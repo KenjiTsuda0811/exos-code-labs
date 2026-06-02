@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Exos | Suite Completa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Nunito', sans-serif; 
+            background-color: #f8fafc;
+        }
+        
+        /* Botones 3D */
+        .btn-3d-emerald {
+            background-color: #10b981;
+            color: white;
+            border-radius: 1rem;
+            border: none;
+            box-shadow: 0 6px 0 #047857, 0 10px 15px -3px rgba(16, 185, 129, 0.4);
+            transition: all 0.1s ease-in-out;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-weight: 900;
+            letter-spacing: 0.05em;
+        }
+        .btn-3d-emerald:active { transform: translateY(6px); box-shadow: 0 0px 0 #047857; }
+
+        .btn-3d-white {
+            background-color: #ffffff;
+            color: #64748b;
+            border-radius: 1rem;
+            border: 2px solid #e2e8f0;
+            box-shadow: 0 4px 0 #cbd5e1;
+            transition: all 0.1s ease-in-out;
+            cursor: pointer;
+            font-weight: 800;
+        }
+        .btn-3d-white:active { transform: translateY(4px); box-shadow: 0 0px 0 #cbd5e1; }
+
+        /* Navegación */
+        .nav-item { transition: all 0.2s ease; cursor: pointer; }
+        .nav-item.active { background-color: #ecfdf5; color: #047857; font-weight: 800; transform: translateX(8px); border-left: 4px solid #10b981; }
+        .nav-item:not(.active):hover { background-color: #f1f5f9; color: #10b981; transform: translateX(4px); }
+
+        /* Vistas (SPA Simulation) */
+        .vista-seccion { display: none; animation: fadeIn 0.4s ease-out; }
+        .vista-seccion.activa { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Modal y Toasts */
+        .backdrop-blur { backdrop-filter: blur(8px); background: rgba(255, 255, 255, 0.7); }
+        .toast-enter { animation: slideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        .toast-leave { animation: slideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
+
+        /* Esqueletos Visuales (Sin Números) */
+        .esqueleto-monto { height: 12px; background: linear-gradient(90deg, #e2e8f0 25%, #cbd5e1 50%, #e2e8f0 75%); background-size: 200% 100%; animation: carga 1.5s infinite; border-radius: 999px; }
+        @keyframes carga { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Toggle Switch */
+        .toggle-checkbox:checked { right: 0; border-color: #10b981; }
+        .toggle-checkbox:checked + .toggle-label { background-color: #10b981; }
+    </style>
+</head>
+<body class="text-slate-700 h-screen overflow-hidden flex">
+
+    <aside class="w-72 bg-white border-r border-slate-200 flex flex-col z-20 shadow-sm">
+        <div class="p-8 flex items-center gap-4 border-b border-slate-50 shrink-0">
+            <div class="w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center shadow-lg">
+                <span class="text-emerald-400 text-2xl font-black">E</span>
+            </div>
+            <div>
+                <h1 class="text-lg font-black text-slate-800 uppercase tracking-tight">Exos Suite</h1>
+                <p class="text-[10px] font-bold text-emerald-600 uppercase tracking-widest">Code Labs</p>
+            </div>
+        </div>
+        
+        <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+            <div onclick="cambiarVista('resumen', this)" class="nav-item active flex items-center gap-4 px-5 py-3.5 rounded-xl text-sm">
+                <span class="text-xl w-6 text-center">🏠</span> <span>Mi Resumen</span>
+            </div>
+            <div onclick="cambiarVista('facturacion', this)" class="nav-item flex items-center gap-4 px-5 py-3.5 rounded-xl text-slate-500 text-sm font-semibold">
+                <span class="text-xl w-6 text-center">📄</span> <span>Facturación</span>
+            </div>
+            <div onclick="cambiarVista('clientes', this)" class="nav-item flex items-center gap-4 px-5 py-3.5 rounded-xl text-slate-500 text-sm font-semibold">
+                <span class="text-xl w-6 text-center">👥</span> <span>Clientes</span>
+            </div>
+            <div onclick="cambiarVista('cuentas', this)" class="nav-item flex items-center gap-4 px-5 py-3.5 rounded-xl text-slate-500 text-sm font-semibold">
+                <span class="text-xl w-6 text-center">💰</span> <span>Cuentas x Cobrar</span>
+            </div>
+            <div onclick="cambiarVista('lanzador', this)" class="nav-item flex items-center gap-4 px-5 py-3.5 rounded-xl text-slate-500 text-sm font-semibold">
+                <span class="text-xl w-6 text-center">🚀</span> <span>Lanzador Web</span>
+            </div>
+            <div onclick="cambiarVista('productos', this)" class="nav-item flex items-center gap-4 px-5 py-3.5 rounded-xl text-slate-500 text-sm font-semibold">
+                <span class="text-xl w-6 text-center">📦</span> <span>Productos</span>
+            </div>
+            <div onclick="cambiarVista('inventario', this)" class="nav-item flex items-center gap-4 px-5 py-3.5 rounded-xl text-slate-500 text-sm font-semibold">
+                <span class="text-xl w-6 text-center">📊</span> <span>Inventario</span>
+            </div>
+            <div onclick="cambiarVista('ventas', this)" class="nav-item flex items-center gap-4 px-5 py-3.5 rounded-xl text-slate-500 text-sm font-semibold">
+                <span class="text-xl w-6 text-center">📈</span> <span>Ventas</span>
+            </div>
+            <div onclick="cambiarVista('configuracion', this)" class="nav-item flex items-center gap-4 px-5 py-3.5 rounded-xl text-slate-500 text-sm font-semibold">
+                <span class="text-xl w-6 text-center">⚙️</span> <span>Configuración</span>
+            </div>
+        </nav>
+    </aside>
+
+    <main class="flex-1 flex flex-col relative">
+        <header class="h-24 px-10 flex items-center justify-between bg-white/90 backdrop-blur-md sticky top-0 z-10 border-b border-slate-100 shrink-0">
+            <div class="flex flex-col">
+                <h2 id="header-titulo" class="text-2xl font-black text-slate-800">Mi Resumen</h2>
+                <p id="header-subtitulo" class="text-xs font-bold text-slate-400 uppercase tracking-wider">Panel Principal</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <button class="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 hover:text-emerald-600 transition-colors" onclick="mostrarToast('Notificaciones al día')">🔔</button>
+                <div class="flex items-center gap-4 p-2 pl-4 bg-emerald-50 rounded-2xl border border-emerald-100 cursor-pointer" onclick="mostrarToast('Ajustes de Perfil Exos')">
+                    <div class="pr-2 text-right">
+                        <p class="text-sm font-black text-emerald-800">Usuario Exos</p>
+                        <p class="text-[10px] text-emerald-600 uppercase font-bold">Admin Status</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-xl bg-white text-emerald-700 flex items-center justify-center font-black shadow-sm">U</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="p-10 overflow-y-auto flex-1 bg-[#f8fafc]">
+            
+            <div id="vista-resumen" class="vista-seccion activa space-y-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white p-8 rounded-[2rem] border-2 border-slate-100 shadow-sm hover:border-emerald-200 transition-all cursor-pointer">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-50 flex items-center justify-center text-2xl mb-4">✨</div>
+                        <h3 class="font-black text-slate-700 text-lg">Estado Operativo</h3>
+                        <div class="mt-4 h-3 w-full bg-slate-100 rounded-full overflow-hidden">
+                            <div class="h-full bg-emerald-500 w-full rounded-full"></div>
+                        </div>
+                        <p class="text-xs font-bold text-emerald-600 mt-2 uppercase">Sincronización Óptima</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-[2rem] border-2 border-slate-100 shadow-sm hover:border-emerald-200 transition-all cursor-pointer">
+                        <div class="w-12 h-12 rounded-2xl bg-blue-50 flex items-center justify-center text-2xl mb-4">🔄</div>
+                        <h3 class="font-black text-slate-700 text-lg">Flujo de Trabajo</h3>
+                        <div class="mt-4 flex gap-1 h-3">
+                            <div class="flex-1 bg-emerald-500 rounded-full"></div>
+                            <div class="flex-1 bg-emerald-400 rounded-full"></div>
+                            <div class="flex-1 bg-emerald-200 rounded-full"></div>
+                        </div>
+                        <p class="text-xs font-bold text-slate-400 mt-2 uppercase">Procesos activos</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-[2rem] border-2 border-slate-100 shadow-sm">
+                        <h3 class="font-black text-slate-700 text-lg mb-4">Acción Rápida</h3>
+                        <button class="btn-3d-emerald w-full py-3 text-xs mb-3" onclick="abrirModalGeneral('Nueva Venta')">+ Registrar Venta</button>
+                        <button class="btn-3d-white w-full py-3 text-xs" onclick="abrirModalGeneral('Nuevo Cliente')">+ Añadir Cliente</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="vista-facturacion" class="vista-seccion">
+                <div class="bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-sm p-8">
+                    <div class="flex justify-between items-center mb-8">
+                        <h3 class="text-xl font-black text-slate-800">Documentos Emitidos</h3>
+                        <button class="btn-3d-white px-6 py-2 text-xs" onclick="mostrarToast('Generando ZIP...')">Exportar</button>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-5 rounded-2xl bg-slate-50 border-2 border-transparent">
+                            <div class="flex items-center gap-4 w-1/3">
+                                <div class="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center text-lg">📄</div>
+                                <div><p class="font-bold text-slate-700">Factura Comercial</p><div class="w-16 h-2 bg-slate-200 rounded-full mt-1"></div></div>
+                            </div>
+                            <div class="w-1/3 flex justify-center"><div class="esqueleto-monto w-20"></div></div>
+                            <div class="w-1/3 flex justify-end"><span class="px-4 py-2 bg-emerald-100 text-emerald-700 rounded-xl text-xs font-black uppercase">Emitida</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="vista-clientes" class="vista-seccion">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-[2rem] border-2 border-slate-100 flex items-center gap-6 hover:shadow-lg transition-all cursor-pointer" onclick="mostrarToast('Perfil de cliente abierto')">
+                        <div class="w-16 h-16 rounded-full bg-purple-100 flex items-center justify-center text-2xl">🏢</div>
+                        <div class="flex-1">
+                            <h3 class="font-black text-slate-700">Corporación Alpha</h3>
+                            <div class="h-2 w-1/2 bg-slate-100 rounded-full mt-2"><div class="h-full bg-emerald-400 w-full rounded-full"></div></div>
+                            <p class="text-[10px] font-bold text-emerald-600 mt-1 uppercase">Cliente VIP</p>
+                        </div>
+                        <button class="btn-3d-white px-4 py-2 text-xs">Ver</button>
+                    </div>
+                    <div class="bg-white p-6 rounded-[2rem] border-2 border-slate-100 flex items-center gap-6 hover:shadow-lg transition-all cursor-pointer">
+                        <div class="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-2xl">🏬</div>
+                        <div class="flex-1">
+                            <h3 class="font-black text-slate-700">Distribuidora Beta</h3>
+                            <div class="h-2 w-1/2 bg-slate-100 rounded-full mt-2"><div class="h-full bg-amber-400 w-3/4 rounded-full"></div></div>
+                            <p class="text-[10px] font-bold text-amber-600 mt-1 uppercase">Crédito Activo</p>
+                        </div>
+                        <button class="btn-3d-white px-4 py-2 text-xs">Ver</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="vista-cuentas" class="vista-seccion">
+                <div class="bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-sm p-8">
+                    <div class="flex justify-between items-center mb-8">
+                        <div>
+                            <h3 class="text-xl font-black text-slate-800">Cartera Pendiente</h3>
+                            <p class="text-xs font-bold text-slate-400 uppercase mt-1">Saldos por recuperar</p>
+                        </div>
+                        <button class="btn-3d-emerald px-6 py-2 text-xs" onclick="mostrarToast('Enviando recordatorios automáticos...')">🔔 Notificar a Todos</button>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-5 rounded-2xl bg-white border-2 border-slate-100">
+                            <div class="w-1/3"><p class="font-bold text-slate-700">Cliente Referencial A</p><p class="text-xs font-bold text-rose-500 uppercase mt-1">Vencido</p></div>
+                            <div class="w-1/3 flex justify-center"><div class="esqueleto-monto w-32 bg-gradient-to-r from-rose-200 to-rose-100"></div></div>
+                            <div class="w-1/3 flex justify-end"><button class="btn-3d-white px-4 py-2 text-xs" onclick="mostrarToast('Detalles de deuda abiertos')">Gestionar</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="vista-lanzador" class="vista-seccion">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <button class="bg-white p-8 rounded-[2rem] border-2 border-slate-100 hover:border-emerald-400 hover:-translate-y-2 transition-all flex flex-col items-center gap-4 group" onclick="mostrarToast('Iniciando Portal Empleados...')">
+                        <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">🧑‍💻</div>
+                        <span class="font-black text-slate-700">Portal Staff</span>
+                    </button>
+                    <button class="bg-white p-8 rounded-[2rem] border-2 border-slate-100 hover:border-emerald-400 hover:-translate-y-2 transition-all flex flex-col items-center gap-4 group" onclick="mostrarToast('Abriendo Tienda Online...')">
+                        <div class="w-16 h-16 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">🛒</div>
+                        <span class="font-black text-slate-700">eCommerce</span>
+                    </button>
+                    <button class="bg-white p-8 rounded-[2rem] border-2 border-slate-100 hover:border-emerald-400 hover:-translate-y-2 transition-all flex flex-col items-center gap-4 group" onclick="mostrarToast('Accediendo a Analíticas...')">
+                        <div class="w-16 h-16 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">📊</div>
+                        <span class="font-black text-slate-700">Analíticas</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="vista-productos" class="vista-seccion">
+                <div class="flex justify-between mb-6">
+                    <div class="relative w-72">
+                        <input type="text" placeholder="Buscar catálogo..." class="w-full bg-white border-2 border-slate-100 rounded-xl py-2 px-4 text-sm font-bold focus:border-emerald-400 outline-none">
+                    </div>
+                    <button class="btn-3d-emerald px-6 py-2 text-xs" onclick="abrirModalGeneral('Nuevo Producto')">+ Añadir</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="bg-white rounded-[2rem] border-2 border-slate-100 overflow-hidden hover:shadow-lg transition-all">
+                        <div class="h-32 bg-slate-100 flex items-center justify-center text-4xl">📦</div>
+                        <div class="p-5">
+                            <div class="h-4 w-3/4 bg-slate-200 rounded-full mb-3"></div>
+                            <div class="esqueleto-monto w-1/2 mb-4"></div>
+                            <button class="w-full py-2 bg-slate-50 rounded-xl text-xs font-bold text-slate-500 hover:bg-emerald-50 hover:text-emerald-600 transition-colors">Editar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="vista-inventario" class="vista-seccion">
+                <div class="bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-sm p-8">
+                    <h3 class="text-xl font-black text-slate-800 mb-8">Niveles de Stock</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between text-sm font-bold mb-2"><span class="text-slate-700">Categoría A</span><span class="text-emerald-600">Suficiente</span></div>
+                            <div class="h-4 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-emerald-500 w-4/5 rounded-full"></div></div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-sm font-bold mb-2"><span class="text-slate-700">Categoría B</span><span class="text-amber-500">Revisar</span></div>
+                            <div class="h-4 w-full bg-slate-100 rounded-full overflow-hidden"><div class="h-full bg-amber-400 w-2/5 rounded-full"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="vista-ventas" class="vista-seccion">
+                <div class="bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-sm p-8">
+                    <div class="flex justify-between items-center mb-8">
+                        <h3 class="text-xl font-black text-slate-800">Rendimiento Comercial</h3>
+                        <div class="px-4 py-1.5 bg-emerald-50 text-emerald-700 rounded-xl text-xs font-black uppercase">En Crecimiento</div>
+                    </div>
+                    <div class="flex items-end gap-4 h-48 mb-8 border-b-2 border-slate-100 pb-4">
+                        <div class="flex-1 bg-emerald-100 rounded-t-xl h-[40%] hover:bg-emerald-200 transition-colors cursor-pointer"></div>
+                        <div class="flex-1 bg-emerald-300 rounded-t-xl h-[60%] hover:bg-emerald-400 transition-colors cursor-pointer"></div>
+                        <div class="flex-1 bg-emerald-500 rounded-t-xl h-[85%] hover:bg-emerald-600 transition-colors cursor-pointer" onclick="mostrarToast('Pico máximo de ventas')"></div>
+                        <div class="flex-1 bg-emerald-200 rounded-t-xl h-[50%] hover:bg-emerald-300 transition-colors cursor-pointer"></div>
+                    </div>
+                    <button class="btn-3d-emerald w-full py-4 text-sm" onclick="abrirModalGeneral('Punto de Venta')">Abrir Punto de Venta (POS)</button>
+                </div>
+            </div>
+
+            <div id="vista-configuracion" class="vista-seccion">
+                <div class="max-w-3xl bg-white border-2 border-slate-100 rounded-[2.5rem] shadow-sm p-8">
+                    <h3 class="text-xl font-black text-slate-800 mb-8">Ajustes del Sistema</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="flex items-center justify-between p-4 border-2 border-slate-50 rounded-2xl">
+                            <div>
+                                <p class="font-bold text-slate-700">Notificaciones Automáticas</p>
+                                <p class="text-xs text-slate-400 font-bold mt-1">Alertas en tiempo real</p>
+                            </div>
+                            <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                                <input type="checkbox" name="toggle" id="toggle1" checked class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-slate-200 appearance-none cursor-pointer z-10"/>
+                                <label for="toggle1" class="toggle-label block overflow-hidden h-6 rounded-full bg-slate-200 cursor-pointer"></label>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 border-2 border-slate-50 rounded-2xl">
+                            <div>
+                                <p class="font-bold text-slate-700">Modo Alta Seguridad Exos</p>
+                                <p class="text-xs text-slate-400 font-bold mt-1">Doble factor requerido</p>
+                            </div>
+                            <div class="relative inline-block w-12 mr-2 align-middle select-none transition duration-200 ease-in">
+                                <input type="checkbox" name="toggle" id="toggle2" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 border-slate-200 appearance-none cursor-pointer z-10"/>
+                                <label for="toggle2" class="toggle-label block overflow-hidden h-6 rounded-full bg-slate-200 cursor-pointer"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-8 pt-6 border-t border-slate-100">
+                        <button class="btn-3d-white px-6 py-3 text-xs" onclick="mostrarToast('Ajustes guardados correctamente')">Guardar Cambios</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="modal-general" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="absolute inset-0 backdrop-blur" onclick="cerrarModal()"></div>
+        <div class="bg-white w-full max-w-md rounded-[2.5rem] p-10 shadow-2xl relative z-10 border-4 border-slate-50 transform scale-95 transition-transform duration-300" id="modal-content">
+            <div class="text-center mb-8">
+                <h3 id="modal-titulo" class="text-2xl font-black text-slate-800 mb-2">Acción</h3>
+                <p class="text-slate-400 text-xs font-bold uppercase">Entorno Seguro Exos</p>
+            </div>
+            <div class="space-y-4 mb-8">
+                <div class="h-12 w-full bg-slate-50 rounded-xl border-2 border-slate-100 flex items-center px-4"><span class="text-slate-400 text-sm font-bold">Datos requeridos...</span></div>
+                <div class="h-12 w-full bg-slate-50 rounded-xl border-2 border-slate-100 flex items-center px-4"><span class="text-slate-400 text-sm font-bold">Información extra...</span></div>
+            </div>
+            <div class="flex gap-4">
+                <button onclick="cerrarModal()" class="btn-3d-white w-1/3 py-3 text-xs">Cancelar</button>
+                <button onclick="ejecutarAccionModal()" class="btn-3d-emerald w-2/3 py-3 text-xs">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="fixed bottom-10 right-10 flex flex-col gap-3 z-50 pointer-events-none"></div>
+
+    <script>
+        const titulos = {
+            'resumen': { titulo: 'Mi Resumen', sub: 'Panel Principal' },
+            'facturacion': { titulo: 'Facturación', sub: 'Emisión y Control' },
+            'clientes': { titulo: 'Directorio Clientes', sub: 'Gestión de Cuentas' },
+            'cuentas': { titulo: 'Cuentas x Cobrar', sub: 'Recuperación de Cartera' },
+            'lanzador': { titulo: 'Lanzador Web', sub: 'Accesos Directos' },
+            'productos': { titulo: 'Productos', sub: 'Catálogo Maestro' },
+            'inventario': { titulo: 'Inventario', sub: 'Control de Almacén' },
+            'ventas': { titulo: 'Ventas', sub: 'Métricas Comerciales' },
+            'configuracion': { titulo: 'Configuración', sub: 'Ajustes Exos' }
+        };
+
+        // Sistema de Pestañas (SPA)
+        function cambiarVista(vistaId, elementoNav) {
+            const items = document.querySelectorAll('.nav-item');
+            items.forEach(item => {
+                item.classList.remove('active');
+                item.querySelector('span:nth-child(2)').classList.remove('font-bold');
+                item.querySelector('span:nth-child(2)').classList.add('font-semibold');
+            });
+            elementoNav.classList.add('active');
+            elementoNav.querySelector('span:nth-child(2)').classList.remove('font-semibold');
+            elementoNav.querySelector('span:nth-child(2)').classList.add('font-bold');
+
+            document.getElementById('header-titulo').innerText = titulos[vistaId].titulo;
+            document.getElementById('header-subtitulo').innerText = titulos[vistaId].sub;
+
+            document.querySelectorAll('.vista-seccion').forEach(vista => {
+                vista.classList.remove('activa');
+            });
+            document.getElementById(`vista-${vistaId}`).classList.add('activa');
+            
+            mostrarToast(`Vista cambiada a ${titulos[vistaId].titulo}`);
+        }
+
+        // Sistema de Modal
+        function abrirModalGeneral(titulo) {
+            document.getElementById('modal-titulo').innerText = titulo;
+            const modal = document.getElementById('modal-general');
+            const content = document.getElementById('modal-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 10);
+        }
+
+        function cerrarModal() {
+            const modal = document.getElementById('modal-general');
+            const content = document.getElementById('modal-content');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => { modal.classList.add('hidden'); }, 300);
+        }
+
+        function ejecutarAccionModal() {
+            cerrarModal();
+            setTimeout(() => { mostrarToast('✨ Operación registrada con éxito en Exos.'); }, 300);
+        }
+
+        // Sistema de Toasts (Notificaciones)
+        function mostrarToast(mensaje) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'bg-white border-2 border-slate-100 shadow-[0_10px_40px_rgba(0,0,0,0.08)] rounded-2xl p-4 flex items-center gap-4 toast-enter pointer-events-auto max-w-sm';
+            toast.innerHTML = `
+                <div class="w-8 h-8 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600 font-black">✓</div>
+                <p class="text-sm font-bold text-slate-700 flex-1">${mensaje}</p>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.remove('toast-enter');
+                toast.classList.add('toast-leave');
+                setTimeout(() => { toast.remove(); }, 300); 
+            }, 2500);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPM Demo - Sistema en Auditoría</title>
+    <link rel="icon" href="https://fav.farm/📊" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #0f172a;
+            --accent-blue: #2563eb;
+            --accent-glow: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --text-main: #0f172a; 
+            --text-body: #334155; 
+            --body-font: 'Montserrat', sans-serif;
+        }
+
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            font-family: var(--body-font);
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden;
+        }
+
+        .login-box {
+            background: #ffffff;
+            padding: 45px 35px;
+            border-radius: 28px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            position: relative;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .login-logo {
+            font-size: 65px;
+            margin-bottom: 10px;
+            display: inline-block;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        h1 {
+            color: var(--text-main);
+            margin: 10px 0;
+            font-size: 38px;
+            font-weight: 800;
+            letter-spacing: -2px;
+        }
+
+        .subtitle {
+            color: var(--text-body);
+            font-size: 15px;
+            font-weight: 500;
+            line-height: 1.5;
+            margin-bottom: 30px;
+        }
+
+        /* --- BARRA DE CARGA --- */
+        .loader-container { width: 100%; margin-bottom: 35px; }
+        .loader-track {
+            width: 100%; height: 12px;
+            background: #e2e8f0;
+            border-radius: 20px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #cbd5e1;
+        }
+
+        .loader-bar {
+            width: 45%; height: 100%;
+            background: linear-gradient(90deg, var(--accent-blue), #60a5fa, var(--accent-blue));
+            background-size: 200% 100%;
+            border-radius: 20px;
+            position: absolute;
+            animation: loadingMove 2s infinite linear;
+            box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
+        }
+
+        /* --- TARJETAS --- */
+        .info-card {
+            background: #f8fafc;
+            border: 2px solid #f1f5f9;
+            border-radius: 20px;
+            padding: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-align: left;
+        }
+
+        .info-card.pending { border-left: 5px solid var(--accent-purple); }
+
+        .icon-box {
+            font-size: 20px;
+            min-width: 40px;
+            height: 40px;
+            background: #eff6ff;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-blue);
+        }
+
+        .info-text strong {
+            display: block;
+            color: var(--text-main);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .info-text p {
+            margin: 0;
+            color: var(--text-body);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .status-tag {
+            color: var(--accent-purple);
+            font-weight: 800;
+            text-transform: uppercase;
+            font-size: 11px;
+        }
+
+        .footer {
+            position: absolute; bottom: 20px;
+            color: #94a3b8; font-size: 12px; font-weight: 600;
+        }
+
+        /* --- BOTONES DE DEMO --- */
+        .btn-action {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            font-family: var(--body-font);
+            font-weight: 800;
+            font-size: 13px;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: transform 0.2s;
+        }
+
+        .btn-action:active { transform: scale(0.98); }
+        
+        .btn-primary {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.3);
+        }
+
+        @keyframes loadingMove {
+            0% { left: -50%; }
+            100% { left: 110%; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-box">
+        <div class="login-logo">📊</div>
+        
+        <h1>VPM Demo</h1>
+        <p class="subtitle">
+            El administrador está realizando el cuadre de caja global. El acceso se habilitará automáticamente al terminar.
+        </p>
+
+        <div class="loader-container">
+            <div class="loader-track">
+                <div class="loader-bar"></div>
+            </div>
+        </div>
+
+        <div class="info-card pending">
+            <div class="icon-box">🔍</div>
+            <div class="info-text">
+                <span class="status-tag">Estado actual:</span>
+                <strong>Verificando sucursales</strong>
+                <p>Consolidando ventas de todos los puntos de venta activos.</p>
+            </div>
+        </div>
+
+        <div class="info-card">
+            <div class="icon-box">🛡️</div>
+            <div class="info-text">
+                <strong>Seguridad Activa</strong>
+                <p>El sistema protege la integridad de los datos durante la auditoría.</p>
+            </div>
+        </div>
+
+        <button class="btn-action btn-primary" onclick="window.location.href='index.html'">
+            Desbloquear Sistema (Ir al inicio)
+        </button>
+    </div>
+
+    <div class="footer">
+        Software de Gestión de Cajas de Nueva Generación
+    </div>
+
+</body>
+</html>

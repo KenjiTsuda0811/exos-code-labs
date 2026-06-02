@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VPM - Control de Caja (Versión Beta)</title>
+    <link rel="icon" href="https://fav.farm/📊" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        /* --- VARIABLES Y ESTILOS BASE --- */
+        :root { 
+            --primary: #1e293b; --primary-dark: #0f172a; --success: #10b981; 
+            --info: #3b82f6; --warning: #f59e0b; --danger: #ef4444; 
+            --accent: #8b5cf6; --gastos: #d97706; --bg: #f1f5f9; --text-main: #1e293b;
+            --text-muted: #64748b; --body-font: 'Plus Jakarta Sans', sans-serif;
+            
+            /* Variables Dinámicas para Temas */
+            --surface: #ffffff;
+            --surface-hover: #f1f5f9;
+            --border: #e2e8f0;
+            --input-bg: #f8fafc;
+            --overlay-bg: rgba(255, 255, 255, 0.5);
+            --danger-bg: #fef2f2;
+            --danger-border: #fecaca;
+            --success-bg: #ecfdf5;
+        }
+
+        /* --- MODO OSCURO --- */
+        body.dark-mode {
+            --primary: #e2e8f0; --primary-dark: #f8fafc;
+            --bg: #0f172a; --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            
+            --surface: #1e293b;
+            --surface-hover: #334155;
+            --border: #334155;
+            --input-bg: #020617;
+            --overlay-bg: rgba(15, 23, 42, 0.7);
+            --danger-bg: rgba(239, 68, 68, 0.1);
+            --danger-border: rgba(239, 68, 68, 0.3);
+            --success-bg: rgba(16, 185, 129, 0.1);
+        }
+
+        body { 
+            font-family: var(--body-font); background-color: var(--bg); margin: 0; 
+            padding: 15px; overflow-x: hidden; min-height: 100vh; box-sizing: border-box; color: var(--text-main);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        #login-screen { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            background-color: var(--primary-dark); 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            z-index: 10000; padding: 20px; box-sizing: border-box;
+        }
+
+        .login-box { 
+            background: var(--surface); 
+            padding: 40px 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); 
+            width: 100%; max-width: 400px; text-align: center; border: 1px solid var(--border);
+        }
+        
+        .login-logo { font-size: 48px; margin-bottom: 5px; display: inline-block; }
+
+        .login-box h1 { color: var(--primary-dark); margin: 0 0 5px 0; font-size: 32px; font-weight: 800; letter-spacing: -1px; }
+        .login-box p.subtitle { color: var(--text-muted); font-size: 14px; font-weight: 500; margin-bottom: 30px; line-height: 1.4; }
+
+        .input-group { position: relative; margin-bottom: 20px; display: flex; align-items: center; }
+
+        .login-box input { 
+            width: 100%; padding: 15px !important; border: 2px solid var(--border); border-radius: 8px; 
+            box-sizing: border-box; font-size: 15px; font-family: var(--body-font); font-weight: 500;
+            background-color: var(--input-bg); color: var(--primary-dark); transition: border-color 0.2s ease; -webkit-appearance: none;
+        }
+
+        .login-box input:focus { outline: none; border-color: var(--info); background-color: var(--surface); }
+
+        .login-box button { 
+            width: 100%; padding: 16px; background-color: var(--info); 
+            color: white; border: none; border-radius: 8px; font-weight: 700; font-size: 16px; 
+            text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: background-color 0.2s ease; 
+            margin-top: 10px;
+        }
+        .login-box button:hover { background-color: #2563eb; }
+
+        #login-error { 
+            background-color: var(--danger-bg); color: var(--danger); font-size: 13px; font-weight: 600;
+            margin-bottom: 20px; padding: 12px; border-radius: 8px; border: 1px solid var(--danger-border);
+            display: none; text-align: left;
+        }
+
+        .login-footer { 
+            margin-top: 30px; color: rgba(255,255,255,0.6); font-size: 13px; text-align: center; 
+            line-height: 1.8; font-weight: 500; padding: 12px 25px;
+        }
+        .login-footer strong { color: white; font-weight: 700; }
+
+        /* HEADER NAV */
+        .top-nav { display: flex; justify-content: space-between; align-items: center; background: var(--surface); padding: 12px 25px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid var(--border); }
+        .user-info { font-weight: 700; color: var(--primary-dark); font-size: 14px; display: flex; align-items: center; gap: 12px; }
+        .role-badge { background: var(--warning); color: white; padding: 4px 10px; border-radius: 50px; font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;}
+        .role-badge.admin { background: var(--danger); }
+        .btn-logout { background: var(--surface-hover); color: var(--text-main); border: 1px solid var(--border); padding: 8px 15px; border-radius: 8px; cursor: pointer; font-size: 12px; font-weight: 700; transition: background-color 0.2s; }
+        .btn-logout:hover { background: var(--border); }
+
+        /* HINT ANIMADO MODO OSCURO */
+        .hint-bounce {
+            background-color: var(--accent);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 800;
+            position: absolute;
+            right: 280px; 
+            white-space: nowrap;
+            animation: bounceX 1.5s infinite;
+            pointer-events: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 50;
+        }
+        @keyframes bounceX {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(-8px); }
+        }
+
+        /* APP LAYOUT - 4 COLUMNAS */
+        #app-layout { 
+            display: none; 
+            height: calc(100vh - 165px); 
+            min-height: 750px;
+        }
+        .main-layout { display: grid; grid-template-columns: 1fr 1fr 1fr 340px; gap: 15px; height: 100%; max-width: 100%; margin: 0 auto; }
+        .panel { 
+            background: var(--surface); padding: 15px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
+            display: flex; flex-direction: column; overflow-y: auto; overflow-x: hidden; border: 1px solid var(--border); position: relative;
+        }
+        
+        .panel::before { content:''; position: absolute; top:0; left:25px; right:25px; height: 4px; border-radius: 0 0 4px 4px; }
+        .panel-ingresos::before { background-color: var(--success); }
+        .panel-cuadre::before { background-color: var(--accent); }
+        .panel-gastos::before { background-color: var(--gastos); }
+        .panel-resumen::before { background-color: var(--info); }
+        
+        h2 { margin: 0 0 15px 0; color: var(--primary-dark); font-size: 1rem; text-align: center; text-transform: uppercase; letter-spacing: 1px; font-weight: 800; }
+        label { font-size: 11px; font-weight: 700; color: var(--text-muted); display: block; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        input:not([type="checkbox"]), select:not([multiple]) { 
+            width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 8px; box-sizing: border-box; font-size: 13px; margin-bottom: 12px; font-family: var(--body-font); color: var(--text-main); background-color: var(--input-bg); -webkit-appearance: none;
+        }
+        select { -webkit-appearance: auto; }
+        
+        .btn-pegar-unico { width: 100%; padding: 8px 15px; background: var(--surface); color: var(--warning); border: 2px solid var(--warning); border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 12px; text-transform: uppercase; margin-bottom: 8px; font-family: var(--body-font);}
+        
+        .btn { width: 100%; padding: 12px; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 13px; text-transform: uppercase; font-family: var(--body-font); letter-spacing: 0.5px; }
+        .btn-ingreso { background-color: var(--success); }
+        .btn-cuadre { background-color: var(--accent); }
+        .btn-gastos-guardar { background-color: var(--gastos); }
+        .btn-pdf { background-color: var(--danger); margin-top: 10px; }
+        .btn-banco { background-color: #1e40af; margin-top: 15px; }
+        .btn-reset { background-color: transparent; color: var(--text-muted); margin-top: 10px; font-size: 11px; padding: 8px; border: 1px solid var(--border); }
+
+        .filtros-box { background: var(--input-bg); padding: 10px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--border); }
+        .filtros-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .filtros-grid input, .filtros-grid select { margin-bottom: 0; font-size: 12px; padding: 8px; }
+
+        .scroll-area { flex-grow: 1; overflow-y: auto; padding-right: 5px; }
+        .scroll-area::-webkit-scrollbar { width: 6px; }
+        .scroll-area::-webkit-scrollbar-track { background: var(--surface-hover); border-radius: 10px; }
+        .scroll-area::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 10px; }
+
+        .item { background: var(--surface); border: 1px solid var(--border); padding: 12px; margin-bottom: 10px; border-radius: 8px; position: relative; font-size: 13px; }
+        .item-bs { border-left: 4px solid var(--success); }
+        .item-cuadre { border-left: 4px solid var(--accent); }
+        .item-gastos { border-left: 4px solid var(--gastos); }
+        
+        .item-sede-name { font-weight: 700; color: var(--primary-dark); margin-bottom: 4px; display: block; }
+        .item-monto { font-size: 15px; font-weight: 800; color: var(--success); margin: 2px 0; display: block;}
+        .item-cuadre .item-monto { color: var(--text-main); }
+        .item-gastos .item-monto { color: var(--gastos); }
+        .item-ref { color: var(--text-muted); font-size: 12px; font-weight: 500; }
+
+        .item-meta { position: absolute; right: 12px; bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .btn-edit { background: #fef9c3; color: #a16207; border: none; border-radius: 6px; padding: 4px 8px; cursor: pointer; font-size: 13px; }
+        .btn-del { background: #fee2e2; color: var(--danger); border: none; border-radius: 6px; padding: 4px 8px; cursor: pointer; font-size: 13px; }
+        .time-label { font-size: 10px; color: var(--text-muted); font-weight: 600; background: var(--surface-hover); padding: 3px 6px; border-radius: 4px; }
+
+        .total-box { padding: 10px; border-radius: 8px; text-align: center; color: white; margin-bottom: 8px; }
+        .total-box small { text-transform: uppercase; font-size: 9px; font-weight: 700; opacity: 0.9; display: block; margin-bottom: 4px;}
+        .total-amount { font-size: 1.2rem; font-weight: 900; }
+
+        .bg-reg { background-color: var(--success); }
+        .bg-pto { background-color: var(--info); }
+        .bg-usd { background-color: var(--accent); }
+        
+        .mask-text { font-size: 12px !important; font-weight: 700; background: rgba(0,0,0,0.5); padding: 4px 10px; border-radius: 8px; display: inline-block; color: white; }
+        
+        .resumen-sede-card { background: var(--surface); border: 1px solid var(--border); padding: 10px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .badge-cantidad { background: var(--surface-hover); color: var(--primary); width: 30px; height: 30px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; border: 1px solid var(--border); }
+        
+        .locked-sede { position: relative; overflow: hidden; border-color: var(--border); }
+        .locked-sede .card-content { filter: blur(4px); opacity: 0.5; user-select: none; pointer-events: none; }
+        .locked-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: var(--overlay-bg); z-index: 2; }
+        .locked-overlay span:first-child { font-size: 20px; }
+        .locked-overlay span:last-child { font-size: 10px; font-weight: 800; color: var(--primary-dark); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; background: var(--surface); padding: 2px 8px; border-radius: 6px; border: 1px solid var(--border); }
+
+        .alert-critica { background: var(--danger-bg); color: var(--danger); padding: 10px; border-radius: 8px; font-size: 11px; font-weight: 700; display: none; margin-bottom: 12px; border: 1px solid var(--danger-border); text-align: center; }
+        .pegado-exito { background-color: var(--success-bg) !important; border-color: var(--success) !important; transition: background-color 0.3s; }
+
+        .disabled-panel { opacity: 0.6; pointer-events: none; filter: grayscale(0.5); }
+        .hidden { display: none !important; }
+        
+        #loader { position: fixed; bottom: 20px; right: 20px; background: var(--primary-dark); color: var(--surface); padding: 10px 20px; border-radius: 8px; font-size: 12px; font-weight: 700; z-index: 9999; display: none; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+
+        /* --- ESTILOS DE MODALES (ADMIN/NOTAS) --- */
+        .modal-overlay {
+            position: fixed; top:0; left:0; width:100vw; height:100vh;
+            background: rgba(15, 23, 42, 0.8);
+            display: none; justify-content: center; align-items: center; z-index: 100000;
+        }
+        .modal-box {
+            background: var(--surface); padding: 30px; border-radius: 12px; width: 100%; max-width: 400px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4); position: relative; box-sizing: border-box; margin: 15px; border: 1px solid var(--border);
+        }
+        .modal-close {
+            position: absolute; top: 15px; right: 20px; background: none; border: none; font-size: 24px; cursor: pointer; color: var(--text-muted);
+        }
+        .modal-close:hover { color: var(--danger); }
+
+        /* Estilos Auditoría Banco */
+        .audit-item { font-size: 10px; border-bottom: 1px solid var(--border); padding: 5px 0; color: var(--text-muted); }
+        .audit-item b { color: var(--primary-dark); }
+        
+        /* Lista Modal Novedades */
+        .novedades-lista { font-size: 13px; color: var(--text-muted); text-align: left; line-height: 1.6; padding-left: 20px; margin-bottom: 25px; }
+        .novedades-lista li { margin-bottom: 8px; }
+        .novedades-lista b { color: var(--primary-dark); }
+
+        @media (max-width: 1200px) {
+            body { height: auto; overflow-y: auto; padding: 10px; }
+            #app-layout { height: auto; min-height: auto; }
+            .main-layout { display: flex; flex-direction: column; gap: 15px; height: auto; }
+            .panel { max-height: none; overflow: visible; }
+            .scroll-area { max-height: 350px; overflow-y: auto; }
+            .top-nav { flex-direction: column; align-items: stretch; gap: 10px; }
+            .btn-logout { width: 100%; }
+            .filtros-grid { grid-template-columns: 1fr; }
+            .hint-bounce { right: 20px; top: 50px; } 
+        }
+    </style>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if(localStorage.getItem('vpm-theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                const btn = document.getElementById('theme-icon');
+                if(btn) btn.innerText = '☀️';
+            }
+            if(localStorage.getItem('vpm-theme-hint-seen')) {
+                const hint = document.getElementById('dark-mode-hint');
+                if(hint) hint.style.display = 'none';
+            }
+        });
+        
+        window.toggleDarkMode = () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('vpm-theme', isDark ? 'dark' : 'light');
+            document.getElementById('theme-icon').innerText = isDark ? '☀️' : '🌙';
+            
+            // Ocultar hint flecha para siempre
+            const hint = document.getElementById('dark-mode-hint');
+            if(hint) hint.style.display = 'none';
+            localStorage.setItem('vpm-theme-hint-seen', 'true');
+        };
+
+        window.simularStop = () => {
+            alert("Simulando cierre de sistema por restricción de horario (Ej. Después de las 8:00 PM). Redirigiendo a Stop.html...");
+            window.location.href = "Stop.html";
+        };
+    </script>
+</head>
+<body>
+
+<div id="loader">🔄 Sincronizando con la nube...</div>
+
+<div id="modal-overlay" class="modal-overlay">
+    
+    <div id="modal-actualizacion" class="modal-box hidden">
+        <h2 style="margin-top:0; color: var(--info); font-size: 22px;">🚀 ¡Nueva Actualización!</h2>
+        <div id="texto-actualizacion-dinamico">
+            <p style="font-size: 14px; color: var(--text-main); margin-bottom: 15px; font-weight: 600;">Hemos mejorado VPM con las siguientes novedades:</p>
+            <ul class="novedades-lista">
+            </ul>
+        </div>
+        <button class="btn" style="background-color:var(--success); font-size: 15px;" onclick="cerrarModalActualizacion()">¡Entendido!</button>
+    </div>
+
+    <div id="modal-lanzar-update" class="modal-box hidden">
+        <button class="modal-close" onclick="cerrarModales()">✖</button>
+        <h2 style="margin-top:0; font-size: 20px;">🚀 Publicar Actualización</h2>
+        <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px;">Escribe las notas del parche. Esto lanzará un aviso global e inmediato a todos los usuarios en el sistema.</p>
+        <label>Detalles de la Actualización (Cada línea será una viñeta)</label>
+        <textarea id="update-texto-admin" rows="6" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text-main); resize: none; margin-bottom: 15px; font-family: var(--body-font); font-size: 13px;" placeholder="- Se arregló el bug del cuadre...&#10;- Nueva función añadida..."></textarea>
+        <button class="btn" style="background-color: var(--accent);" onclick="enviarActualizacionFirebase()">Enviar a Todos</button>
+    </div>
+
+    <div id="modal-sede" class="modal-box hidden">
+        <button class="modal-close" onclick="cerrarModales()">✖</button>
+        <h2 style="margin-top:0">🏢 Crear Nueva Sede</h2>
+        <label>Nombre del Local / Sede</label>
+        <input type="text" id="nueva-sede-nombre" placeholder="Ej: Sucursal Centro">
+        <button class="btn" style="background-color:var(--info);" onclick="guardarSede()">Guardar Sede</button>
+    </div>
+
+    <div id="modal-usuario" class="modal-box hidden">
+        <button class="modal-close" onclick="cerrarModales()">✖</button>
+        <h2 style="margin-top:0">👥 Nuevo Usuario</h2>
+        <label>Correo Electrónico</label>
+        <input type="email" id="nuevo-usu-email" placeholder="usuario@gmail.com">
+        <label>Contraseña</label>
+        <input type="password" id="nuevo-usu-pass" placeholder="Mínimo 6 caracteres">
+        <label>Rol de Acceso</label>
+        <select id="nuevo-usu-rol" onchange="toggleSedeUsuario()">
+            <option value="user">Usuario de Local (Restringido)</option>
+            <option value="admin">Administrador (Total)</option>
+        </select>
+        <div id="div-nuevo-usu-sede">
+            <label>Asignar a Sede</label>
+            <select id="nuevo-usu-sede"></select>
+        </div>
+        <button class="btn" style="background-color:var(--accent);" onclick="guardarUsuario()">Crear Usuario</button>
+    </div>
+
+    <div id="modal-pdf-comentarios" class="modal-box hidden" style="max-width: 500px;">
+        <button class="modal-close" onclick="cerrarModales()">✖</button>
+        <h2 style="margin-top:0">📝 Notas para el Reporte</h2>
+        <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px; line-height: 1.4;">Agregue notas o marque errores para cada sede. Estas se guardarán y el empleado de la sede verá el mensaje la próxima vez que entre hoy.</p>
+        <div id="lista-comentarios-sedes" style="max-height: 250px; overflow-y: auto; margin-bottom: 15px; padding-right: 5px;">
+            </div>
+        <button class="btn" style="background-color:var(--danger);" onclick="generarPDFConComentarios()">Guardar y Generar PDF</button>
+    </div>
+
+    <div id="modal-nota-local" class="modal-box hidden">
+        <h2 style="margin-top:0; color: var(--danger);">⚠️ Mensaje de Administración</h2>
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">Se han reportado observaciones para su sede en el cuadre más reciente:</p>
+        <p id="texto-nota-local" style="font-size: 14px; font-weight: 700; color: var(--danger); line-height: 1.5; padding: 15px; background: var(--danger-bg); border: 1px solid var(--danger-border); border-radius: 8px; text-align: left;"></p>
+        <button class="btn" style="background-color:var(--info); margin-top: 15px;" onclick="cerrarNotaLocal()">Entendido</button>
+    </div>
+    
+    <div id="modal-enviar-mensaje" class="modal-box hidden">
+        <button class="modal-close" onclick="cerrarModales()">✖</button>
+        <h2 style="margin-top:0; font-size: 20px;">✉️ Enviar Mensaje Global</h2>
+        <p style="font-size: 11px; color: var(--text-muted); margin-bottom: 15px;">El mensaje aparecerá como alerta emergente en la sede seleccionada.</p>
+        <label>Destino (Sede)</label>
+        <select id="msg-destino-admin"></select>
+        <label>Mensaje</label>
+        <textarea id="msg-texto-admin" rows="4" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); font-family: var(--body-font); font-size: 13px; margin-bottom: 15px; background: var(--input-bg); color: var(--text-main); resize: none; box-sizing: border-box;"></textarea>
+        <button class="btn" style="background-color: var(--info);" onclick="enviarMensajeAdmin()">Enviar Mensaje a Sede</button>
+    </div>
+
+</div>
+
+<div id="login-screen">
+    <div class="login-box">
+        <div class="login-logo">📊</div>
+        <h1>VPM Beta</h1>
+        <p class="subtitle">Demostración del Control de Caja</p>
+        
+        <div id="login-error"></div>
+        
+        <div class="input-group">
+            <input type="email" id="email" value="usuario@gmail.com" placeholder="Correo electrónico" required>
+        </div>
+        
+        <div class="input-group">
+            <input type="password" id="password" value="1234" placeholder="Contraseña" required>
+        </div>
+        
+        <button onclick="iniciarSesion()">Entrar a la Demostración</button>
+    </div>
+    
+    <div class="login-footer">
+        Desarrollado para <strong>Muestra de Portfolio</strong>
+    </div>
+</div>
+
+<div id="top-bar" class="top-nav hidden">
+    <div class="user-info">
+        <div style="background:var(--surface-hover); width:35px; height:35px; border-radius:8px; display:flex; align-items:center; justify-content:center; border:1px solid var(--border);">👤</div>
+        <div>
+            <span id="user-display">Usuario</span><br>
+            <span id="role-display" class="role-badge">Local</span>
+        </div>
+    </div>
+    <div style="display: flex; gap: 10px; position: relative; align-items: center;">
+        <div id="dark-mode-hint" class="hint-bounce">Activa aqui el modo oscuro ➡️</div>
+        
+        <button id="btn-msg-admin" class="btn-logout hidden" onclick="abrirModalMensajeAdmin()" style="background-color: var(--info); color: white; border: none;">✉️ Mensaje Global</button>
+        <button id="btn-simular-stop" class="btn-logout" style="background-color: var(--warning); color: white; border: none;" onclick="simularStop()" title="Simular Restricción de Horario">⏱️ Simular Cierre</button>
+
+        <button id="btn-theme" class="btn-logout" style="padding: 8px 12px; font-size: 14px;" onclick="toggleDarkMode()" title="Cambiar Tema">
+            <span id="theme-icon">🌙</span>
+        </button>
+        <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión 👋</button>
+    </div>
+</div>
+
+<div id="bcv-bar" class="hidden" style="background: var(--surface); color: var(--text-main); padding: 12px 25px; font-size: 13px; font-weight: 700; display: flex; justify-content: space-between; align-items: center; border-radius: 12px; margin-bottom: 15px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.03);">
+    <div style="display:flex; align-items:center; gap: 15px;">
+        <span style="background: var(--success); color: white; padding: 4px 10px; border-radius: 6px; font-size: 11px; letter-spacing: 0.5px; text-transform: uppercase;">Tasa Oficial BCV</span>
+        <span id="tasa-bcv-usd">Cargando USD...</span>
+        <span id="tasa-bcv-eur">Cargando EUR...</span>
+    </div>
+    <span style="font-size: 11px; color: var(--text-muted);">Actualizado desde bcv.org.ve</span>
+</div>
+
+<div id="app-layout">
+    <div class="main-layout">
+        
+        <div class="panel panel-ingresos">
+            <h2>Transacciones Bolívares</h2>
+            <div id="msg-error-global" class="alert-critica"></div>
+            
+            <label>Monto (Bs.)</label>
+            <input type="text" id="bs-monto" placeholder="0,00">
+            
+            <label>Número de Referencia</label>
+            <input type="text" id="bs-ref" placeholder="Ej: 8844">
+            
+            <button class="btn-pegar-unico" onclick="pegarTodoDesdePortapapeles()">📋 Pegar Banesco</button>
+            
+            <label>Sede / Local</label>
+            <select id="bs-sede"></select>
+            
+            <button class="btn btn-banco" style="margin-bottom: 10px; margin-top: 5px;" onclick="abrirBanco()">🏦 Abrir Banco</button>
+            
+            <button id="btn-bs" class="btn btn-ingreso" onclick="registrarBs()">Guardar Registro Bs.</button>
+            
+            <hr style="border:0; border-top:1px solid var(--border); margin:15px 0;">
+            
+            <div class="filtros-box">
+                <div class="filtros-grid">
+                    <select id="filtro-sede" onchange="renderUI()"></select>
+                    <input type="text" id="buscador" onkeyup="renderUI()" placeholder="🔍 Buscar Referencia...">
+                </div>
+            </div>
+            <div class="scroll-area" id="lista-bs"></div>
+        </div>
+
+        <div class="panel panel-cuadre" id="panel-cuadre">
+            <h2>Cierres Punto / USD</h2>
+            <div id="form-cuadre" style="background: var(--input-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px;">
+                <label>Tipo de Cierre</label>
+                <select id="c-tipo">
+                    <option value="Punto">Cierre de Punto (Bs)</option>
+                    <option value="Dólares">Efectivo ($)</option>
+                </select>
+                <label>Monto Total</label>
+                <input type="text" id="c-monto" placeholder="0,00">
+                <label>Sede</label>
+                <select id="c-sede"></select>
+                <button id="btn-cuadre" class="btn btn-cuadre" onclick="registrarCuadre()">Registrar Cierre Diario</button>
+            </div>
+            <div class="scroll-area" id="lista-cuadre"></div>
+        </div>
+
+        <div class="panel panel-gastos">
+            <h2>Gastos y Pagos</h2>
+            <div style="background: var(--input-bg); padding: 15px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 15px;">
+                <label>Tipo de Operación</label>
+                <select id="g-tipo">
+                    <option value="Gasto">Gasto</option>
+                    <option value="Nómina">Nómina</option>
+                    <option value="Cambio de divisas" id="opt-divisas" style="display:none;">Cambio de divisas</option>
+                </select>
+                
+                <label>Concepto / Descripción</label>
+                <input type="text" id="g-concepto" placeholder="Ej: Mantenimiento, Nómina...">
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div>
+                        <label>Monto</label>
+                        <input type="text" id="g-monto" placeholder="0,00">
+                    </div>
+                    <div>
+                        <label>Moneda</label>
+                        <select id="g-moneda">
+                            <option value="Bs">Bs.</option>
+                            <option value="USD">$ USD</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <label>Sede / Local</label>
+                <select id="g-sede"></select>
+                <button class="btn btn-gastos-guardar" onclick="registrarGasto()">Guardar Operación</button>
+            </div>
+            <div class="scroll-area" id="lista-gastos"></div>
+        </div>
+
+        <div class="panel panel-resumen">
+            <h2>📊 Resumen Consolidado</h2>
+            <div class="total-box bg-reg"><small>TOTAL REFERENCIAS (BS)</small><div id="tot-reg" class="total-amount">Bs. 0,00</div></div>
+            <div class="total-box bg-pto"><small>TOTAL CIERRE PUNTOS (BS)</small><div id="tot-pto" class="total-amount">Bs. 0,00</div></div>
+            <div class="total-box bg-usd"><small>TOTAL EFECTIVO (USD)</small><div id="tot-usd" class="total-amount">$ 0.00</div></div>
+            
+            <div class="scroll-area" id="resumen-final" style="margin-top: 10px;"></div>
+
+            <div id="panel-audit-banco" class="hidden" style="margin-top:10px; border: 1px dashed var(--border); padding: 10px; border-radius: 8px;">
+                <label style="font-size: 9px; color: var(--text-muted);">Registro Actividad Banco</label>
+                <div id="lista-audit-banco" style="max-height: 80px; overflow-y: auto;"></div>
+            </div>
+            
+            <div style="margin-top:auto;">
+                <div id="admin-action-buttons" class="hidden" style="margin-top: 0; background: var(--input-bg); padding: 12px; border-radius: 8px; border: 1px solid var(--border);">
+                    <label style="font-size: 10px; text-align: center; display: block; margin-bottom: 10px; color: var(--primary-dark);">🛠️ PANEL DE ADMINISTRADOR</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <button id="btn-crear-sede" class="btn" style="background-color:#059669; font-size: 10px; padding: 10px; margin-top:0;" onclick="abrirModalSedes()">🏢 Crear Sede</button>
+                        <button id="btn-crear-usuario" class="btn" style="background-color:#4f46e5; font-size: 10px; padding: 10px; margin-top:0;" onclick="abrirModalUsuarios()">👥 Crear Usuario</button>
+                        <button id="btn-pdf" class="btn" style="background-color:var(--danger); margin-top:0; font-size: 10px; padding: 10px;" onclick="abrirModalComentariosPDF()">📥 PDF Pago Móvil</button>
+                        <button id="btn-pdf-gastos" class="btn" style="background-color:var(--gastos); margin-top:0; font-size: 10px; padding: 10px;" onclick="exportarPDFGastos()">📄 PDF Gastos</button>
+                        <button id="btn-broadcast-update" class="btn" style="background-color:var(--accent); margin-top:0; font-size: 10px; padding: 10px;" onclick="abrirModalLanzarActualizacion()">🚀 Publicar Actualización</button>
+                        <button id="btn-pdf-banco" class="btn" style="background-color:#0284c7; margin-top:0; font-size: 10px; padding: 10px;" onclick="exportarPDFBanco()">📑 PDF Registro Banco</button>
+                    </div>
+                    <button id="btn-reset" class="btn btn-reset" style="width: 100%; margin-top: 10px; font-weight: bold;" onclick="reiniciarDia()">🗑️ REINICIAR DÍA</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('admin_override') === 'true') {
+        sessionStorage.setItem('admin_override', 'true');
+        window.history.replaceState({}, document.title, window.location.pathname); 
+    }
+
+    function verificarCierre() {
+        if (sessionStorage.getItem('admin_override') === 'true') return;
+
+        const ahora = new Date();
+        const opciones = { timeZone: 'America/Caracas', hour12: false, hour: '2-digit', minute: '2-digit' };
+        const horaVE = new Intl.DateTimeFormat('es-VE', opciones).format(ahora);
+        
+        if (horaVE >= "20:00" || horaVE < "08:00") {
+            // Comentado para que no bloquee en la versión de muestra a menos que se fuerce
+            // window.location.href = "Stop.html";
+        }
+    }
+
+    verificarCierre(); 
+    setInterval(verificarCierre, 60000);
+
+    async function cargarTasaBCV() {
+        try {
+            const reqUsd = await fetch('https://ve.dolarapi.com/v1/dolares/oficial');
+            const dataUsd = await reqUsd.json();
+            document.getElementById('tasa-bcv-usd').innerText = `USD: Bs. ${dataUsd.promedio.toFixed(2)}`;
+
+            const reqEur = await fetch('https://ve.dolarapi.com/v1/euros/oficial');
+            const dataEur = await reqEur.json();
+            document.getElementById('tasa-bcv-eur').innerText = `EUR: Bs. ${dataEur.promedio.toFixed(2)}`;
+        } catch (e) {
+            document.getElementById('tasa-bcv-usd').innerText = `USD: Error de conexión`;
+            document.getElementById('tasa-bcv-eur').innerText = `EUR: Error de conexión`;
+        }
+    }
+
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+    import { getDatabase, ref, push, set, onValue, remove, update, get } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+    // Nota: Para tu versión Beta pública, es seguro usar llaves falsas o dejar vacías, 
+    // ya que el login demo saltará esta conexión.
+    const firebaseConfig = {
+        apiKey: "TU_API_KEY_AQUI",
+        authDomain: "tu-proyecto.firebaseapp.com",
+        databaseURL: "https://tu-proyecto.firebaseio.com",
+        projectId: "tu-proyecto",
+        storageBucket: "tu-proyecto.appspot.com",
+        messagingSenderId: "123456789",
+        appId: "1:123456789:web:abcdef12345",
+        measurementId: "G-ABCDEFG"
+    };
+
+    let app, auth, db, secondaryApp, secondaryAuth;
+    
+    try {
+        app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        db = getDatabase(app);
+        secondaryApp = initializeApp(firebaseConfig, "Secondary");
+        secondaryAuth = getAuth(secondaryApp);
+    } catch(e) {
+        console.warn("Firebase no inicializado correctamente debido a credenciales de muestra.");
+    }
+
+    const ROLES_FALLBACK = {
+        'sede1@demo.com': { role: 'user', sede: 'Sucursal Centro' },
+        'sede2@demo.com': { role: 'user', sede: 'Sucursal Norte' },
+        'sede3@demo.com': { role: 'user', sede: 'Sucursal Sur' },
+        'sede4@demo.com': { role: 'user', sede: 'Sucursal Este' },
+        'admin@demo.com': { role: 'admin', sede: 'Todas' },
+        'usuario@gmail.com': { role: 'admin', sede: 'Todas' }
+    };
+
+    const SEDES_DEFAULT = ["Sucursal Centro", "Sucursal Norte", "Sucursal Sur", "Sucursal Este"];
+
+    let currentUserProfile = null;
+    let localDB = { bs: [], cuadre: [], gastos: [], logs_banco: [] };
+    let editandoBsID = null;
+    let sedes = [...SEDES_DEFAULT]; 
+    
+    const getSafeSedeKey = (s) => s.replace(/[\.\#\$\[\]\s]/g, '_');
+
+    const fmtBs = (n) => "Bs. " + n.toLocaleString('es-VE', { minimumFractionDigits: 2 });
+    const fmtUsd = (n) => "$ " + n.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    const showLoader = (show) => document.getElementById('loader').style.display = show ? 'block' : 'none';
+
+    window.iniciarSesion = () => {
+        const e = document.getElementById('email').value.toLowerCase().trim();
+        const p = document.getElementById('password').value;
+        const err = document.getElementById('login-error');
+        err.style.display = "none";
+        
+        if(!e || !p) { err.innerText = "⚠️ Por favor, rellene todos los campos."; err.style.display = "block"; return; }
+
+        // --- BYPASS PARA VERSIÓN DE DEMOSTRACIÓN / BETA ---
+        if (e === 'usuario@gmail.com' && p === '1234') {
+            showLoader(true);
+            setTimeout(() => {
+                currentUserProfile = ROLES_FALLBACK['usuario@gmail.com'];
+                iniciarEntornoDePrueba();
+                showLoader(false);
+            }, 800);
+            return;
+        }
+
+        showLoader(true);
+        if(auth) {
+            signInWithEmailAndPassword(auth, e, p).catch(error => {
+                showLoader(false);
+                let msg = "❌ Error de autenticación.";
+                if(error.code === 'auth/wrong-password') msg = "❌ Contraseña incorrecta.";
+                if(error.code === 'auth/user-not-found') msg = "❌ Usuario no encontrado.";
+                err.innerText = msg; err.style.display = "block";
+            });
+        }
+    };
+
+    function iniciarEntornoDePrueba() {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('top-bar').classList.remove('hidden');
+        document.getElementById('app-layout').style.display = 'block';
+        
+        document.getElementById('user-display').innerText = 'Usuario Demo';
+        const badge = document.getElementById('role-display');
+        badge.innerText = 'Administrador (Demo)'; badge.classList.add('admin');
+        
+        document.getElementById('admin-action-buttons').classList.remove('hidden');
+        document.getElementById('panel-audit-banco').classList.remove('hidden');
+        document.getElementById('btn-msg-admin').classList.remove('hidden');
+        
+        document.getElementById('form-cuadre').classList.remove('disabled-panel');
+        document.getElementById('bs-sede').disabled = false;
+        document.getElementById('c-sede').disabled = false;
+        document.getElementById('g-sede').disabled = false;
+        document.getElementById('filtro-sede').disabled = false;
+
+        document.getElementById('bcv-bar').classList.remove('hidden');
+        cargarTasaBCV();
+
+        // Datos ficticios para que el portfolio no se vea vacío
+        localDB = {
+            bs: [
+                { id: '1', monto: 1500, ref: '483920', sede: 'Sucursal Norte', hora: '10:15 AM' },
+                { id: '2', monto: 2300, ref: '129485', sede: 'Sucursal Centro', hora: '11:30 AM' }
+            ],
+            cuadre: [
+                { id: '1', tipo: 'Punto', monto: 3800, sede: 'Sucursal Norte' },
+                { id: '2', tipo: 'Dólares', monto: 120, sede: 'Sucursal Centro' }
+            ],
+            gastos: [
+                { id: '1', tipo: 'Gasto', concepto: 'Artículos de limpieza', monto: 15, moneda: 'USD', sede: 'Sucursal Sur', hora: '09:00 AM' }
+            ],
+            logs_banco: []
+        };
+        
+        sedes = [...SEDES_DEFAULT];
+        actualizarSelectsSedes();
+        renderUI();
+    }
+
+    window.cerrarSesion = () => {
+        sessionStorage.removeItem('admin_override'); 
+        if(auth) signOut(auth).catch(()=>{});
+        
+        // Reset para demo manual
+        document.getElementById('login-screen').style.display = 'flex';
+        document.getElementById('top-bar').classList.add('hidden');
+        document.getElementById('bcv-bar').classList.add('hidden');
+        document.getElementById('app-layout').style.display = 'none';
+        currentUserProfile = null;
+    };
+
+    function verificarNotasLocales() {
+        if (currentUserProfile && currentUserProfile.sede !== 'Todas' && db) {
+            const safeSedeKey = getSafeSedeKey(currentUserProfile.sede);
+            get(ref(db, `vpm/notas_locales/${safeSedeKey}`)).then(snap => {
+                if (snap.exists()) {
+                    const nota = snap.val();
+                    const tokenVista = `nota_vista_${btoa(nota.texto)}`; 
+                    if (!localStorage.getItem(tokenVista)) {
+                        document.getElementById('texto-nota-local').innerText = nota.texto;
+                        document.getElementById('modal-overlay').style.display = 'flex';
+                        document.getElementById('modal-sede').classList.add('hidden');
+                        document.getElementById('modal-usuario').classList.add('hidden');
+                        document.getElementById('modal-pdf-comentarios').classList.add('hidden');
+                        document.getElementById('modal-actualizacion').classList.add('hidden');
+                        document.getElementById('modal-enviar-mensaje').classList.add('hidden');
+                        document.getElementById('modal-lanzar-update').classList.add('hidden');
+                        document.getElementById('modal-nota-local').classList.remove('hidden');
+                    }
+                }
+            }).catch(()=>{});
+        }
+    }
+
+    if(auth) {
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const email = user.email.toLowerCase();
+                const emailKey = email.replace(/\./g, '_'); 
+                
+                showLoader(true);
+                let roleSnap = await get(ref(db, `vpm/roles/${emailKey}`));
+                let profile = roleSnap.val();
+
+                if (!profile) {
+                    profile = ROLES_FALLBACK[email];
+                    if (profile) {
+                        await set(ref(db, `vpm/roles/${emailKey}`), profile);
+                    } else {
+                        showLoader(false); alert("Usuario no autorizado por el administrador."); signOut(auth); return;
+                    }
+                }
+
+                currentUserProfile = profile;
+
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('top-bar').classList.remove('hidden');
+                document.getElementById('app-layout').style.display = 'block';
+                
+                document.getElementById('user-display').innerText = email;
+                const badge = document.getElementById('role-display');
+                
+                document.getElementById('email').value = ''; document.getElementById('password').value = '';
+
+                const optDivisas = document.getElementById('opt-divisas');
+                if (currentUserProfile.role === 'admin' || currentUserProfile.sede === 'Sucursal Centro' || currentUserProfile.sede === 'Sucursal Sur') {
+                    optDivisas.style.display = 'block';
+                } else {
+                    optDivisas.style.display = 'none';
+                }
+
+                if (currentUserProfile.role === 'admin') {
+                    badge.innerText = 'Administrador'; badge.classList.add('admin');
+                    document.getElementById('admin-action-buttons').classList.remove('hidden');
+                    document.getElementById('panel-audit-banco').classList.remove('hidden');
+                    
+                    document.getElementById('btn-msg-admin').classList.remove('hidden');
+                    sessionStorage.setItem('admin_override', 'true');
+                    
+                    document.getElementById('form-cuadre').classList.remove('disabled-panel');
+                    document.getElementById('bs-sede').disabled = false;
+                    document.getElementById('c-sede').disabled = false;
+                    document.getElementById('g-sede').disabled = false;
+                    document.getElementById('filtro-sede').disabled = false;
+                } else {
+                    const ahora = new Date();
+                    const opciones = { timeZone: 'America/Caracas', hour12: false, hour: '2-digit', minute: '2-digit' };
+                    const horaVE = new Intl.DateTimeFormat('es-VE', opciones).format(ahora);
+                    if (horaVE >= "20:00" || horaVE < "08:00") {
+                        signOut(auth);
+                        window.location.href = "Stop.html";
+                        return;
+                    }
+
+                    badge.innerText = currentUserProfile.sede; badge.classList.remove('admin');
+                    document.getElementById('admin-action-buttons').classList.add('hidden');
+                    document.getElementById('panel-audit-banco').classList.add('hidden');
+                    
+                    document.getElementById('bs-sede').disabled = true;
+                    document.getElementById('filtro-sede').disabled = true;
+                    document.getElementById('g-sede').disabled = true;
+                    document.getElementById('form-cuadre').classList.add('disabled-panel');
+                }
+                
+                document.getElementById('bcv-bar').classList.remove('hidden');
+                cargarTasaBCV();
+                escucharMensajesSistema(); 
+                escucharActualizacionGlobal(); 
+                
+                if (!localStorage.getItem('vpm-update-v1-seen')) {
+                    document.getElementById('modal-overlay').style.display = 'flex';
+                    document.getElementById('modal-sede').classList.add('hidden');
+                    document.getElementById('modal-usuario').classList.add('hidden');
+                    document.getElementById('modal-pdf-comentarios').classList.add('hidden');
+                    document.getElementById('modal-nota-local').classList.add('hidden');
+                    document.getElementById('modal-enviar-mensaje').classList.add('hidden');
+                    document.getElementById('modal-lanzar-update').classList.add('hidden');
+                    document.getElementById('modal-actualizacion').classList.remove('hidden');
+                } else {
+                    verificarNotasLocales();
+                }
+
+                initRealtimeListeners();
+            } else {
+                if(!currentUserProfile) { 
+                    document.getElementById('login-screen').style.display = 'flex';
+                    document.getElementById('top-bar').classList.add('hidden');
+                    document.getElementById('bcv-bar').classList.add('hidden');
+                    document.getElementById('app-layout').style.display = 'none';
+                    showLoader(false);
+                }
+            }
+        });
+    }
+
+    window.cerrarModalActualizacion = () => {
+        if(window.updateVersionPendiente) {
+            localStorage.setItem('vpm_update_version', window.updateVersionPendiente);
+            window.updateVersionPendiente = null;
+        } else {
+            localStorage.setItem('vpm-update-v1-seen', 'true');
+        }
+        cerrarModales();
+        verificarNotasLocales(); 
+    };
+
+    window.cerrarNotaLocal = () => {
+        const texto = document.getElementById('texto-nota-local').innerText;
+        const tokenVista = `nota_vista_${btoa(texto)}`;
+        localStorage.setItem(tokenVista, 'true');
+        cerrarModales();
+    };
+
+    window.abrirModalLanzarActualizacion = () => {
+        if(currentUserProfile?.role !== 'admin') return;
+        document.getElementById('modal-overlay').style.display = 'flex';
+        const modales = document.querySelectorAll('.modal-box');
+        modales.forEach(m => m.classList.add('hidden'));
+        document.getElementById('modal-lanzar-update').classList.remove('hidden');
+    };
+
+    window.enviarActualizacionFirebase = async () => {
+        const texto = document.getElementById('update-texto-admin').value.trim();
+        if(!texto) return alert("Por favor escribe el mensaje de actualización.");
+        
+        if(!db) return alert("Modo Demo: Actualización simulada enviada correctamente.");
+
+        showLoader(true);
+        try {
+            await set(ref(db, 'vpm/sistema/actualizacion_actual'), {
+                version: Date.now(),
+                texto: texto,
+                autor: auth.currentUser.email
+            });
+            alert("🚀 Actualización publicada. Llegará a todos los usuarios.");
+            document.getElementById('update-texto-admin').value = '';
+            cerrarModales();
+        } catch (e) {
+            alert("Error: " + e.message);
+        }
+        showLoader(false);
+    };
+
+    function escucharActualizacionGlobal() {
+        if(!db) return;
+        onValue(ref(db, 'vpm/sistema/actualizacion_actual'), (snap) => {
+            if (!snap.exists()) return;
+            const data = snap.val();
+            const versionStr = data.version.toString();
+            
+            if (localStorage.getItem('vpm_update_version') !== versionStr) {
+                const lineas = data.texto.split('\n').filter(l => l.trim() !== '');
+                const htmlLista = lineas.map(l => {
+                    const lLimpia = l.replace(/^-\s*/, '');
+                    return `<li>${lLimpia}</li>`;
+                }).join('');
+                
+                document.getElementById('texto-actualizacion-dinamico').innerHTML = `<ul class="novedades-lista">${htmlLista}</ul>`;
+                
+                document.getElementById('modal-overlay').style.display = 'flex';
+                const modales = document.querySelectorAll('.modal-box');
+                modales.forEach(m => m.classList.add('hidden'));
+                document.getElementById('modal-actualizacion').classList.remove('hidden');
+                
+                window.updateVersionPendiente = versionStr;
+            }
+        });
+    }
+
+    window.abrirModalMensajeAdmin = () => {
+        if(currentUserProfile?.role !== 'admin') return;
+        const htmlDestinos = `<option value="Todas">Todas las Sedes</option>` + sedes.map(s => `<option value="${s}">${s}</option>`).join('');
+        document.getElementById('msg-destino-admin').innerHTML = htmlDestinos;
+        
+        document.getElementById('modal-overlay').style.display = 'flex';
+        const modales = document.querySelectorAll('.modal-box');
+        modales.forEach(m => m.classList.add('hidden'));
+        document.getElementById('modal-enviar-mensaje').classList.remove('hidden');
+    };
+
+    window.enviarMensajeAdmin = async () => {
+        const destino = document.getElementById('msg-destino-admin').value;
+        const texto = document.getElementById('msg-texto-admin').value;
+        
+        if (!texto) return alert("Escriba un mensaje para enviar.");
+        if(!db) return alert("Modo Demo: Mensaje simulado enviado correctamente.");
+        
+        showLoader(true);
+        try {
+            await push(ref(db, 'vpm/mensajes_sistema'), {
+                destino: destino,
+                texto: texto,
+                timestamp: Date.now(),
+                autor: auth.currentUser.email
+            });
+            alert("✅ Mensaje enviado exitosamente.");
+            document.getElementById('msg-texto-admin').value = '';
+            cerrarModales();
+        } catch (error) {
+            alert("Error al enviar: " + error.message);
+        }
+        showLoader(false);
+    };
+
+    function escucharMensajesSistema() {
+        if(!db) return;
+        onValue(ref(db, 'vpm/mensajes_sistema'), (snap) => {
+            if (!snap.exists() || !currentUserProfile) return;
+            const mensajes = [];
+            snap.forEach(child => mensajes.push({ id: child.key, ...child.val() }));
+            
+            const miSede = currentUserProfile.sede;
+            const mensajesParaMi = mensajes.filter(m => m.destino === 'Todas' || m.destino === miSede);
+            
+            if (mensajesParaMi.length > 0) {
+                const ultimoMsg = mensajesParaMi[mensajesParaMi.length - 1];
+                const tokenLeido = `msg_leido_${ultimoMsg.id}`;
+                
+                if (!localStorage.getItem(tokenLeido)) {
+                    alert(`📢 MENSAJE DE ADMINISTRACIÓN\nDe: ${ultimoMsg.autor}\n\n${ultimoMsg.texto}`);
+                    localStorage.setItem(tokenLeido, 'true');
+                }
+            }
+        });
+    }
+
+    function initRealtimeListeners() {
+        if(!db) return; // Salta la conexión real de firebase si estamos en demo
+        const bsRef = ref(db, 'vpm/bs');
+        const cuadreRef = ref(db, 'vpm/cuadre');
+        const gastosRef = ref(db, 'vpm/gastos');
+        const sedesRef = ref(db, 'vpm/sedes_list');
+        const logsRef = ref(db, 'vpm/logs_banco');
+
+        onValue(sedesRef, (snapshot) => {
+            let dbSedes = [];
+            if(snapshot.exists()) {
+                snapshot.forEach(child => {
+                    const val = child.val();
+                    if(val && val.nombre) dbSedes.push(val.nombre);
+                    else if(typeof val === 'string') dbSedes.push(val); 
+                });
+            }
+            sedes = [...new Set([...SEDES_DEFAULT, ...dbSedes])];
+            actualizarSelectsSedes();
+            renderUI();
+        });
+
+        onValue(bsRef, (snapshot) => {
+            localDB.bs = [];
+            snapshot.forEach(child => { localDB.bs.push({ id: child.key, ...child.val() }); });
+            localDB.bs.reverse(); renderUI(); showLoader(false);
+        });
+
+        onValue(cuadreRef, (snapshot) => {
+            localDB.cuadre = [];
+            snapshot.forEach(child => { localDB.cuadre.push({ id: child.key, ...child.val() }); });
+            localDB.cuadre.reverse(); renderUI();
+        });
+
+        onValue(gastosRef, (snapshot) => {
+            localDB.gastos = [];
+            snapshot.forEach(child => { localDB.gastos.push({ id: child.key, ...child.val() }); });
+            localDB.gastos.reverse(); renderUI();
+        });
+
+        onValue(logsRef, (snapshot) => {
+            localDB.logs_banco = [];
+            snapshot.forEach(child => { localDB.logs_banco.push(child.val()); });
+            localDB.logs_banco.reverse();
+            renderLogsBanco();
+        });
+    }
+
+    function actualizarSelectsSedes() {
+        const htmlSedes = sedes.map(s => `<option value="${s}">${s}</option>`).join('');
+        document.getElementById('bs-sede').innerHTML = htmlSedes;
+        document.getElementById('c-sede').innerHTML = htmlSedes;
+        document.getElementById('g-sede').innerHTML = htmlSedes;
+        document.getElementById('filtro-sede').innerHTML = `<option value="Todas">Todas las Sedes</option>` + htmlSedes;
+        document.getElementById('nuevo-usu-sede').innerHTML = htmlSedes;
+        
+        if (currentUserProfile && currentUserProfile.role !== 'admin') {
+            document.getElementById('bs-sede').value = currentUserProfile.sede;
+            document.getElementById('g-sede').value = currentUserProfile.sede;
+            document.getElementById('filtro-sede').value = currentUserProfile.sede;
+        }
+    }
+
+    window.abrirModalSedes = () => {
+        if(currentUserProfile?.role !== 'admin') return;
+        document.getElementById('modal-overlay').style.display = 'flex';
+        const modales = document.querySelectorAll('.modal-box');
+        modales.forEach(m => m.classList.add('hidden'));
+        document.getElementById('modal-sede').classList.remove('hidden');
+    };
+
+    window.abrirModalUsuarios = () => {
+        if(currentUserProfile?.role !== 'admin') return;
+        document.getElementById('modal-overlay').style.display = 'flex';
+        const modales = document.querySelectorAll('.modal-box');
+        modales.forEach(m => m.classList.add('hidden'));
+        document.getElementById('modal-usuario').classList.remove('hidden');
+    };
+
+    window.abrirModalComentariosPDF = () => {
+        if(currentUserProfile?.role !== 'admin') return;
+        const container = document.getElementById('lista-comentarios-sedes');
+        container.innerHTML = sedes.map(s => `
+            <div style="margin-bottom: 10px;">
+                <label style="font-size: 11px; color: var(--primary-dark);">${s}</label>
+                <input type="text" id="comentario-pdf-${s.replace(/\s+/g, '-')}" placeholder="Errores en cuadre, falta registrar algo, etc..." style="padding: 8px; font-size: 12px; margin-bottom: 0; background: var(--input-bg); color: var(--text-main); border-color: var(--border);">
+            </div>
+        `).join('');
+        
+        document.getElementById('modal-overlay').style.display = 'flex';
+        const modales = document.querySelectorAll('.modal-box');
+        modales.forEach(m => m.classList.add('hidden'));
+        document.getElementById('modal-pdf-comentarios').classList.remove('hidden');
+    };
+
+    window.generarPDFConComentarios = () => {
+        const comentarios = {};
+        sedes.forEach(s => {
+            const input = document.getElementById(`comentario-pdf-${s.replace(/\s+/g, '-')}`);
+            const texto = input ? input.value.trim() : '';
+            comentarios[s] = texto;
+            
+            if (texto && db) {
+                const safeSedeKey = getSafeSedeKey(s);
+                set(ref(db, `vpm/notas_locales/${safeSedeKey}`), { 
+                    texto: texto, 
+                    fecha: new Date().toLocaleDateString('es-VE'),
+                    timestamp: Date.now()
+                });
+            }
+        });
+        
+        cerrarModales();
+        exportarPDF(comentarios);
+    };
+
+    window.cerrarModales = () => {
+        document.getElementById('modal-overlay').style.display = 'none';
+        const modales = document.querySelectorAll('.modal-box');
+        modales.forEach(m => m.classList.add('hidden'));
+    };
+
+    window.toggleSedeUsuario = () => {
+        const rol = document.getElementById('nuevo-usu-rol').value;
+        document.getElementById('div-nuevo-usu-sede').style.display = rol === 'admin' ? 'none' : 'block';
+    };
+
+    window.guardarSede = () => {
+        if(currentUserProfile?.role !== 'admin') return;
+        const nombre = document.getElementById('nueva-sede-nombre').value.trim();
+        if(!nombre) return alert("Ingrese un nombre para la sede.");
+        if(sedes.map(s=>s.toLowerCase()).includes(nombre.toLowerCase())) return alert("Esta sede ya existe en el sistema.");
+        
+        if(!db) {
+            sedes.push(nombre);
+            actualizarSelectsSedes();
+            renderUI();
+            alert("Modo Demo: Sede creada temporalmente.");
+            document.getElementById('nueva-sede-nombre').value = '';
+            cerrarModales();
+            return;
+        }
+
+        showLoader(true);
+        const nuevaSedeRef = push(ref(db, 'vpm/sedes_list'));
+        set(nuevaSedeRef, { nombre: nombre }).then(() => {
+            alert("Sede creada exitosamente.");
+            document.getElementById('nueva-sede-nombre').value = '';
+            cerrarModales(); showLoader(false);
+        }).catch(e => {
+            alert("Error: " + e.message);
+            showLoader(false);
+        });
+    };
+
+    window.guardarUsuario = async () => {
+        if(currentUserProfile?.role !== 'admin') return;
+        const email = document.getElementById('nuevo-usu-email').value.trim().toLowerCase();
+        const password = document.getElementById('nuevo-usu-pass').value;
+        const rol = document.getElementById('nuevo-usu-rol').value;
+        let sede = document.getElementById('nuevo-usu-sede').value;
+
+        if(!email || !password) return alert("Por favor complete todos los datos.");
+        if(password.length < 6) return alert("La contraseña debe tener al menos 6 caracteres.");
+        if(rol === 'admin') sede = 'Todas';
+
+        if(!db) return alert("Modo Demo: Simulación de usuario creado exitosamente.");
+
+        showLoader(true);
+        try {
+            await createUserWithEmailAndPassword(secondaryAuth, email, password);
+            const emailKey = email.replace(/\./g, '_');
+            await set(ref(db, `vpm/roles/${emailKey}`), { role: rol, sede: sede, email: email });
+            
+            alert("✅ Usuario creado exitosamente.");
+            document.getElementById('nuevo-usu-email').value = '';
+            document.getElementById('nuevo-usu-pass').value = '';
+            cerrarModales();
+            await signOut(secondaryAuth);
+        } catch (error) {
+            alert("❌ Error al crear usuario: " + error.message);
+        }
+        showLoader(false);
+    };
+
+    window.registrarBs = () => {
+        const montoI = document.getElementById('bs-monto');
+        const refI = document.getElementById('bs-ref');
+        const monto = parseFloat(montoI.value.toString().replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+        const refNum = refI.value.trim();
+        const sede = document.getElementById('bs-sede').value;
+        const msgError = document.getElementById('msg-error-global');
+        
+        if (!monto || !refNum) return alert("Faltan datos.");
+
+        const duplicado = localDB.bs.find(x => x.ref === refNum && x.id !== editandoBsID);
+        if (duplicado) {
+            msgError.innerText = `❌ ERROR: LA REFERENCIA ${refNum} YA EXISTE EN: ${duplicado.sede.toUpperCase()}`;
+            msgError.style.display = 'block'; window.scrollTo(0,0);
+            setTimeout(() => msgError.style.display = 'none', 8000); return;
+        }
+
+        const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        if(!db) {
+            if(editandoBsID) {
+                const i = localDB.bs.find(x => x.id === editandoBsID);
+                if(i) { i.monto = monto; i.ref = refNum; i.sede = sede; }
+                editandoBsID = null; document.getElementById('btn-bs').innerText = "Guardar Registro Bs.";
+            } else {
+                localDB.bs.unshift({ id: Date.now().toString(), monto, ref: refNum, sede, hora });
+            }
+            montoI.value = ''; refI.value = ''; msgError.style.display = 'none'; refI.focus();
+            renderUI();
+            return;
+        }
+
+        showLoader(true);
+        if (editandoBsID) {
+            update(ref(db, `vpm/bs/${editandoBsID}`), { monto, ref: refNum, sede })
+                .then(() => { editandoBsID = null; document.getElementById('btn-bs').innerText = "Guardar Registro Bs."; });
+        } else {
+            push(ref(db, 'vpm/bs'), { monto, ref: refNum, sede, hora, timestamp: Date.now() });
+        }
+        
+        montoI.value = ''; refI.value = ''; msgError.style.display = 'none'; refI.focus();
+    };
+
+    window.registrarCuadre = () => {
+        if(currentUserProfile.role !== 'admin') return;
+        const montoI = document.getElementById('c-monto');
+        const tipo = document.getElementById('c-tipo').value;
+        const monto = parseFloat(montoI.value.toString().replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+        const sede = document.getElementById('c-sede').value;
+        if (isNaN(monto) || monto <= 0) return alert("Monto inválido");
+        
+        if(!db) {
+            localDB.cuadre.unshift({ id: Date.now().toString(), tipo, monto, sede });
+            montoI.value = '';
+            renderUI();
+            return;
+        }
+
+        showLoader(true);
+        push(ref(db, 'vpm/cuadre'), { tipo, monto, sede, timestamp: Date.now() });
+        montoI.value = '';
+    };
+
+    window.registrarGasto = () => {
+        const tipo = document.getElementById('g-tipo').value;
+        const concepto = document.getElementById('g-concepto').value.trim();
+        const montoI = document.getElementById('g-monto');
+        const monto = parseFloat(montoI.value.toString().replace(/[^\d,]/g, '').replace(',', '.')) || 0;
+        const moneda = document.getElementById('g-moneda').value;
+        const sede = document.getElementById('g-sede').value;
+
+        if (!concepto || monto <= 0) return alert("Faltan datos o monto inválido en la sección de Gastos.");
+
+        const hora = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+        if(!db) {
+            localDB.gastos.unshift({ id: Date.now().toString(), tipo, concepto, monto, moneda, sede, hora });
+            document.getElementById('g-concepto').value = '';
+            montoI.value = '';
+            renderUI();
+            return;
+        }
+
+        showLoader(true);
+        push(ref(db, 'vpm/gastos'), { tipo, concepto, monto, moneda, sede, hora, timestamp: Date.now() })
+            .then(() => {
+                document.getElementById('g-concepto').value = '';
+                montoI.value = '';
+                showLoader(false);
+            });
+    };
+
+    window.gestionarBs = (id) => {
+        const i = localDB.bs.find(x => x.id === id); if(!i) return;
+        if (currentUserProfile.role !== 'admin' && i.sede !== currentUserProfile.sede) { alert("No tienes permisos."); return; }
+
+        if (confirm(`Referencia: ${i.ref}\nOK para EDITAR / Cancelar para ELIMINAR`)) {
+            document.getElementById('bs-monto').value = i.monto.toLocaleString('es-VE', { minimumFractionDigits: 2 });
+            document.getElementById('bs-ref').value = i.ref;
+            if(currentUserProfile.role === 'admin') document.getElementById('bs-sede').value = i.sede;
+            editandoBsID = id; document.getElementById('btn-bs').innerText = "ACTUALIZAR REGISTRO"; window.scrollTo(0,0);
+        } else if (confirm("¿Seguro que desea ELIMINAR este registro de la base de datos?")) {
+            if(!db) { localDB.bs = localDB.bs.filter(x=>x.id!==id); renderUI(); return; }
+            showLoader(true); remove(ref(db, `vpm/bs/${id}`));
+        }
+    };
+
+    window.eliminarC = (id) => {
+        if (currentUserProfile.role !== 'admin') return;
+        if (confirm("¿Seguro que desea ELIMINAR este cierre?")) { 
+            if(!db) { localDB.cuadre = localDB.cuadre.filter(x=>x.id!==id); renderUI(); return; }
+            showLoader(true); remove(ref(db, `vpm/cuadre/${id}`)); 
+        }
+    };
+
+    window.eliminarGasto = (id) => {
+        const i = localDB.gastos.find(x => x.id === id); if(!i) return;
+        if (currentUserProfile.role !== 'admin' && i.sede !== currentUserProfile.sede) { alert("No tienes permisos."); return; }
+        if (confirm("¿Seguro que desea ELIMINAR esta operación de Gasto/Pago?")) { 
+            if(!db) { localDB.gastos = localDB.gastos.filter(x=>x.id!==id); renderUI(); return; }
+            showLoader(true); remove(ref(db, `vpm/gastos/${id}`)); 
+        }
+    };
+
+    window.reiniciarDia = () => {
+        if (currentUserProfile.role !== 'admin') return;
+        if (confirm("⚠️ ¿ESTÁS TOTALMENTE SEGURO?\nEsto borrará TODAS las transacciones y cierres de HOY en la Nube de forma IRREVERSIBLE.")) {
+            if (confirm("🔒 CONFIRMACIÓN FINAL: ¿Realmente quieres vaciar la base de datos global?")) {
+                if(!db) {
+                    localDB = { bs: [], cuadre: [], gastos: [], logs_banco: [] };
+                    renderUI();
+                    alert("✅ Base de datos local vaciada.");
+                    return;
+                }
+                showLoader(true); 
+                remove(ref(db, 'vpm/bs')); 
+                remove(ref(db, 'vpm/cuadre'));
+                remove(ref(db, 'vpm/gastos'));
+                remove(ref(db, 'vpm/logs_banco'));
+                remove(ref(db, 'vpm/notas_locales'));
+                alert("✅ Base de datos reiniciada satisfactoriamente.");
+            }
+        }
+    };
+
+    window.renderUI = () => {
+        const fSede = document.getElementById('filtro-sede').value;
+        const fRef = document.getElementById('buscador').value.toLowerCase();
+
+        const filtradosBs = localDB.bs.filter(i => (fSede === "Todas" || i.sede === fSede) && i.ref.toLowerCase().includes(fRef));
+        document.getElementById('lista-bs').innerHTML = filtradosBs.map(i => {
+            const canEdit = currentUserProfile.role === 'admin' || i.sede === currentUserProfile.sede;
+            return `<div class="item item-bs"><span class="item-sede-name">${i.sede}</span><span class="item-monto">${fmtBs(i.monto)}</span><span class="item-ref">Ref: ${i.ref}</span><div class="item-meta"><span class="time-label">${i.hora}</span>${canEdit ? `<button class="btn-edit" onclick="gestionarBs('${i.id}')">✏️</button>` : ''}</div></div>`;
+        }).join('');
+
+        document.getElementById('lista-cuadre').innerHTML = localDB.cuadre.map(i => `<div class="item item-cuadre"><span class="item-sede-name">${i.sede}</span><span class="item-monto">${i.tipo === 'Dólares' ? fmtUsd(i.monto) : fmtBs(i.monto)}</span><span class="item-ref">${i.tipo === 'Punto' ? 'Cierre Punto' : 'Efectivo USD'}</span>${currentUserProfile.role === 'admin' ? `<div class="item-meta"><button class="btn-del" onclick="eliminarC('${i.id}')">🗑️</button></div>` : ''}</div>`).join('');
+        
+        const filtradosGastos = localDB.gastos.filter(i => (fSede === "Todas" || i.sede === fSede));
+        document.getElementById('lista-gastos').innerHTML = filtradosGastos.map(i => {
+            const canEdit = currentUserProfile.role === 'admin' || i.sede === currentUserProfile.sede;
+            const formatMonto = i.moneda === 'USD' ? fmtUsd(i.monto) : fmtBs(i.monto);
+            return `<div class="item item-gastos"><span class="item-sede-name">${i.sede}</span><span class="item-monto">${formatMonto}</span><span class="item-ref">${i.tipo}: ${i.concepto}</span><div class="item-meta"><span class="time-label">${i.hora}</span>${canEdit ? `<button class="btn-del" onclick="eliminarGasto('${i.id}')">🗑️</button>` : ''}</div></div>`;
+        }).join('');
+
+        let tReg = 0, tPto = 0, tUsd = 0;
+        const resDiv = document.getElementById('resumen-final'); resDiv.innerHTML = '';
+        
+        sedes.forEach(s => {
+            const trSede = localDB.bs.filter(x => x.sede === s);
+            const rS = trSede.reduce((a,b) => a+b.monto, 0);
+            const pS = localDB.cuadre.filter(x => x.sede === s && x.tipo === 'Punto').reduce((a,b) => a+b.monto, 0);
+            const uS = localDB.cuadre.filter(x => x.sede === s && x.tipo === 'Dólares').reduce((a,b) => a+b.monto, 0);
+            tReg += rS; tPto += pS; tUsd += uS;
+            
+            const isLocked = currentUserProfile.role !== 'admin' && s !== currentUserProfile.sede;
+            
+            if (isLocked) {
+                resDiv.innerHTML += `
+                <div class="resumen-sede-card locked-sede">
+                    <div class="card-content" style="display:flex; width:100%; justify-content:space-between;">
+                        <div style="flex:1">
+                            <strong style="color:var(--primary-dark); font-size:13px;">${s}</strong>
+                            <div style="font-size:11px; color:var(--text-muted); margin-top:3px; line-height:1.4;">
+                                Refs: <b>Bs. 0,00</b><br>
+                                Punto: Bs. 0,00 | Efect: <span style="color:var(--accent); font-weight:700">$ 0.00</span>
+                            </div>
+                        </div>
+                        <div class="badge-cantidad">0</div>
+                    </div>
+                    <div class="locked-overlay">
+                        <span>🔒</span>
+                        <span>Sin Acceso</span>
+                    </div>
+                </div>`;
+            } else {
+                resDiv.innerHTML += `
+                <div class="resumen-sede-card">
+                    <div style="flex:1">
+                        <strong style="color:var(--primary-dark); font-size:13px;">${s}</strong>
+                        <div style="font-size:11px; color:var(--text-muted); margin-top:3px; line-height:1.4;">
+                            Refs: <b>${fmtBs(rS)}</b><br>
+                            Punto: ${fmtBs(pS)} | Efect: <span style="color:var(--accent); font-weight:700">${fmtUsd(uS)}</span>
+                        </div>
+                    </div>
+                    <div class="badge-cantidad">${trSede.length}</div>
+                </div>`;
+            }
+        });
+
+        if(currentUserProfile.role === 'admin'){
+            document.getElementById('tot-reg').innerText = fmtBs(tReg); document.getElementById('tot-pto').innerText = fmtBs(tPto); document.getElementById('tot-usd').innerText = fmtUsd(tUsd);
+        } else {
+            const lockMsg = '<div class="mask-text">🔒 Permisos Insuficientes</div>';
+            document.getElementById('tot-reg').innerHTML = lockMsg; document.getElementById('tot-pto').innerHTML = lockMsg; document.getElementById('tot-usd').innerHTML = lockMsg;
+        }
+    };
+
+    window.pegarTodoDesdePortapapeles = async () => {
+        try { const texto = await navigator.clipboard.readText(); procesarTextoBanesco(texto); } 
+        catch(e) { alert("No se pudo acceder al portapapeles. Pegue el texto manualmente."); }
+    };
+
+    function procesarTextoBanesco(textoCompleto) {
+        const inputRef = document.getElementById('bs-ref'); const inputMonto = document.getElementById('bs-monto');
+        inputRef.value = ''; inputMonto.value = '';
+        let refEncontrada = null, montoEncontrado = null;
+        
+        const lineas = textoCompleto.split(/[\r\n]+/).map(l => l.trim()).filter(l => l);
+        if (lineas.length >= 2) {
+            if (/^\d{8,}$/.test(lineas[0])) refEncontrada = lineas[0];
+            if ((lineas[1].includes('.') || lineas[1].includes(',')) && !/^\d{8,}$/.test(lineas[1])) montoEncontrado = lineas[1];
+        }
+        if (!refEncontrada || !montoEncontrado) {
+            const partes = textoCompleto.replace(/[\r\n]+/g, ' ').trim().split(/\s+/).filter(p => p);
+            if (partes.length >= 2) {
+                if (/^\d{8,}$/.test(partes[0]) && !refEncontrada) refEncontrada = partes[0];
+                if ((partes[1].includes('.') || partes[1].includes(',')) && !/^\d{8,}$/.test(partes[1]) && !montoEncontrado) montoEncontrado = partes[partes.length - 1];
+            }
+        }
+        
+        let exitoCont = 0;
+        if (refEncontrada) { inputRef.value = refEncontrada; inputRef.classList.add('pegado-exito'); exitoCont++; setTimeout(()=>inputRef.classList.remove('pegado-exito'), 1000); }
+        if (montoEncontrado) { inputMonto.value = montoEncontrado; inputMonto.classList.add('pegado-exito'); exitoCont++; setTimeout(()=>inputMonto.classList.remove('pegado-exito'), 1000); }
+        
+        if(exitoCont > 0) { if(exitoCont === 2) document.getElementById('btn-bs').focus(); } 
+        else { alert("No se reconoció el formato de Banesco."); }
+    }
+
+    window.abrirBanco = () => { 
+        alert("🏦 Aquí se abriría la ventana emergente con el portal del banco que uses.");
+        
+        // Simular registro en log si estuviéramos en DB real
+        const userEmail = currentUserProfile ? currentUserProfile.email : "demo@demo.com";
+        const ahora = new Date();
+        const fecha = ahora.toLocaleDateString('es-VE');
+        const hora = ahora.toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        
+        if(!db) {
+            localDB.logs_banco.unshift({ usuario: userEmail, fecha: fecha, hora: hora });
+            renderLogsBanco();
+            return;
+        }
+
+        push(ref(db, 'vpm/logs_banco'), {
+            usuario: userEmail,
+            fecha: fecha,
+            hora: hora,
+            timestamp: Date.now()
+        });
+    };
+
+    function renderLogsBanco() {
+        if (currentUserProfile?.role !== 'admin') return;
+        const container = document.getElementById('lista-audit-banco');
+        container.innerHTML = localDB.logs_banco.map(log => `
+            <div class="audit-item">
+                <b>${log.usuario ? log.usuario.split('@')[0] : 'Admin'}</b> abrió banco el ${log.fecha} a las ${log.hora}
+            </div>
+        `).join('');
+    }
+
+    window.exportarPDF = (comentarios = {}) => {
+        if (currentUserProfile.role !== 'admin') return;
+        if (typeof window.jspdf === 'undefined') return alert('Error crítico: La librería PDF no está disponible.');
+        showLoader(true); const { jsPDF } = window.jspdf; const doc = new jsPDF();
+        
+        doc.setFont("helvetica", "bold"); doc.setFontSize(20); doc.setTextColor(30, 41, 59); doc.text("VPM - REPORTE DE TRANSACCIONES", 14, 22);
+        doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(100); 
+        doc.text(`Fecha y Hora de emisión: ${new Date().toLocaleString('es-VE')}`, 14, 30); 
+        doc.text(`Generado por: ${currentUserProfile.email || 'Admin Demo'}`, 14, 35);
+        doc.setDrawColor(226, 232, 240); doc.line(14, 40, 196, 40);
+
+        doc.setFontSize(14); doc.setTextColor(59, 130, 246); doc.text("1. RESUMEN GENERAL POR SEDE", 14, 50);
+        const resumenCuerpo = sedes.map(s => {
+            const rS = localDB.bs.filter(x => x.sede === s).reduce((a,b) => a+b.monto, 0); 
+            const pS = localDB.cuadre.filter(x => x.sede === s && x.tipo === 'Punto').reduce((a,b) => a+b.monto, 0); 
+            const uS = localDB.cuadre.filter(x => x.sede === s && x.tipo === 'Dólares').reduce((a,b) => a+b.monto, 0);
+            const nota = comentarios[s] || '-';
+            return [s, fmtBs(rS), fmtBs(pS), fmtUsd(uS), nota];
+        });
+        
+        doc.autoTable({ 
+            startY: 55, 
+            head: [['Sede / Local', 'Total Refs (Bs)', 'Cierre Punto (Bs)', 'Efectivo ($)', 'Notas / Comentarios']], 
+            body: resumenCuerpo, 
+            theme: 'striped', 
+            headStyles: { fillColor: [59, 130, 246], fontStyle: 'bold' }, 
+            styles: { font: 'helvetica', fontSize: 8, cellPadding: 4 }, 
+            columnStyles: { 0: { fontStyle: 'bold' }, 4: { cellWidth: 50 } } 
+        });
+        
+        let finalY = doc.lastAutoTable.finalY + 15;
+        doc.setFontSize(14); doc.setTextColor(16, 185, 129); doc.text("2. DETALLE DE TRANSACCIONES PAGOMOVIL (BS)", 14, finalY);
+        const transCuerpo = localDB.bs.map(x => [x.sede, x.hora, x.ref, fmtBs(x.monto)]);
+        doc.autoTable({ startY: finalY + 8, head: [['Sede', 'Hora', 'Referencia', 'Monto Bs.']], body: transCuerpo, theme: 'grid', headStyles: { fillColor: [16, 185, 129] }, styles: { fontSize: 8 }, columnStyles: { 3: { halign: 'right', fontStyle: 'bold' } } });
+
+        finalY = doc.lastAutoTable.finalY + 15; doc.setFontSize(14); doc.setTextColor(139, 92, 246); doc.text("3. DETALLE DE CIERRES (PUNTO Y USD)", 14, finalY);
+        const cuadreCuerpo = localDB.cuadre.map(x => [x.sede, x.tipo === 'Punto' ? 'Cierre Punto (Bs)' : 'Efectivo ($)', x.tipo === 'Dólares' ? fmtUsd(x.monto) : fmtBs(x.monto)]);
+        doc.autoTable({ startY: finalY + 8, head: [['Sede', 'Tipo de Cierre', 'Monto']], body: cuadreCuerpo, theme: 'grid', headStyles: { fillColor: [139, 92, 246] }, styles: { fontSize: 8 }, columnStyles: { 2: { halign: 'right', fontStyle: 'bold' } } });
+
+        showLoader(false); window.open(doc.output('bloburl'), '_blank');
+    };
+
+    window.exportarPDFGastos = () => {
+        if (currentUserProfile.role !== 'admin') return;
+        if (typeof window.jspdf === 'undefined') return alert('Error crítico: La librería PDF no está disponible.');
+        showLoader(true); const { jsPDF } = window.jspdf; const doc = new jsPDF();
+        
+        doc.setFont("helvetica", "bold"); doc.setFontSize(20); doc.setTextColor(30, 41, 59); doc.text("VPM - REPORTE DE GASTOS Y NÓMINAS", 14, 22);
+        doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(100); 
+        doc.text(`Fecha y Hora de emisión: ${new Date().toLocaleString('es-VE')}`, 14, 30); 
+        doc.text(`Generado por: ${currentUserProfile.email || 'Admin Demo'}`, 14, 35);
+        doc.setDrawColor(226, 232, 240); doc.line(14, 40, 196, 40);
+
+        doc.setFontSize(14); doc.setTextColor(217, 119, 6); 
+        doc.text("1. RESUMEN DE GASTOS POR SEDE", 14, 50);
+
+        const resumenGastosCuerpo = sedes.map(s => {
+            const gBs = localDB.gastos.filter(x => x.sede === s && x.moneda === 'Bs').reduce((a,b) => a + b.monto, 0);
+            const gUsd = localDB.gastos.filter(x => x.sede === s && x.moneda === 'USD').reduce((a,b) => a + b.monto, 0);
+            return [s, fmtBs(gBs), fmtUsd(gUsd)];
+        });
+
+        doc.autoTable({ 
+            startY: 55, 
+            head: [['Sede / Local', 'Total Gastos (Bs)', 'Total Gastos ($)']], 
+            body: resumenGastosCuerpo, 
+            theme: 'striped', 
+            headStyles: { fillColor: [217, 119, 6], fontStyle: 'bold' },
+            styles: { font: 'helvetica', fontSize: 9, cellPadding: 4 },
+            columnStyles: { 0: { fontStyle: 'bold' } } 
+        });
+
+        let finalY = doc.lastAutoTable.finalY + 15;
+        doc.setFontSize(14); doc.setTextColor(217, 119, 6); 
+        doc.text("2. DETALLE DE OPERACIONES", 14, finalY);
+        
+        const gastosCuerpo = localDB.gastos.map(x => {
+            const formatMonto = x.moneda === 'USD' ? fmtUsd(x.monto) : fmtBs(x.monto);
+            return [x.sede, x.hora, x.tipo, x.concepto, formatMonto];
+        });
+
+        doc.autoTable({ 
+            startY: finalY + 8, 
+            head: [['Sede / Local', 'Hora', 'Tipo', 'Concepto', 'Monto']], 
+            body: gastosCuerpo, 
+            theme: 'grid', 
+            headStyles: { fillColor: [217, 119, 6] }, 
+            styles: { font: 'helvetica', fontSize: 8 }, 
+            columnStyles: { 4: { halign: 'right', fontStyle: 'bold' } } 
+        });
+
+        showLoader(false); window.open(doc.output('bloburl'), '_blank');
+    };
+
+    window.exportarPDFBanco = () => {
+        if (currentUserProfile.role !== 'admin') return;
+        if (typeof window.jspdf === 'undefined') return alert('Error crítico: La librería PDF no está disponible.');
+        showLoader(true); const { jsPDF } = window.jspdf; const doc = new jsPDF();
+        
+        doc.setFont("helvetica", "bold"); doc.setFontSize(20); doc.setTextColor(30, 41, 59); doc.text("VPM - REPORTE ACTIVIDAD DE BANCO", 14, 22);
+        doc.setFont("helvetica", "normal"); doc.setFontSize(10); doc.setTextColor(100); 
+        doc.text(`Fecha y Hora de emisión: ${new Date().toLocaleString('es-VE')}`, 14, 30); 
+        doc.text(`Generado por: ${currentUserProfile.email || 'Admin Demo'}`, 14, 35);
+        doc.setDrawColor(226, 232, 240); doc.line(14, 40, 196, 40);
+
+        doc.setFontSize(14); doc.setTextColor(2, 132, 199); 
+        doc.text("REGISTRO DE ACCESOS AL BANCO", 14, 50);
+
+        const logsCuerpo = localDB.logs_banco.map(log => {
+            return [log.fecha, log.hora, log.usuario];
+        });
+
+        doc.autoTable({ 
+            startY: 55, 
+            head: [['Fecha', 'Hora', 'Usuario (Correo)']], 
+            body: logsCuerpo, 
+            theme: 'grid', 
+            headStyles: { fillColor: [2, 132, 199] }, 
+            styles: { font: 'helvetica', fontSize: 9 }
+        });
+
+        showLoader(false); window.open(doc.output('bloburl'), '_blank');
+    };
+</script>
+</body>
+</html>

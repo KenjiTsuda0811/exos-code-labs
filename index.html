@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exos Code Labs</title>
+    <style>
+        /* Estilos y efectos visuales preservados */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            animation: glow 2s ease-in-out infinite alternate, float 3s ease-in-out infinite;
+            text-shadow: 0 0 10px #00d2ff, 0 0 20px #00d2ff;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 0 0 10px #00d2ff, 0 0 20px #00d2ff; }
+            to { text-shadow: 0 0 20px #9d50bb, 0 0 40px #9d50bb; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .btn-comenzar {
+            margin-top: 50px;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            color: white;
+            background: transparent;
+            border: 2px solid #00d2ff;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-transform: uppercase;
+            box-shadow: 0 0 10px #00d2ff;
+        }
+
+        .btn-comenzar:hover {
+            background: #00d2ff;
+            color: #0f0c29;
+            box-shadow: 0 0 30px #00d2ff;
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Bienvenido a Exos Code Labs</h1>
+
+    <a href="index2.html" class="btn-comenzar">Comenzemos</a>
+
+</body>
+</html>
