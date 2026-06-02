@@ -3,116 +3,530 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exos Code Labs | Mission Control</title>
+    <title>Exos Code Labs Studio | Mission Control</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    
     <style>
-        /* Estructura y Estética de Alta Precisión */
         :root {
-            --nasa-blue: #0b3d91;
-            --nasa-white: #ffffff;
-            --accent-red: #fc3d21;
-            --terminal-green: #00ff41;
+            --bg-space: #030308;
+            --nasa-blue: #00e5ff;
+            --nasa-glow: rgba(0, 229, 255, 0.2);
+            --matrix-green: #39ff14;
+            --text-muted: #6c7a9c;
+            --panel-bg: rgba(6, 11, 25, 0.7);
+            --border-color: rgba(0, 229, 255, 0.15);
         }
 
-        body, html {
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-space);
+            color: #ffffff;
+            font-family: 'JetBrains Mono', monospace;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
+                radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
+                linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
+            background-size: 550px 550px, 350px 350px, 40px 40px, 40px 40px;
+            background-position: 0 0, 40px 60px, 0 0, 0 0;
+            animation: backgroundAmbient 120s linear infinite;
+        }
+
+        @keyframes backgroundAmbient {
+            from { background-position: 0 0, 40px 60px, 0 0, 0 0; }
+            to { background-position: 550px 550px, 390px 610px, 0 0, 0 0; }
+        }
+
+        /* Línea de escaneo láser tipo Radar */
+        .scanline {
             width: 100%;
-            height: 100%;
-            background-color: #050505;
-            color: var(--nasa-white);
-            font-family: 'Courier New', Courier, monospace;
-            overflow: hidden;
+            height: 4px;
+            background: linear-gradient(to bottom, rgba(0,229,255,0), var(--nasa-blue), rgba(0,229,255,0));
+            position: fixed;
+            animation: scan 6s linear infinite;
+            z-index: 9999;
+            opacity: 0.7;
+            pointer-events: none;
+        }
+
+        @keyframes scan {
+            0% { top: -5%; }
+            100% { top: 105%; }
+        }
+
+        /* Contenedor Principal */
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            min-height: 100vh;
+        }
+
+        /* Encabezado NASA */
+        header {
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--nasa-blue);
+            padding-bottom: 1rem;
+            box-shadow: 0 4px 20px var(--nasa-glow);
+        }
+
+        .logo-area {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.8rem;
+            letter-spacing: 4px;
+            color: #fff;
+            text-shadow: 0 0 10px var(--nasa-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-area span {
+            color: var(--nasa-blue);
+        }
+
+        .system-status {
+            font-size: 0.8rem;
+            text-align: right;
+            color: var(--text-muted);
+        }
+
+        .status-pulse {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: var(--matrix-green);
+            border-radius: 50%;
+            margin-right: 8px;
+            box-shadow: 0 0 10px var(--matrix-green);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.9); opacity: 0.6; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.9); opacity: 0.6; }
+        }
+
+        /* Sección Hero / Manifiesto */
+        .main-telemetry {
+            display: grid;
+            grid-template-columns: 1.51fr 1fr;
+            gap: 2rem;
             align-items: center;
         }
 
-        /* Efecto de ruido de monitor */
-        body::before {
-            content: " ";
+        @media (max-width: 968px) {
+            .main-telemetry { grid-template-columns: 1fr; }
+        }
+
+        .manifesto-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 3rem;
+            border-radius: 4px;
+            position: relative;
+            backdrop-filter: blur(10px);
+            box-shadow: inset 0 0 20px rgba(0,229,255,0.05);
+        }
+
+        .manifesto-panel::before {
+            content: "CORE_MISSION_MANIFESTO";
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
-                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            background-size: 100% 4px, 3px 100%;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        .container {
-            max-width: 800px;
-            text-align: center;
-            padding: 50px;
-            border: 2px solid var(--nasa-blue);
-            background: rgba(11, 61, 145, 0.05);
-            animation: fadeIn 2s ease-in-out;
-        }
-
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        h1 {
-            font-size: 2.5rem;
-            text-transform: uppercase;
-            letter-spacing: 10px;
+            top: -10px;
+            left: 20px;
+            background: var(--bg-space);
+            padding: 0 10px;
+            font-size: 0.75rem;
             color: var(--nasa-blue);
-            text-shadow: 2px 2px 0px var(--nasa-white);
-            margin-bottom: 20px;
+            letter-spacing: 2px;
         }
 
-        .mission-statement {
+        .manifesto-panel h2 {
+            font-family: 'Orbitron', sans-serif;
             font-size: 1.2rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            letter-spacing: 3px;
+        }
+
+        /* El texto mejorado por IA profesional */
+        .epic-text {
+            font-size: 1.4rem;
             line-height: 1.8;
-            margin-bottom: 40px;
-            border-left: 3px solid var(--accent-red);
-            padding-left: 20px;
-            text-align: left;
+            color: #e2e8f0;
+            font-weight: 300;
         }
 
-        .btn-control {
-            display: inline-block;
-            padding: 15px 40px;
-            background: var(--nasa-blue);
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
+        .epic-text strong {
+            color: #fff;
+            font-weight: 700;
+            border-bottom: 1px dashed var(--nasa-blue);
+        }
+
+        .highlight-blue {
+            color: var(--nasa-blue);
+            text-shadow: 0 0 8px var(--nasa-glow);
+        }
+
+        /* Animación del 0% de Error */
+        .error-rate-box {
+            margin-top: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 1.5rem;
+        }
+
+        .counter-container {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--matrix-green);
+            text-shadow: 0 0 15px rgba(57, 255, 20, 0.4);
+            display: flex;
+            align-items: baseline;
+        }
+
+        .counter-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            letter-spacing: 1px;
             text-transform: uppercase;
-            transition: all 0.3s;
-            border: 1px solid white;
+            max-width: 200px;
         }
 
-        .btn-control:hover {
-            background: var(--accent-red);
-            letter-spacing: 5px;
+        /* Panel de Control Lateral (Efectos de Código Vivo) */
+        .terminal-panel {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            height: 100%;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        /* Animación de escaneo */
-        .scanline {
-            width: 100%; height: 2px;
-            background: var(--terminal-green);
+        .terminal-header {
+            background: #111;
+            padding: 0.5rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .terminal-buttons {
+            display: flex;
+            gap: 6px;
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #333;
+        }
+        .dot.red { background: #ff5f56; }
+        .dot.yellow { background: #ffbd2e; }
+        .dot.green { background: #27c93f; }
+
+        .terminal-body {
+            padding: 1.5rem;
+            font-size: 0.85rem;
+            color: var(--matrix-green);
+            flex-grow: 1;
+            line-height: 1.6;
+            overflow-y: hidden;
+        }
+
+        /* Grid de Módulos Operacionales */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .service-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            padding: 2rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card:hover {
+            border-color: var(--nasa-blue);
+            transform: translateY(-5px);
+            box-shadow: 0 5px 25px rgba(0, 229, 255, 0.15);
+        }
+
+        .service-card::after {
+            content: '';
             position: absolute;
-            top: 0;
-            animation: scan 4s linear infinite;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--nasa-blue), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
         }
 
-        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+        .service-card:hover::after {
+            transform: translateX(100%);
+        }
+
+        .service-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: var(--nasa-blue);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .service-card p {
+            font-size: 0.85rem;
+            color: #a0aec0;
+            line-height: 1.6;
+        }
+
+        /* Botón de Acción */
+        .cta-container {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .nasa-btn {
+            background: transparent;
+            border: 1px solid var(--nasa-blue);
+            color: #fff;
+            padding: 1rem 2.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
+        }
+
+        .nasa-btn:hover {
+            background: var(--nasa-blue);
+            color: var(--bg-space);
+            box-shadow: 0 0 30px var(--nasa-blue);
+            font-weight: bold;
+        }
+
+        /* Efecto de Glitch controlado */
+        .glitch-text {
+            position: relative;
+        }
+        
+        .glitch-text::before {
+            content: attr(data-text);
+            position: absolute;
+            left: -2px;
+            text-shadow: 1px 0 blue;
+            top: 0;
+            color: white;
+            background: var(--bg-space);
+            overflow: hidden;
+            clip: rect(0, 900px, 0, 0); 
+            animation: noise-blur 3s infinite linear alternate-reverse;
+        }
+
+        @keyframes noise-blur {
+            0% { clip: rect(12px, 9999px, 66px, 0); }
+            50% { clip: rect(85px, 9999px, 5px, 0); }
+            100% { clip: rect(34px, 9999px, 95px, 0); }
+        }
     </style>
 </head>
 <body>
 
     <div class="scanline"></div>
 
-    <div class="container">
-        <h1>EXOS CODE LABS STUDIO</h1>
-        <div class="mission-statement">
-            <p>En Exos Code Labs no solo desarrollamos, <strong>ejecutamos misiones de alta precisión</strong>. Transformamos tu visión en arquitectura digital de vanguardia. Diseñamos sistemas, plataformas web y aplicaciones con una infraestructura impecable.</p>
-            <p>Nuestro estándar de error es 0%. Tu negocio no merece menos que la excelencia técnica absoluta. <strong>Exos Code Labs: El código donde tu negocio alcanza su órbita final.</strong></p>
-        </div>
+    <div class="dashboard">
         
-        <a href="index2.html" class="btn-control">INICIAR SECUENCIA</a>
+        <header>
+            <div class="logo-area">
+                EXOS <span>CODE LABS</span> STUDIO
+            </div>
+            <div class="system-status">
+                <span class="status-pulse"></span>SYSTEM STATUS: ONLINE <br>
+                <span style="color: var(--nasa-blue); font-size: 0.7rem;">CORE: v4.0.26 // OPTIMIZATION LEVEL: MAX</span>
+            </div>
+        </header>
+
+        <section class="main-telemetry">
+            
+            <div class="manifesto-panel">
+                <h2>// DECLARACIÓN OPERACIONAL</h2>
+                <p class="epic-text">
+                    En <span class="highlight-blue">Exos Code Labs Studio</span>, rompemos el estándar de la masa. Diseñamos e implementamos ecosistemas web de alta fidelidad: <strong>limpios, milimétricamente estructurados</strong> y calibrados bajo tu absoluto criterio.
+                    <br><br>
+                    No somos un nodo más en el montón. Nos dedicamos a la ingeniería pura: transformamos tu visión en sistemas complejos, plataformas web avanzadas y aplicaciones de alto rendimiento automatizadas para llevar tus ventas a la perfección.
+                </p>
+
+                <div class="error-rate-box">
+                    <div class="counter-container">
+                        <span id="error-digit">0.0</span>%
+                    </div>
+                    <div class="counter-label">
+                        Margen de error tolerado<br>
+                        <span style="color: var(--matrix-green);">[Arquitectura Absoluta]</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="terminal-panel">
+                <div class="terminal-header">
+                    <div class="terminal-buttons">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <span>diagnostics_kernel.sh</span>
+                </div>
+                <div class="terminal-body" id="terminal-logs">
+                    </div>
+            </div>
+
+        </section>
+
+        <section class="services-grid">
+            
+            <div class="service-card">
+                <h3>01. SISTEMAS <span class="highlight-blue">[SYS]</span></h3>
+                <p>Arquitecturas robustas a medida encargadas de centralizar, procesar y automatizar las operaciones críticas de tu empresa sin fisuras.</p>
+            </div>
+
+            <div class="service-card">
+                <h3>02. PLATAFORMAS WEB <span class="highlight-blue">[WEB]</span></h3>
+                <p>Desarrollo front-end y back-end ultra limpio. Código optimizado para velocidad de carga instantánea e interfaces con experiencia de usuario intuitiva.</p>
+            </div>
+
+            <div class="service-card">
+                <h3>03. APLICACIONES <span class="highlight-blue">[APP]</span></h3>
+                <p>Software móvil y nativo diseñado para integrarse perfectamente a cualquier ecosistema tecnológico, manteniendo estabilidad bajo alta demanda.</p>
+            </div>
+
+            <div class="service-card">
+                <h3>04. EMBUDOS DE VENTA <span class="highlight-blue">[ROI]</span></h3>
+                <p>Ingeniería aplicada a la conversión. Diseñamos el trayecto de tus usuarios reduciendo la fricción para asegurar cierres perfectos.</p>
+            </div>
+
+        </section>
+
+        <div class="cta-container">
+            <button class="nasa-btn" onclick="reiniciarDiagnostico()">
+                INICIAR PROYECTO // DEPLOY CORE
+            </button>
+            <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 1rem; letter-spacing: 2px;">
+                "EN EXOS CODE LABS TU NEGOCIO ESTÁ EN EL MEJOR CÓDIGO."
+            </p>
+        </div>
+
     </div>
 
     <script>
-        console.log("Exos Code Labs: Mission Initiated - Accuracy Level: 100%");
+        // Simulador de consola/terminal de la NASA
+        const logs = [
+            "[OK] Inicializando protocolo Exos Code Labs...",
+            "[INFO] Escaneando estructura de datos del cliente...",
+            "[OK] Arquitectura limpia detectada.",
+            "[LOAD] Compilando componentes de UI sin fricción...",
+            "[SUCCESS] Interfaz de usuario adaptada al 100% de criterio.",
+            "[WARN] Buscando margen de error en el mercado común...",
+            "[SYSTEM] Margen de error detectado en la competencia: 14.8%",
+            "[ACTION] Ejecutando algoritmo de optimización Exos...",
+            "[REDUCING] Reduciendo fallos... 8%... 4%... 1%...",
+            "[CRITICAL] Margen de error redefinido exitosamente a: 0.0%",
+            "[SUCCESS] Tu negocio ha sido inyectado en el mejor código.",
+            "[READY] Sistema listo para el despliegue global."
+        ];
+
+        const terminalBody = document.getElementById("terminal-logs");
+
+        let i = 0;
+        function typeLogs() {
+            if (i < logs.length) {
+                const p = document.createElement("p");
+                p.textContent = logs[i];
+                
+                // Dar colores según el tipo de log
+                if(logs[i].includes("[OK]") || logs[i].includes("[SUCCESS]")) p.style.color = "var(--matrix-green)";
+                if(logs[i].includes("[WARN]") || logs[i].includes("[CRITICAL]")) p.style.color = "#ffbd2e";
+                if(logs[i].includes("[REDUCING]")) p.style.color = "var(--nasa-blue)";
+
+                terminalBody.appendChild(p);
+                i++;
+                
+                // Auto scroll hacia abajo en la terminal
+                terminalBody.scrollTop = terminalBody.scrollHeight;
+                setTimeout(typeLogs, 1200);
+            }
+        }
+
+        // Animación interactiva para el contador de error
+        function animateErrorRate() {
+            const obj = document.getElementById("error-digit");
+            let startTimestamp = null;
+            const duration = 2500; // 2.5 segundos de bajada
+            const startValue = 12.5;
+            const endValue = 0.0;
+            
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const currentValue = (startValue - (progress * startValue)).toFixed(1);
+                obj.innerHTML = currentValue;
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                } else {
+                    obj.innerHTML = "0.0";
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        function reiniciarDiagnostico() {
+            terminalBody.innerHTML = "";
+            i = 0;
+            typeLogs();
+            animateErrorRate();
+        }
+
+        // Ejecutar funciones al cargar la página
+        window.onload = () => {
+            typeLogs();
+            animateErrorRate();
+        };
     </script>
 </body>
 </html>
