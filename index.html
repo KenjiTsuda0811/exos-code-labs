@@ -3,108 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exos Code Labs | Technology Nexus</title>
+    <title>Exos Code Labs | Mission Control</title>
     <style>
-        /* Base de Estructura Profesional */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        /* Estructura y Estética de Alta Precisión */
+        :root {
+            --nasa-blue: #0b3d91;
+            --nasa-white: #ffffff;
+            --accent-red: #fc3d21;
+            --terminal-green: #00ff41;
+        }
+
         body, html {
+            margin: 0;
+            padding: 0;
             width: 100%;
             height: 100%;
             background-color: #050505;
-            color: #ffffff;
+            color: var(--nasa-white);
             font-family: 'Courier New', Courier, monospace;
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
         }
 
-        /* Efecto de fondo tecnológico (Destellos) */
-        .stars {
+        /* Efecto de ruido de monitor */
+        body::before {
+            content: " ";
             position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            background: radial-gradient(circle at center, #1b2735 0%, #090a0f 100%);
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+            z-index: 10;
         }
 
-        .sparkle {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            opacity: 0;
-            animation: twinkle 4s infinite;
-        }
-
-        @keyframes twinkle {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 1; }
-        }
-
-        /* Contenido Principal */
         .container {
-            z-index: 1;
+            max-width: 800px;
             text-align: center;
-            border: 1px solid rgba(0, 242, 255, 0.3);
-            padding: 40px;
-            background: rgba(10, 10, 10, 0.8);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 20px rgba(0, 242, 255, 0.1);
+            padding: 50px;
+            border: 2px solid var(--nasa-blue);
+            background: rgba(11, 61, 145, 0.05);
+            animation: fadeIn 2s ease-in-out;
         }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         h1 {
-            font-size: 3rem;
-            margin-bottom: 30px;
+            font-size: 2.5rem;
             text-transform: uppercase;
-            letter-spacing: 8px;
-            background: linear-gradient(to right, #00d2ff, #9d50bb);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            letter-spacing: 10px;
+            color: var(--nasa-blue);
+            text-shadow: 2px 2px 0px var(--nasa-white);
+            margin-bottom: 20px;
         }
 
-        .btn-comenzar {
+        .mission-statement {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            margin-bottom: 40px;
+            border-left: 3px solid var(--accent-red);
+            padding-left: 20px;
+            text-align: left;
+        }
+
+        .btn-control {
             display: inline-block;
-            padding: 15px 50px;
-            color: #00d2ff;
-            border: 1px solid #00d2ff;
+            padding: 15px 40px;
+            background: var(--nasa-blue);
+            color: white;
             text-decoration: none;
-            text-transform: uppercase;
             font-weight: bold;
-            letter-spacing: 2px;
-            transition: all 0.4s ease;
-            position: relative;
-            overflow: hidden;
+            text-transform: uppercase;
+            transition: all 0.3s;
+            border: 1px solid white;
         }
 
-        .btn-comenzar:hover {
-            background: #00d2ff;
-            color: #050505;
-            box-shadow: 0 0 25px #00d2ff;
+        .btn-control:hover {
+            background: var(--accent-red);
+            letter-spacing: 5px;
         }
+
+        /* Animación de escaneo */
+        .scanline {
+            width: 100%; height: 2px;
+            background: var(--terminal-green);
+            position: absolute;
+            top: 0;
+            animation: scan 4s linear infinite;
+        }
+
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
     </style>
 </head>
 <body>
 
-    <div class="stars" id="sparkle-container"></div>
+    <div class="scanline"></div>
 
     <div class="container">
-        <h1>Bienvenido a Exos Code Labs</h1>
-        <a href="index2.html" class="btn-comenzar">Comenzemos</a>
+        <h1>EXOS CODE LABS STUDIO</h1>
+        <div class="mission-statement">
+            <p>En Exos Code Labs no solo desarrollamos, <strong>ejecutamos misiones de alta precisión</strong>. Transformamos tu visión en arquitectura digital de vanguardia. Diseñamos sistemas, plataformas web y aplicaciones con una infraestructura impecable.</p>
+            <p>Nuestro estándar de error es 0%. Tu negocio no merece menos que la excelencia técnica absoluta. <strong>Exos Code Labs: El código donde tu negocio alcanza su órbita final.</strong></p>
+        </div>
+        
+        <a href="index2.html" class="btn-control">INICIAR SECUENCIA</a>
     </div>
 
     <script>
-        // Generador dinámico de destellos tecnológicos
-        const container = document.getElementById('sparkle-container');
-        for (let i = 0; i < 50; i++) {
-            const sparkle = document.createElement('div');
-            sparkle.className = 'sparkle';
-            sparkle.style.width = Math.random() * 3 + 'px';
-            sparkle.style.height = sparkle.style.width;
-            sparkle.style.top = Math.random() * 100 + '%';
-            sparkle.style.left = Math.random() * 100 + '%';
-            sparkle.style.animationDelay = Math.random() * 4 + 's';
-            container.appendChild(sparkle);
-        }
+        console.log("Exos Code Labs: Mission Initiated - Accuracy Level: 100%");
     </script>
 </body>
 </html>
