@@ -10,13 +10,13 @@
     
     <style>
         :root {
-            --bg-space: #030308;
+            --bg-space: #020205;
             --nasa-blue: #00e5ff;
             --nasa-glow: rgba(0, 229, 255, 0.2);
             --matrix-green: #39ff14;
-            --text-muted: #6c7a9c;
-            --panel-bg: rgba(6, 11, 25, 0.7);
-            --border-color: rgba(0, 229, 255, 0.15);
+            --text-muted: #52627a;
+            --panel-bg: rgba(5, 9, 20, 0.85);
+            --border-color: rgba(0, 229, 255, 0.2);
         }
 
         * {
@@ -30,30 +30,24 @@
             color: #ffffff;
             font-family: 'JetBrains Mono', monospace;
             overflow-x: hidden;
+            min-height: 100vh;
             background-image: 
-                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 40px),
                 radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 30px),
-                linear-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 229, 255, 0.03) 1px, transparent 1px);
-            background-size: 550px 550px, 350px 350px, 40px 40px, 40px 40px;
-            background-position: 0 0, 40px 60px, 0 0, 0 0;
-            animation: backgroundAmbient 120s linear infinite;
+                linear-gradient(rgba(0, 229, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 229, 255, 0.02) 1px, transparent 1px);
+            background-size: 250px 250px, 30px 30px, 30px 30px;
+            background-position: 0 0, 0 0, 0 0;
         }
 
-        @keyframes backgroundAmbient {
-            from { background-position: 0 0, 40px 60px, 0 0, 0 0; }
-            to { background-position: 550px 550px, 390px 610px, 0 0, 0 0; }
-        }
-
-        /* Línea de escaneo láser tipo Radar */
+        /* Línea de escaneo láser Radar */
         .scanline {
             width: 100%;
-            height: 4px;
+            height: 3px;
             background: linear-gradient(to bottom, rgba(0,229,255,0), var(--nasa-blue), rgba(0,229,255,0));
             position: fixed;
-            animation: scan 6s linear infinite;
+            animation: scan 8s linear infinite;
             z-index: 9999;
-            opacity: 0.7;
+            opacity: 0.5;
             pointer-events: none;
         }
 
@@ -62,112 +56,94 @@
             100% { top: 105%; }
         }
 
-        /* Contenedor Principal */
+        /* Contenedor Principal Optimizado y Compacto */
         .dashboard {
-            max-width: 1400px;
+            max-width: 1300px;
             margin: 0 auto;
-            padding: 2rem;
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
+            padding: 1rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
             min-height: 100vh;
+            justify-content: space-between;
         }
 
-        /* Encabezado NASA */
+        /* Encabezado NASA Sutil */
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid var(--nasa-blue);
-            padding-bottom: 1rem;
-            box-shadow: 0 4px 20px var(--nasa-glow);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.8rem;
         }
 
         .logo-area {
             font-family: 'Orbitron', sans-serif;
             font-weight: 900;
-            font-size: 1.8rem;
-            letter-spacing: 4px;
-            color: #fff;
-            text-shadow: 0 0 10px var(--nasa-blue);
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            font-size: 1.4rem;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px var(--nasa-glow);
         }
 
-        .logo-area span {
-            color: var(--nasa-blue);
-        }
+        .logo-area span { color: var(--nasa-blue); }
 
         .system-status {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             text-align: right;
             color: var(--text-muted);
+            line-height: 1.3;
         }
 
         .status-pulse {
             display: inline-block;
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
             background-color: var(--matrix-green);
             border-radius: 50%;
-            margin-right: 8px;
-            box-shadow: 0 0 10px var(--matrix-green);
-            animation: pulse 1.5s infinite;
+            margin-right: 6px;
+            box-shadow: 0 0 8px var(--matrix-green);
+            animation: pulse 2s infinite;
         }
 
         @keyframes pulse {
-            0% { transform: scale(0.9); opacity: 0.6; }
-            50% { transform: scale(1.2); opacity: 1; }
-            100% { transform: scale(0.9); opacity: 0.6; }
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; transform: scale(1.1); }
         }
 
-        /* Sección Hero / Manifiesto */
+        /* Sección Telemetría Principal */
         .main-telemetry {
             display: grid;
-            grid-template-columns: 1.51fr 1fr;
-            gap: 2rem;
-            align-items: center;
-        }
-
-        @media (max-width: 968px) {
-            .main-telemetry { grid-template-columns: 1fr; }
+            grid-template-columns: 1.2fr 1fr;
+            gap: 1.2rem;
         }
 
         .manifesto-panel {
             background: var(--panel-bg);
             border: 1px solid var(--border-color);
-            padding: 3rem;
+            padding: 1.8rem;
             border-radius: 4px;
             position: relative;
-            backdrop-filter: blur(10px);
-            box-shadow: inset 0 0 20px rgba(0,229,255,0.05);
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
 
         .manifesto-panel::before {
-            content: "CORE_MISSION_MANIFESTO";
+            content: "CORE_MISSION_MANIFESTO // v4.0";
             position: absolute;
-            top: -10px;
-            left: 20px;
+            top: -9px;
+            left: 15px;
             background: var(--bg-space);
-            padding: 0 10px;
-            font-size: 0.75rem;
+            padding: 0 8px;
+            font-size: 0.7rem;
             color: var(--nasa-blue);
             letter-spacing: 2px;
         }
 
-        .manifesto-panel h2 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            margin-bottom: 1.5rem;
-            letter-spacing: 3px;
-        }
-
-        /* El texto mejorado por IA profesional */
         .epic-text {
-            font-size: 1.4rem;
-            line-height: 1.8;
+            font-size: 1.15rem;
+            line-height: 1.6;
             color: #e2e8f0;
             font-weight: 300;
         }
@@ -180,190 +156,188 @@
 
         .highlight-blue {
             color: var(--nasa-blue);
-            text-shadow: 0 0 8px var(--nasa-glow);
+            text-shadow: 0 0 8px rgba(0, 229, 255, 0.3);
         }
 
-        /* Animación del 0% de Error */
+        /* Bloque de Tasa de Error */
         .error-rate-box {
-            margin-top: 2rem;
+            margin-top: 1.2rem;
             display: flex;
             align-items: center;
-            gap: 1.5rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            padding-top: 1.5rem;
+            gap: 1.2rem;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 1rem;
         }
 
         .counter-container {
             font-family: 'Orbitron', sans-serif;
-            font-size: 3.5rem;
+            font-size: 2.8rem;
             font-weight: 900;
             color: var(--matrix-green);
-            text-shadow: 0 0 15px rgba(57, 255, 20, 0.4);
-            display: flex;
-            align-items: baseline;
+            text-shadow: 0 0 12px rgba(57, 255, 20, 0.3);
         }
 
         .counter-label {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--text-muted);
             letter-spacing: 1px;
             text-transform: uppercase;
-            max-width: 200px;
+            line-height: 1.4;
         }
 
-        /* Panel de Control Lateral (Efectos de Código Vivo) */
+        /* Terminal diagnostics_kernel.sh */
         .terminal-panel {
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(2, 3, 7, 0.95);
+            border: 1px solid var(--border-color);
             border-radius: 4px;
             height: 100%;
-            min-height: 350px;
+            min-height: 260px;
+            max-height: 320px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
+            box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.6);
         }
 
         .terminal-header {
-            background: #111;
+            background: #090e1a;
             padding: 0.5rem 1rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.75rem;
+            border-bottom: 1px solid rgba(0, 229, 255, 0.15);
+            font-size: 0.7rem;
             color: var(--text-muted);
+            letter-spacing: 1px;
         }
 
-        .terminal-buttons {
-            display: flex;
-            gap: 6px;
-        }
-
-        .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #333;
-        }
-        .dot.red { background: #ff5f56; }
-        .dot.yellow { background: #ffbd2e; }
-        .dot.green { background: #27c93f; }
+        .terminal-buttons { display: flex; gap: 5px; }
+        .dot { width: 7px; height: 7px; border-radius: 50%; background: #222; }
+        .dot.red { background: #ef4444; }
+        .dot.yellow { background: #eab308; }
+        .dot.green { background: #22c55e; }
 
         .terminal-body {
-            padding: 1.5rem;
-            font-size: 0.85rem;
-            color: var(--matrix-green);
+            padding: 1rem;
+            font-size: 0.8rem;
+            color: #cbd5e1;
             flex-grow: 1;
-            line-height: 1.6;
-            overflow-y: hidden;
+            line-height: 1.5;
+            overflow-y: auto;
         }
+        .terminal-line { margin-bottom: 0.4rem; word-break: break-all;}
 
-        /* Grid de Módulos Operacionales */
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin-top: 1rem;
-        }
-
-        .service-card {
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            padding: 2rem;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .service-card:hover {
-            border-color: var(--nasa-blue);
-            transform: translateY(-5px);
-            box-shadow: 0 5px 25px rgba(0, 229, 255, 0.15);
-        }
-
-        .service-card::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--nasa-blue), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s ease;
-        }
-
-        .service-card:hover::after {
-            transform: translateX(100%);
-        }
-
-        .service-card h3 {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-            color: var(--nasa-blue);
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .service-card p {
-            font-size: 0.85rem;
-            color: #a0aec0;
-            line-height: 1.6;
-        }
-
-        /* Botón de Acción */
+        /* Botón de Navegación "A Primera Vista" */
         .cta-container {
             text-align: center;
-            margin-top: 2rem;
+            margin: 0.5rem 0;
+            z-index: 10;
         }
 
         .nasa-btn {
             background: transparent;
             border: 1px solid var(--nasa-blue);
             color: #fff;
-            padding: 1rem 2.5rem;
+            padding: 0.9rem 2.2rem;
             font-family: 'Orbitron', sans-serif;
-            font-size: 1rem;
+            font-size: 0.95rem;
             letter-spacing: 2px;
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
-            transition: all 0.4s ease;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
             box-shadow: 0 0 15px rgba(0, 229, 255, 0.1);
+            border-radius: 2px;
         }
 
         .nasa-btn:hover {
             background: var(--nasa-blue);
             color: var(--bg-space);
-            box-shadow: 0 0 30px var(--nasa-blue);
-            font-weight: bold;
+            box-shadow: 0 0 25px var(--nasa-blue);
+            font-weight: 700;
         }
 
-        /* Efecto de Glitch controlado */
-        .glitch-text {
-            position: relative;
+        /* Grid Secundario de Capacidades */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
         }
+
+        .service-card {
+            background: rgba(5, 9, 20, 0.6);
+            border: 1px solid rgba(0, 229, 255, 0.1);
+            padding: 1rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .service-card:hover {
+            border-color: var(--nasa-blue);
+            background: var(--panel-bg);
+        }
+
+        .service-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            margin-bottom: 0.4rem;
+            color: var(--nasa-blue);
+            letter-spacing: 1px;
+        }
+
+        .service-card p {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            line-height: 1.4;
+        }
+
+        /* =======================================================
+           MEDIA QUERIES (OPTIMIZACIÓN PARA TABLETS Y MÓVILES)
+        ======================================================= */
         
-        .glitch-text::before {
-            content: attr(data-text);
-            position: absolute;
-            left: -2px;
-            text-shadow: 1px 0 blue;
-            top: 0;
-            color: white;
-            background: var(--bg-space);
-            overflow: hidden;
-            clip: rect(0, 900px, 0, 0); 
-            animation: noise-blur 3s infinite linear alternate-reverse;
+        /* Tablets (Medianas y pantallas pequeñas de laptops) */
+        @media (max-width: 1024px) {
+            .main-telemetry {
+                grid-template-columns: 1fr; /* Stacks el manifiesto y la terminal */
+            }
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr); /* 2 columnas en lugar de 4 */
+            }
+            .terminal-panel {
+                min-height: 200px;
+            }
         }
 
-        @keyframes noise-blur {
-            0% { clip: rect(12px, 9999px, 66px, 0); }
-            50% { clip: rect(85px, 9999px, 5px, 0); }
-            100% { clip: rect(34px, 9999px, 95px, 0); }
+        /* Teléfonos Móviles (Pantallas de smartphones) */
+        @media (max-width: 768px) {
+            .dashboard {
+                padding: 0.8rem 1rem;
+                gap: 1rem;
+            }
+            header {
+                flex-direction: column;
+                gap: 0.5rem;
+                text-align: center;
+                align-items: center;
+            }
+            .system-status { text-align: center; }
+            .logo-area { font-size: 1.2rem; }
+            
+            .manifesto-panel { padding: 1.2rem; }
+            .epic-text { font-size: 0.95rem; line-height: 1.5; }
+            
+            .counter-container { font-size: 2.2rem; }
+            .counter-label { font-size: 0.7rem; }
+            
+            .nasa-btn {
+                width: 100%;
+                padding: 0.8rem 1rem;
+                font-size: 0.85rem;
+            }
+            .services-grid {
+                grid-template-columns: 1fr; /* Una sola columna en móvil */
+            }
+            .service-card { padding: 0.8rem; }
         }
     </style>
 </head>
@@ -378,28 +352,27 @@
                 EXOS <span>CODE LABS</span> STUDIO
             </div>
             <div class="system-status">
-                <span class="status-pulse"></span>SYSTEM STATUS: ONLINE <br>
-                <span style="color: var(--nasa-blue); font-size: 0.7rem;">CORE: v4.0.26 // OPTIMIZATION LEVEL: MAX</span>
+                <span class="status-pulse"></span>CORE DIAGNOSTICS: ONLINE <br>
+                <span style="color: var(--nasa-blue); font-size: 0.65rem; letter-spacing: 1px;">OPTIMIZATION ENGINE v4.0</span>
             </div>
         </header>
 
         <section class="main-telemetry">
             
             <div class="manifesto-panel">
-                <h2>// DECLARACIÓN OPERACIONAL</h2>
                 <p class="epic-text">
-                    En <span class="highlight-blue">Exos Code Labs Studio</span>, rompemos el estándar de la masa. Diseñamos e implementamos ecosistemas web de alta fidelidad: <strong>limpios, milimétricamente estructurados</strong> y calibrados bajo tu absoluto criterio.
+                    En <span class="highlight-blue">Exos Code Labs Studio</span> rompemos la monotonía del molde común. Desarrollamos infraestructuras web impecables: <strong>limpias, milimétricamente estructuradas</strong> y adaptadas a tu absoluto criterio.
                     <br><br>
-                    No somos un nodo más en el montón. Nos dedicamos a la ingeniería pura: transformamos tu visión en sistemas complejos, plataformas web avanzadas y aplicaciones de alto rendimiento automatizadas para llevar tus ventas a la perfección.
+                    No somos una variable más en el montón. Nos dedicamos a la ingeniería de software pura: creamos tu sistema, tu aplicación y tus plataformas de ventas con un nivel de optimización radical, llevando el margen de error a cero absoluto.
                 </p>
 
                 <div class="error-rate-box">
                     <div class="counter-container">
-                        <span id="error-digit">0.0</span>%
+                        <span id="error-digit">15.0</span>%
                     </div>
                     <div class="counter-label">
-                        Margen de error tolerado<br>
-                        <span style="color: var(--matrix-green);">[Arquitectura Absoluta]</span>
+                        Margen de Error Operacional<br>
+                        <span style="color: var(--matrix-green); font-weight: bold;">[ESTABILIDAD CRÍTICA 0.0%]</span>
                     </div>
                 </div>
             </div>
@@ -419,86 +392,91 @@
 
         </section>
 
-        <section class="services-grid">
-            
-            <div class="service-card">
-                <h3>01. SISTEMAS <span class="highlight-blue">[SYS]</span></h3>
-                <p>Arquitecturas robustas a medida encargadas de centralizar, procesar y automatizar las operaciones críticas de tu empresa sin fisuras.</p>
-            </div>
-
-            <div class="service-card">
-                <h3>02. PLATAFORMAS WEB <span class="highlight-blue">[WEB]</span></h3>
-                <p>Desarrollo front-end y back-end ultra limpio. Código optimizado para velocidad de carga instantánea e interfaces con experiencia de usuario intuitiva.</p>
-            </div>
-
-            <div class="service-card">
-                <h3>03. APLICACIONES <span class="highlight-blue">[APP]</span></h3>
-                <p>Software móvil y nativo diseñado para integrarse perfectamente a cualquier ecosistema tecnológico, manteniendo estabilidad bajo alta demanda.</p>
-            </div>
-
-            <div class="service-card">
-                <h3>04. EMBUDOS DE VENTA <span class="highlight-blue">[ROI]</span></h3>
-                <p>Ingeniería aplicada a la conversión. Diseñamos el trayecto de tus usuarios reduciendo la fricción para asegurar cierres perfectos.</p>
-            </div>
-
-        </section>
-
         <div class="cta-container">
-            <button class="nasa-btn" onclick="reiniciarDiagnostico()">
-                INICIAR PROYECTO // DEPLOY CORE
-            </button>
-            <p style="font-size: 0.7rem; color: var(--text-muted); margin-top: 1rem; letter-spacing: 2px;">
-                "EN EXOS CODE LABS TU NEGOCIO ESTÁ EN EL MEJOR CÓDIGO."
+            <a href="index2.html" class="nasa-btn">
+                VER PÁGINA PRINCIPAL // ENTER INTERFACE
+            </a>
+            <p style="font-size: 0.65rem; color: var(--text-muted); margin-top: 0.5rem; letter-spacing: 2px; text-transform: uppercase;">
+                "En Exos Code Labs tu negocio está en el mejor código"
             </p>
         </div>
+
+        <section class="services-grid">
+            <div class="service-card">
+                <h3>[01] SISTEMAS</h3>
+                <p>Automatización de procesos lógicos de alta fidelidad.</p>
+            </div>
+            <div class="service-card">
+                <h3>[02] ECO-WEB</h3>
+                <p>Estructuras semánticas limpias optimizadas para SEO y carga.</p>
+            </div>
+            <div class="service-card">
+                <h3>[03] APPS</h3>
+                <p>Despliegues móviles nativos de alta disponibilidad.</p>
+            </div>
+            <div class="service-card">
+                <h3>[04] VENTAS</h3>
+                <p>Arquitectura de conversión sin fricción mercantil.</p>
+            </div>
+        </section>
 
     </div>
 
     <script>
-        // Simulador de consola/terminal de la NASA
+        // Array de logs con sus funciones del sistema definidas limpiamente
         const logs = [
-            "[OK] Inicializando protocolo Exos Code Labs...",
-            "[INFO] Escaneando estructura de datos del cliente...",
-            "[OK] Arquitectura limpia detectada.",
-            "[LOAD] Compilando componentes de UI sin fricción...",
-            "[SUCCESS] Interfaz de usuario adaptada al 100% de criterio.",
-            "[WARN] Buscando margen de error en el mercado común...",
-            "[SYSTEM] Margen de error detectado en la competencia: 14.8%",
-            "[ACTION] Ejecutando algoritmo de optimización Exos...",
-            "[REDUCING] Reduciendo fallos... 8%... 4%... 1%...",
-            "[CRITICAL] Margen de error redefinido exitosamente a: 0.0%",
-            "[SUCCESS] Tu negocio ha sido inyectado en el mejor código.",
-            "[READY] Sistema listo para el despliegue global."
+            { text: ">> INICIALIZANDO PROTOCOLO: Exos_Core_Labs...", type: "load" },
+            { text: "[FUNCIÓN: ESCANEO] Analizando dependencias de código externo...", type: "info" },
+            { text: "[STATUS] Removiendo redundancias y código sucio del montón.", type: "success" },
+            { text: "[FUNCIÓN: COMPILACIÓN] Estructurando interfaz adaptativa a tu gusto...", type: "load" },
+            { text: "[STATUS] Rejillas responsivas calibradas para Laptop/Tablet/Móvil.", type: "success" },
+            { text: "[FUNCIÓN: DIAGNÓSTICO] Midiendo tasa de error de la competencia...", type: "info" },
+            { text: "[AVISO] Margen de error estándar del mercado: 15.0%", type: "warn" },
+            { text: "[FUNCIÓN: OPTIMIZACIÓN] Ejecutando algoritmo de depuración Exos...", type: "load" },
+            { text: ">> Reduciendo fallos a nivel de kernel de manera progresiva...", type: "info" },
+            { text: "[CRÍTICO] Margen de error purgado exitosamente a 0.0%.", type: "critical" },
+            { text: "[SISTEMA COMPLETO] Tu negocio está alojado en el mejor código.", type: "success" }
         ];
 
         const terminalBody = document.getElementById("terminal-logs");
+        let lineIndex = 0;
 
-        let i = 0;
-        function typeLogs() {
-            if (i < logs.length) {
-                const p = document.createElement("p");
-                p.textContent = logs[i];
+        // Función que escribe los logs carácter por carácter (Typewriter Effect)
+        function typeLine() {
+            if (lineIndex < logs.length) {
+                const currentLine = logs[lineIndex];
+                const p = document.createElement("div");
+                p.className = "terminal-line";
                 
-                // Dar colores según el tipo de log
-                if(logs[i].includes("[OK]") || logs[i].includes("[SUCCESS]")) p.style.color = "var(--matrix-green)";
-                if(logs[i].includes("[WARN]") || logs[i].includes("[CRITICAL]")) p.style.color = "#ffbd2e";
-                if(logs[i].includes("[REDUCING]")) p.style.color = "var(--nasa-blue)";
-
+                // Aplicar estilos cromáticos según la función del log
+                if (currentLine.type === "success") p.style.color = "var(--matrix-green)";
+                if (currentLine.type === "warn" || currentLine.type === "critical") p.style.color = "#ffbd2e";
+                if (currentLine.type === "load") p.style.color = "var(--nasa-blue)";
+                
                 terminalBody.appendChild(p);
-                i++;
-                
-                // Auto scroll hacia abajo en la terminal
                 terminalBody.scrollTop = terminalBody.scrollHeight;
-                setTimeout(typeLogs, 1200);
+
+                let charIndex = 0;
+                function typeChar() {
+                    if (charIndex < currentLine.text.length) {
+                        p.textContent += currentLine.text.charAt(charIndex);
+                        charIndex++;
+                        setTimeout(typeChar, 18); // Velocidad de escritura por letra (muy fluido)
+                    } else {
+                        lineIndex++;
+                        setTimeout(typeLine, 450); // Pausa estratégica entre líneas
+                    }
+                }
+                typeChar();
             }
         }
 
-        // Animación interactiva para el contador de error
+        // Animación de bajada del porcentaje de error ralentizada (5000ms / 5 segundos de tensión)
         function animateErrorRate() {
             const obj = document.getElementById("error-digit");
             let startTimestamp = null;
-            const duration = 2500; // 2.5 segundos de bajada
-            const startValue = 12.5;
+            const duration = 5000; // Ralentizado intencionalmente a 5 segundos
+            const startValue = 15.0;
             const endValue = 0.0;
             
             const step = (timestamp) => {
@@ -515,16 +493,9 @@
             window.requestAnimationFrame(step);
         }
 
-        function reiniciarDiagnostico() {
-            terminalBody.innerHTML = "";
-            i = 0;
-            typeLogs();
-            animateErrorRate();
-        }
-
-        // Ejecutar funciones al cargar la página
+        // Inicialización automática al cargar el DOM
         window.onload = () => {
-            typeLogs();
+            typeLine();
             animateErrorRate();
         };
     </script>
