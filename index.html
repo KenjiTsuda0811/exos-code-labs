@@ -3,582 +3,677 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exos Code Labs Studio</title>
+    <meta name="description" content="Exos Code Labs Studio - Ingeniería de Software para Ecosistemas Escalables">
+    <title>Exos Code Labs | Ecosistemas Escalables</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+    
     <style>
-        /* =========================================
-           Preservación Estética y Visual
-           Las reglas CSS a continuación se mantienen 
-           intactas según la estructura original.
-           ========================================= */
+        /* Variables Globales y Tema Dark/Neón */
         :root {
-            --bg-color: #0d1117;
-            --text-color: #c9d1d9;
-            --accent-color: #58a6ff;
-            --card-bg: #161b22;
-            --border-color: #30363d;
-            --success-color: #2ea043;
-            --btn-hover: #1f6feb;
+            --bg-dark: #0a0a0f;
+            --bg-darker: #050507;
+            --neon-cyan: #00f0ff;
+            --neon-green: #00ff66;
+            --text-light: #e0e0e0;
+            --text-white: #ffffff;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
-        [data-theme="light"] {
-            --bg-color: #ffffff;
-            --text-color: #24292f;
-            --accent-color: #0969da;
-            --card-bg: #f6f8fa;
-            --border-color: #d0d7de;
-            --success-color: #2da44e;
-            --btn-hover: #035fc7;
-        }
-
+        /* Reset y Base */
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: background-color 0.3s, color 0.3s;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
             line-height: 1.6;
         }
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 5%;
-            border-bottom: 1px solid var(--border-color);
-            background-color: var(--bg-color);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+        h1, h2, h3, h4 {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-white);
         }
 
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-weight: bold;
-            font-size: 1.2rem;
-            letter-spacing: 1px;
-        }
-
-        .theme-toggle {
-            background: none;
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-        }
-
-        .hero {
-            text-align: center;
-            padding: 80px 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-            color: var(--accent-color);
-        }
-
-        .hero p {
-            font-size: 1.1rem;
-            margin-bottom: 40px;
-            color: var(--text-color);
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 12px 24px;
-            border-radius: 6px;
+        a {
             text-decoration: none;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: background-color 0.2s;
-            margin: 10px;
+            color: inherit;
         }
 
-        .btn-primary {
-            background-color: var(--success-color);
-            color: #ffffff;
+        /* Utilidades de Diseño Moderno */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: var(--glass-shadow);
+            transition: all 0.4s ease;
         }
 
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
         .section-title {
             text-align: center;
-            margin: 60px 0 40px;
-            font-size: 2rem;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(90deg, var(--text-white), var(--neon-cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            padding: 0 5%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card-img-placeholder {
+        /* Navegación */
+        nav {
+            position: fixed;
+            top: 0;
             width: 100%;
-            height: 150px;
-            background-color: var(--border-color);
-            border-radius: 4px;
-            margin-bottom: 15px;
+            padding: 20px 0;
+            z-index: 1000;
+            background: rgba(10, 10, 15, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-white);
+            letter-spacing: 1px;
+        }
+
+        .logo span {
+            color: var(--neon-cyan);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+        }
+
+        /* Hero Section */
+        #hero {
+            height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.9rem;
-            color: var(--text-color);
-            object-fit: cover;
-            object-position: center;
+            text-align: center;
+            position: relative;
+            background: radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.1) 0%, var(--bg-dark) 60%);
         }
 
-        .badge {
-            background-color: var(--border-color);
-            padding: 4px 8px;
-            border-radius: 12px;
+        .hero-content {
+            max-width: 800px;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            animation: slideUp 1s ease-out forwards;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 40px;
+            color: #a0a0a0;
+            animation: slideUp 1s ease-out 0.2s forwards;
+            opacity: 0;
+        }
+
+        .cta-group {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            animation: slideUp 1s ease-out 0.4s forwards;
+            opacity: 0;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: transparent;
+            color: var(--neon-cyan);
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: var(--neon-cyan);
+            color: var(--bg-dark);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.6);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--glass-bg);
+            color: var(--text-white);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--text-white);
+            transform: translateY(-2px);
+        }
+
+        /* Grid de Precios */
+        #pricing {
+            padding: 100px 0;
+            background-color: var(--bg-darker);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            align-items: center;
+        }
+
+        .pricing-card {
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .pricing-card.highlight {
+            border: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.15);
+            transform: scale(1.05);
+        }
+
+        .pricing-card.highlight:hover {
+            transform: scale(1.05) translateY(-10px);
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.3);
+        }
+
+        .price-badge {
+            position: absolute;
+            top: -15px;
+            right: 20px;
+            background: var(--neon-cyan);
+            color: var(--bg-dark);
+            padding: 5px 15px;
+            border-radius: 20px;
             font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .plan-name {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .plan-price {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--neon-cyan);
+            margin-bottom: 20px;
+        }
+
+        .plan-price.green {
+            color: var(--neon-green);
+        }
+
+        /* Portafolio */
+        #portfolio {
+            padding: 100px 0;
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .portfolio-card {
+            height: 250px;
+            display: flex;
+            align-items: flex-end;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            /* Efecto 3D Base */
+            transform-style: preserve-3d;
+            perspective: 1000px;
+        }
+
+        .portfolio-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to top, rgba(10,10,15,0.9), rgba(10,10,15,0.1));
+            z-index: 1;
+        }
+
+        .portfolio-card:hover {
+            transform: translateY(-10px) rotateX(2deg) rotateY(-2deg);
+            box-shadow: -10px 20px 30px rgba(0,0,0,0.5), 0 0 20px rgba(0, 240, 255, 0.2);
+            border-color: var(--neon-cyan);
+        }
+
+        .portfolio-info {
+            position: relative;
+            z-index: 2;
+            transform: translateZ(30px); /* Elemento sobresaliente en 3D */
+        }
+
+        .portfolio-title {
+            font-size: 1.5rem;
             margin-bottom: 10px;
-            display: inline-block;
+            color: var(--neon-cyan);
         }
 
-        .price {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--accent-color);
-            margin: 15px 0;
+        .portfolio-desc {
+            font-size: 0.9rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
         }
 
-        .team-section {
-            padding: 60px 5%;
+        .portfolio-card:hover .portfolio-desc {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Equipo */
+        #team {
+            padding: 100px 0;
+            background-color: var(--bg-darker);
+        }
+
+        .team-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .team-member {
+            width: 300px;
+            padding: 40px 20px;
             text-align: center;
         }
 
-        .contact-form-container {
+        .team-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            border: 2px solid var(--glass-border);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            color: var(--neon-cyan);
+        }
+
+        .team-name {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .team-role {
+            color: var(--neon-green);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Contacto y Generación de Leads */
+        #contact {
+            padding: 100px 0;
+        }
+
+        .contact-form {
             max-width: 600px;
-            margin: 60px auto;
-            background-color: var(--card-bg);
-            padding: 30px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
+            margin: 0 auto;
+            padding: 40px;
         }
 
         .form-group {
-            margin-bottom: 20px;
-            text-align: left;
+            margin-bottom: 25px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 600;
+            color: var(--text-light);
         }
 
         .form-control {
             width: 100%;
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid var(--border-color);
-            background-color: var(--bg-color);
-            color: var(--text-color);
-        }
-
-        .god-mode-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background-color: #000;
-            color: #0f0;
-            border: 1px solid #0f0;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: monospace;
-            z-index: 1000;
-        }
-
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.8);
-            z-index: 2000;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            padding: 30px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--glass-border);
             border-radius: 8px;
-            width: 90%;
-            max-width: 800px;
-            max-height: 90vh;
-            overflow-y: auto;
+            color: var(--text-white);
+            font-family: 'Inter', sans-serif;
+            transition: all 0.3s;
         }
 
-        .close-modal {
-            float: right;
-            cursor: pointer;
-            font-weight: bold;
+        .form-control:focus {
+            outline: none;
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
         }
 
-        table {
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn-submit {
             width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+            background: var(--neon-cyan);
+            color: var(--bg-dark);
+            border: none;
+            font-size: 1.1rem;
         }
 
-        th, td {
-            border: 1px solid var(--border-color);
-            padding: 10px;
-            text-align: left;
+        .btn-submit:hover {
+            background: var(--text-white);
+            color: var(--bg-dark);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
         }
 
         footer {
             text-align: center;
-            padding: 40px;
-            border-top: 1px solid var(--border-color);
-            margin-top: 60px;
+            padding: 30px 0;
+            border-top: 1px solid var(--glass-border);
+            background: var(--bg-darker);
             font-size: 0.9rem;
+            color: #888;
+        }
+
+        /* Animaciones */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .nav-links { display: none; } /* En un entorno real se añadiría un menú hamburguesa */
+            .pricing-card.highlight { transform: scale(1); }
+            .pricing-card.highlight:hover { transform: translateY(-5px); }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo-container">
-            <span style="font-size: 1.5rem;">⚙️</span>
-            EXOS CODE LABS
+    <nav>
+        <div class="container nav-container">
+            <div class="logo">EXOS<span>.</span>LABS</div>
+            <div class="nav-links">
+                <a href="#hero">Inicio</a>
+                <a href="#pricing">Catálogo</a>
+                <a href="#portfolio">Portafolio</a>
+                <a href="#team">Equipo</a>
+                <a href="#contact">Contacto</a>
+            </div>
         </div>
-        <button class="theme-toggle" id="themeBtn" onclick="toggleTheme()">☀️ MODO CLARO</button>
+    </nav>
+
+    <header id="hero">
+        <div class="container hero-content">
+            <h1 class="hero-title">Ingeniería de Software para Ecosistemas Escalables</h1>
+            <p class="hero-subtitle">Construimos arquitecturas digitales robustas, rápidas y de alto impacto visual diseñadas para el crecimiento corporativo y ventas.</p>
+            <div class="cta-group">
+                <a href="#contact" class="btn btn-primary">Iniciar Requerimiento</a>
+                <a href="#pricing" class="btn btn-secondary">Ver Catálogo</a>
+            </div>
+        </div>
     </header>
 
-    <main>
-        <section class="hero">
-            <h1>Ingeniería de Software para Ecosistemas Escalables</h1>
-            <p>Desarrollamos soluciones técnicas de alto impacto. Desde plataformas E-Commerce hasta infraestructuras de servidores dedicados con propiedad absoluta de código.</p>
-            <a href="#cotizar" class="btn btn-primary">INICIAR REQUERIMIENTO</a>
-            <a href="#cotizar" class="btn btn-outline">INICIAR BRIEFING WEB</a>
-        </section>
+    <section id="pricing">
+        <div class="container">
+            <h2 class="section-title reveal">Nuestras Soluciones</h2>
+            <div class="pricing-grid reveal">
+                
+                <div class="pricing-card glass-panel">
+                    <h3 class="plan-name">Landing Page Corporativa</h3>
+                    <div class="plan-price">$180</div>
+                    <p>Presencia digital impecable y de alta conversión.</p>
+                </div>
 
-        <h2 class="section-title">Nuestra Experiencia<br><span style="font-size: 1.2rem; font-weight: normal; color: var(--border-color);">Casos de Éxito e Infraestructura</span></h2>
-        
-        <div class="grid-container">
-            <div class="card">
-                <div class="card-img-placeholder">Fanática Beauty Ecosystem</div>
-                <span class="badge">E-Commerce Full Stack</span>
-                <h3>Fanática Beauty C.A.</h3>
-                <p>Desarrollo de ecosistema de ventas con gestión de inventario, pasarela de pago semiautomatizada y base de datos de productos integrados.</p>
-            </div>
-            <div class="card">
-                <div class="card-img-placeholder">VPM System Dashboard</div>
-                <span class="badge">Logística Financiera</span>
-                <h3>Sistema VPM</h3>
-                <p>Arquitectura lógica para validación de transacciones multimonedas, cálculo de tasas en tiempo real y operativa de control diario.</p>
-            </div>
-            <div class="card">
-                <div class="card-img-placeholder">Sincronía ERP Interface</div>
-                <span class="badge">SaaS & Administración</span>
-                <h3>Sincronía ERP</h3>
-                <p>Plataforma integral para facturación, gestión de inventario, módulos de cuentas por cobrar/pagar y control de niveles de permisos de usuario.</p>
-            </div>
-            <div class="card">
-                <div class="card-img-placeholder">Fanaticapp Mobile View</div>
-                <span class="badge">App Móvil Nativa</span>
-                <h3>Fanaticapp</h3>
-                <p>Aplicación nativa con escaneo de códigos de barra, catálogo digital de productos e integración en tiempo real con bases de datos Firebase.</p>
+                <div class="pricing-card glass-panel highlight">
+                    <div class="price-badge">MÁS POPULAR</div>
+                    <h3 class="plan-name">E-Commerce Full Stack</h3>
+                    <div class="plan-price">$450</div>
+                    <p>Plataforma de ventas integral, inventario y pasarelas.</p>
+                </div>
+
+                <div class="pricing-card glass-panel">
+                    <h3 class="plan-name">App Híbrida</h3>
+                    <div class="plan-price green">$1200</div>
+                    <p>Desarrollo móvil escalable para iOS y Android.</p>
+                </div>
+
+                <div class="pricing-card glass-panel">
+                    <h3 class="plan-name">Infraestructura VPM</h3>
+                    <div class="plan-price">$75</div>
+                    <p>Optimización y arquitectura de servidores.</p>
+                </div>
+
+                <div class="pricing-card glass-panel">
+                    <h3 class="plan-name">Enterprise Server</h3>
+                    <div class="plan-price green">$800</div>
+                    <p>Despliegue de servidores corporativos de alta demanda.</p>
+                </div>
+
             </div>
         </div>
+    </section>
 
-        <h2 class="section-title">Inversión Tecnológica<br><span style="font-size: 1.2rem; font-weight: normal; color: var(--border-color);">Catálogo de Soluciones</span></h2>
+    <section id="portfolio">
+        <div class="container">
+            <h2 class="section-title reveal">Casos de Éxito</h2>
+            <div class="portfolio-grid reveal">
+                
+                <div class="portfolio-card glass-panel">
+                    <div class="portfolio-info">
+                        <h3 class="portfolio-title">Fanática Beauty</h3>
+                        <p class="portfolio-desc">E-Commerce optimizado para cosméticos con gestión de inventario en tiempo real.</p>
+                    </div>
+                </div>
 
-        <div class="grid-container">
-            <div class="card">
-                <h3>Landing Page Corporativa</h3>
-                <div class="price">$180</div>
-                <p>Presencia digital rápida y profesional.</p>
-                <ul style="margin: 15px 0 15px 20px;">
-                    <li>Diseño One-Page responsivo</li>
-                    <li>Integración WhatsApp/Redes</li>
-                    <li>Código nativo ultrarrápido</li>
-                </ul>
-                <button class="btn btn-outline" style="margin-top: auto;" onclick="selectPlan('Landing Page Corporativa')">SELECCIONAR PLAN</button>
-            </div>
-            <div class="card" style="border-color: var(--accent-color);">
-                <span class="badge" style="background-color: var(--accent-color); color: #fff;">Más Solicitado</span>
-                <h3>E-Commerce Full Stack</h3>
-                <div class="price">$450</div>
-                <p>Gestión de ventas y catálogo completo.</p>
-                <ul style="margin: 15px 0 15px 20px;">
-                    <li>Carrito de Compras y Facturación</li>
-                    <li>Panel de Administración Privado</li>
-                    <li>Dominio y Hosting incluidos</li>
-                </ul>
-                <button class="btn btn-primary" style="margin-top: auto;" onclick="selectPlan('E-Commerce Full Stack')">SELECCIONAR PLAN</button>
-            </div>
-            <div class="card">
-                <h3>App Híbrida</h3>
-                <div class="price">$1200</div>
-                <p>Tu negocio en WEB, ANDROID Y IOS</p>
-                <ul style="margin: 15px 0 15px 20px;">
-                    <li>Código base único (Flutter)</li>
-                    <li>Conexión a Base de Datos (Firebase)</li>
-                    <li>Escaneo de Códigos de Barra/Cámara</li>
-                </ul>
-                <button class="btn btn-outline" style="margin-top: auto;" onclick="selectPlan('App Híbrida')">SELECCIONAR PLAN</button>
-            </div>
-            <div class="card">
-                <h3>Infraestructura VPM</h3>
-                <div class="price">$75</div>
-                <p>Sistema lógico para transacciones.</p>
-                <ul style="margin: 15px 0 15px 20px;">
-                    <li>Multimonedas y Cálculo de Tasas</li>
-                    <li>Cruce de caja diario rápido</li>
-                    <li>Arquitectura ligera</li>
-                </ul>
-                <button class="btn btn-outline" style="margin-top: auto;" onclick="selectPlan('Infraestructura VPM')">SELECCIONAR PLAN</button>
-            </div>
-            <div class="card">
-                <h3>Enterprise Server</h3>
-                <div class="price">$800</div>
-                <p>Servidores remotos dedicados.</p>
-                <ul style="margin: 15px 0 15px 20px;">
-                    <li>Windows Server Configurado</li>
-                    <li>Control Multisucursal Remoto</li>
-                    <li>Integración a2softway asegurada</li>
-                </ul>
-                <button class="btn btn-outline" style="margin-top: auto;" onclick="selectPlan('Enterprise Server')">SELECCIONAR PLAN</button>
+                <div class="portfolio-card glass-panel">
+                    <div class="portfolio-info">
+                        <h3 class="portfolio-title">Sistema VPM</h3>
+                        <p class="portfolio-desc">Arquitectura interna de bases de datos para monitoreo de métricas empresariales.</p>
+                    </div>
+                </div>
+
+                <div class="portfolio-card glass-panel">
+                    <div class="portfolio-info">
+                        <h3 class="portfolio-title">Sincronía ERP</h3>
+                        <p class="portfolio-desc">Sistema monolítico para la gestión unificada de recursos corporativos.</p>
+                    </div>
+                </div>
+
+                <div class="portfolio-card glass-panel">
+                    <div class="portfolio-info">
+                        <h3 class="portfolio-title">Fanaticapp</h3>
+                        <p class="portfolio-desc">Aplicación móvil híbrida para fidelización de clientes y compras in-app.</p>
+                    </div>
+                </div>
+
             </div>
         </div>
+    </section>
 
-        <section class="team-section">
-            <h2>Agencia de Ingeniería Web</h2>
-            <div style="display: flex; justify-content: center; gap: 40px; margin-top: 20px; flex-wrap: wrap;">
-                <div>
-                    <strong>Lead Architect</strong><br>
-                    Samuel A.<br>
-                    <a href="https://wa.me/584127336450" style="color: var(--accent-color);">+58 412-7336450</a>
+    <section id="team">
+        <div class="container">
+            <h2 class="section-title reveal">Liderazgo Técnico</h2>
+            <div class="team-grid reveal">
+                
+                <div class="team-member glass-panel">
+                    <div class="team-avatar">👨‍💻</div>
+                    <h3 class="team-name">Samuel A.</h3>
+                    <div class="team-role">Lead Architect</div>
                 </div>
-                <div>
-                    <strong>Systems Engineer</strong><br>
-                    José R.<br>
-                    <a href="https://wa.me/584120690493" style="color: var(--accent-color);">+58 412-0690493</a>
+
+                <div class="team-member glass-panel">
+                    <div class="team-avatar">⚙️</div>
+                    <h3 class="team-name">José R.</h3>
+                    <div class="team-role">Systems Engineer</div>
                 </div>
+
             </div>
-            <div style="margin-top: 40px;">
-                <p style="color: var(--border-color); font-size: 0.9rem;">Ecosistemas Activos: Fanática Beauty | Sincronía ERP | VPM Logistics</p>
-            </div>
-        </section>
+        </div>
+    </section>
 
-        <section id="cotizar" class="contact-form-container">
-            <h2 style="text-align: center; margin-bottom: 10px;">Cotiza tu Proyecto</h2>
-            <p style="text-align: center; margin-bottom: 30px; color: var(--border-color);">¿Quieres una página web y no sabes por dónde empezar?</p>
-            
-            <button class="btn btn-outline" style="width: 100%; margin: 0 0 20px 0;">ABRIR ASISTENTE DE CREACIÓN WEB</button>
+    <section id="contact">
+        <div class="container">
+            <h2 class="section-title reveal">Inicia tu Proyecto</h2>
+            <form id="leadForm" class="contact-form glass-panel reveal">
+                
+                <div class="form-group">
+                    <label for="clienteNombre">Nombre o Empresa</label>
+                    <input type="text" id="clienteNombre" class="form-control" placeholder="Ej. Empresa C.A." required>
+                </div>
 
-            <form id="briefingForm" onsubmit="enviarWhatsApp(event)">
                 <div class="form-group">
-                    <label>Nombre de la Empresa o Proyecto *</label>
-                    <input type="text" id="clienteNombre" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label>WhatsApp de Contacto *</label>
-                    <input type="tel" id="clienteTlf" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label>Servicio de Interés *</label>
+                    <label for="clienteServicio">Servicio de Interés</label>
                     <select id="clienteServicio" class="form-control" required>
-                        <option value="">Selecciona una solución de ingeniería...</option>
-                        <option value="Landing Page Corporativa">Landing Page Corporativa - $180</option>
-                        <option value="E-Commerce Full Stack">E-Commerce Full Stack - $450</option>
-                        <option value="App Híbrida">App Híbrida - $1200</option>
-                        <option value="Infraestructura VPM">Infraestructura VPM - $75</option>
-                        <option value="Enterprise Server">Enterprise Server - $800</option>
-                        <option value="Otro">Otro Requerimiento Técnico a Medida</option>
+                        <option value="" disabled selected>Selecciona un servicio...</option>
+                        <option value="Landing Page ($180)">Landing Page Corporativa</option>
+                        <option value="E-Commerce ($450)">E-Commerce Full Stack</option>
+                        <option value="App Híbrida ($1200)">App Híbrida</option>
+                        <option value="Infraestructura VPM ($75)">Infraestructura VPM</option>
+                        <option value="Enterprise Server ($800)">Enterprise Server</option>
+                        <option value="Otro">Otro requerimiento a medida</option>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label>Especificaciones Técnicas *</label>
-                    <textarea id="clienteDetalles" class="form-control" rows="4" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%; margin: 0;">ENVIAR A WHATSAPP</button>
-            </form>
-        </section>
 
-    </main>
+                <div class="form-group">
+                    <label for="clienteDetalles">Detalles del Requerimiento</label>
+                    <textarea id="clienteDetalles" class="form-control" placeholder="Describe brevemente lo que necesitas construir..." required></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-submit">Enviar Vía WhatsApp</button>
+            </form>
+        </div>
+    </section>
 
     <footer>
-        EXOS CODE LABS STUDIO. ENGINEERING FUTURE SOLUTIONS.
+        <div class="container">
+            <p>&copy; 2026 Exos Code Labs Studio. Ingeniería de Software para Ecosistemas Escalables. Todos los derechos reservados.</p>
+        </div>
     </footer>
 
-    <!-- Botón Exos God Mode -->
-    <button class="god-mode-btn" onclick="openGodMode()">EXOS GOD MODE</button>
-
-    <!-- Modal Exos God Mode -->
-    <div id="godModeModal" class="modal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeGodMode()">X CERRAR</span>
-            <h2>Autenticación Exos</h2>
-            
-            <div id="loginSection" style="margin-top: 20px;">
-                <input type="password" id="adminPass" class="form-control" placeholder="Clave de Sistema" style="margin-bottom: 10px;">
-                <button class="btn btn-primary" onclick="verificarGodMode()">INGRESAR AL SISTEMA</button>
-                <p id="authError" style="color: red; display: none; margin-top: 10px;">Acceso denegado.</p>
-            </div>
-
-            <div id="adminPanel" style="display: none; margin-top: 20px;">
-                <h3>📥 Órdenes de Clientes</h3>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Fecha</th>
-                            <th>Cliente</th>
-                            <th>Tlf</th>
-                            <th>Servicio</th>
-                            <th>Detalles</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tablaOrdenes">
-                        <tr><td colspan="5" style="text-align: center;">Cargando datos...</td></tr>
-                    </tbody>
-                </table>
-
-                <h3 style="margin-top: 40px;">⚙️ Editor de Precios y Planes</h3>
-                <p style="font-size: 0.9rem; margin-bottom: 15px;">Edita tu catálogo. Los cambios se reflejarán instantáneamente en la web.</p>
-                <button class="btn btn-primary">💾 GUARDAR EN BASE DE DATOS</button>
-                <button class="btn btn-outline" onclick="cerrarSesionGodMode()" style="float: right;">CERRAR SESIÓN</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        /* =========================================
-           Preservación de Lógica de Negocio
-           ========================================= */
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. Animaciones de Intersección (Scroll Reveal)
+            const revealElements = document.querySelectorAll('.reveal');
+            
+            const revealOptions = {
+                threshold: 0.15,
+                rootMargin: "0px 0px -50px 0px"
+            };
 
-        // Lógica de Preservación de Tema
-        function toggleTheme() {
-            const body = document.body;
-            const btn = document.getElementById('themeBtn');
-            if (body.getAttribute('data-theme') === 'light') {
-                body.removeAttribute('data-theme');
-                btn.textContent = '☀️ MODO CLARO';
-                localStorage.setItem('exosTheme', 'dark');
-            } else {
-                body.setAttribute('data-theme', 'light');
-                btn.textContent = '🌙 MODO OSCURO';
-                localStorage.setItem('exosTheme', 'light');
-            }
-        }
+            const revealOnScroll = new IntersectionObserver(function(entries, observer) {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) return;
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                });
+            }, revealOptions);
 
-        // Recuperar tema al cargar
-        window.onload = () => {
-            if (localStorage.getItem('exosTheme') === 'light') {
-                document.body.setAttribute('data-theme', 'light');
-                document.getElementById('themeBtn').textContent = '🌙 MODO OSCURO';
-            }
-        };
+            revealElements.forEach(el => revealOnScroll.observe(el));
 
-        // Lógica de Selección Rápida en el Formulario
-        function selectPlan(planValue) {
-            const selectElement = document.getElementById('clienteServicio');
-            for(let i = 0; i < selectElement.options.length; i++) {
-                if(selectElement.options[i].value === planValue) {
-                    selectElement.selectedIndex = i;
-                    break;
-                }
-            }
-            document.getElementById('cotizar').scrollIntoView({ behavior: 'smooth' });
-        }
+            // 2. Procesamiento de Formulario hacia WhatsApp API
+            const leadForm = document.getElementById('leadForm');
+            
+            leadForm.addEventListener('submit', function(e) {
+                e.preventDefault();
 
-        // Formateo y Envío Seguro a WhatsApp
-        function enviarWhatsApp(e) {
-            e.preventDefault();
-            const nombre = document.getElementById('clienteNombre').value.trim();
-            const tlf = document.getElementById('clienteTlf').value.trim();
-            const servicio = document.getElementById('clienteServicio').value;
-            const detalles = document.getElementById('clienteDetalles').value.trim();
+                // Captura de datos
+                const nombre = document.getElementById('clienteNombre').value.trim();
+                const servicio = document.getElementById('clienteServicio').value;
+                const detalles = document.getElementById('clienteDetalles').value.trim();
 
-            const texto = `*NUEVO REQUERIMIENTO EXOS* %0A%0A` + 
-                          `*Cliente:* ${nombre}%0A` +
-                          `*WhatsApp:* ${tlf}%0A` +
-                          `*Servicio:* ${servicio}%0A` +
-                          `*Detalles Técnicos:* ${detalles}%0A%0A` +
-                          `_Enviado desde el Briefing Web de Exos Code Labs_`;
+                // Número destino (Reemplaza los X por el número de ventas de la agencia con código de país)
+                const telefonoWhatsApp = "58XXXXXXXXX"; 
 
-            window.open(`https://wa.me/584127336450?text=${texto}`, '_blank');
-        }
+                // Estructura del mensaje de Lead
+                const mensajeConstruido = `*🚀 NUEVO LEAD - EXOS CODE LABS*\n\n` +
+                                          `*Cliente / Empresa:* ${nombre}\n` +
+                                          `*Servicio Solicitado:* ${servicio}\n\n` +
+                                          `*Detalles del Proyecto:*\n_${detalles}_\n\n` +
+                                          `_Mensaje generado automáticamente desde la plataforma web._`;
 
-        // Lógica Interna de EXOS GOD MODE
-        function openGodMode() {
-            document.getElementById('godModeModal').style.display = 'flex';
-        }
+                // Codificación de URL para la API
+                const urlApi = `https://wa.me/${telefonoWhatsApp}?text=${encodeURIComponent(mensajeConstruido)}`;
 
-        function closeGodMode() {
-            document.getElementById('godModeModal').style.display = 'none';
-            document.getElementById('adminPass').value = '';
-            document.getElementById('authError').style.display = 'none';
-        }
-
-        function verificarGodMode() {
-            const pass = document.getElementById('adminPass').value;
-            if(pass === 'admin123') { 
-                document.getElementById('loginSection').style.display = 'none';
-                document.getElementById('adminPanel').style.display = 'block';
-                cargarDatosFicticios();
-            } else {
-                document.getElementById('authError').style.display = 'block';
-            }
-        }
-
-        function cerrarSesionGodMode() {
-            document.getElementById('loginSection').style.display = 'block';
-            document.getElementById('adminPanel').style.display = 'none';
-            document.getElementById('adminPass').value = '';
-        }
-
-        function cargarDatosFicticios() {
-            setTimeout(() => {
-                document.getElementById('tablaOrdenes').innerHTML = `
-                    <tr>
-                        <td>2026-06-23</td>
-                        <td>Demo Beauty</td>
-                        <td>+584120000000</td>
-                        <td>E-Commerce</td>
-                        <td>Integración de pasarela</td>
-                    </tr>
-                `;
-            }, 1000);
-        }
+                // Redirección limpia en nueva pestaña
+                window.open(urlApi, '_blank');
+            });
+        });
     </script>
 </body>
 </html>
