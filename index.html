@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exos Code Labs Studio</title>
     <style>
-        /* Preservación Estética y Visual - Base actual intacta */
+        /* =========================================
+           Preservación Estética y Visual
+           Las reglas CSS a continuación se mantienen 
+           intactas según la estructura original.
+           ========================================= */
         :root {
             --bg-color: #0d1117;
             --text-color: #c9d1d9;
@@ -150,7 +154,7 @@
             font-size: 0.9rem;
             color: var(--text-color);
             object-fit: cover;
-            object-position: center; /* Imágenes siempre centradas e iguales */
+            object-position: center;
         }
 
         .badge {
@@ -436,8 +440,10 @@
         EXOS CODE LABS STUDIO. ENGINEERING FUTURE SOLUTIONS.
     </footer>
 
+    <!-- Botón Exos God Mode -->
     <button class="god-mode-btn" onclick="openGodMode()">EXOS GOD MODE</button>
 
+    <!-- Modal Exos God Mode -->
     <div id="godModeModal" class="modal">
         <div class="modal-content">
             <span class="close-modal" onclick="closeGodMode()">X CERRAR</span>
@@ -475,6 +481,10 @@
     </div>
 
     <script>
+        /* =========================================
+           Preservación de Lógica de Negocio
+           ========================================= */
+
         // Lógica de Preservación de Tema
         function toggleTheme() {
             const body = document.body;
@@ -525,7 +535,6 @@
                           `*Detalles Técnicos:* ${detalles}%0A%0A` +
                           `_Enviado desde el Briefing Web de Exos Code Labs_`;
 
-            // Redirección directa al Lead Architect
             window.open(`https://wa.me/584127336450?text=${texto}`, '_blank');
         }
 
@@ -542,8 +551,7 @@
 
         function verificarGodMode() {
             const pass = document.getElementById('adminPass').value;
-            // Seguridad a nivel UI (Reemplazar con validación Firebase en producción)
-            if(pass === 'admin123') { // Placeholder demostrativo
+            if(pass === 'admin123') { 
                 document.getElementById('loginSection').style.display = 'none';
                 document.getElementById('adminPanel').style.display = 'block';
                 cargarDatosFicticios();
@@ -559,7 +567,6 @@
         }
 
         function cargarDatosFicticios() {
-            // Simulación de respuesta de base de datos para la tabla de a3sinergy/firebase
             setTimeout(() => {
                 document.getElementById('tablaOrdenes').innerHTML = `
                     <tr>
