@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Exos Code Labs Studio - Ingeniería de Software para Ecosistemas Escalables">
     <title>Exos Code Labs | Ecosistemas Escalables</title>
+    <!-- Fuentes de Google -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
@@ -262,6 +263,142 @@
             color: var(--neon-green);
         }
 
+        /* Calculadora de Presupuesto */
+        .budget-calculator {
+            margin-top: 60px;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .budget-calculator h3 {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: var(--text-white);
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .slider-label {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            color: var(--text-light);
+            font-size: 1.2rem;
+        }
+
+        /* Input Range Estilizado */
+        input[type=range] {
+            -webkit-appearance: none;
+            width: 100%;
+            max-width: 500px;
+            background: transparent;
+        }
+
+        input[type=range]:focus {
+            outline: none;
+        }
+
+        input[type=range]::-webkit-slider-runnable-track {
+            width: 100%;
+            height: 6px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            border: 1px solid var(--glass-border);
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: var(--neon-cyan);
+            cursor: pointer;
+            -webkit-appearance: none;
+            margin-top: -9px;
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+            transition: transform 0.2s;
+        }
+
+        input[type=range]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .budget-display {
+            font-size: 3.5rem;
+            font-weight: 800;
+            font-family: 'Poppins', sans-serif;
+            color: var(--neon-green);
+            text-shadow: 0 0 20px rgba(0, 255, 102, 0.3);
+        }
+
+        /* Modal Emergente */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 5, 7, 0.85);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            width: 90%;
+            max-width: 550px;
+            padding: 40px;
+            position: relative;
+            transform: translateY(50px) scale(0.9);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid var(--neon-cyan);
+            box-shadow: 0 0 40px rgba(0, 240, 255, 0.15);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0) scale(1);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 2rem;
+            color: var(--text-light);
+            cursor: pointer;
+            transition: color 0.3s;
+            line-height: 1;
+        }
+
+        .close-modal:hover {
+            color: var(--neon-cyan);
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            color: var(--neon-cyan);
+            margin-bottom: 20px;
+            line-height: 1.4;
+            text-align: center;
+        }
+
         /* Portafolio */
         #portfolio {
             padding: 100px 0;
@@ -419,6 +556,12 @@
             color: var(--bg-dark);
             border: none;
             font-size: 1.1rem;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
         .btn-submit:hover {
@@ -456,14 +599,16 @@
         /* Responsive */
         @media (max-width: 768px) {
             .hero-title { font-size: 2.5rem; }
-            .nav-links { display: none; } /* En un entorno real se añadiría un menú hamburguesa */
+            .nav-links { display: none; }
             .pricing-card.highlight { transform: scale(1); }
             .pricing-card.highlight:hover { transform: translateY(-5px); }
+            .budget-display { font-size: 2.5rem; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Navegación -->
     <nav>
         <div class="container nav-container">
             <div class="logo">EXOS<span>.</span>LABS</div>
@@ -477,6 +622,7 @@
         </div>
     </nav>
 
+    <!-- Hero Section -->
     <header id="hero">
         <div class="container hero-content">
             <h1 class="hero-title">Ingeniería de Software para Ecosistemas Escalables</h1>
@@ -488,17 +634,20 @@
         </div>
     </header>
 
+    <!-- Catálogo de Soluciones (Precios) -->
     <section id="pricing">
         <div class="container">
             <h2 class="section-title reveal">Nuestras Soluciones</h2>
             <div class="pricing-grid reveal">
                 
+                <!-- Card 1 -->
                 <div class="pricing-card glass-panel">
                     <h3 class="plan-name">Landing Page Corporativa</h3>
                     <div class="plan-price">$180</div>
                     <p>Presencia digital impecable y de alta conversión.</p>
                 </div>
 
+                <!-- Card 2 (Destacado) -->
                 <div class="pricing-card glass-panel highlight">
                     <div class="price-badge">MÁS POPULAR</div>
                     <h3 class="plan-name">E-Commerce Full Stack</h3>
@@ -506,18 +655,21 @@
                     <p>Plataforma de ventas integral, inventario y pasarelas.</p>
                 </div>
 
+                <!-- Card 3 -->
                 <div class="pricing-card glass-panel">
                     <h3 class="plan-name">App Híbrida</h3>
                     <div class="plan-price green">$1200</div>
                     <p>Desarrollo móvil escalable para iOS y Android.</p>
                 </div>
 
+                <!-- Card 4 -->
                 <div class="pricing-card glass-panel">
                     <h3 class="plan-name">Infraestructura VPM</h3>
                     <div class="plan-price">$75</div>
                     <p>Optimización y arquitectura de servidores.</p>
                 </div>
 
+                <!-- Card 5 -->
                 <div class="pricing-card glass-panel">
                     <h3 class="plan-name">Enterprise Server</h3>
                     <div class="plan-price green">$800</div>
@@ -525,9 +677,50 @@
                 </div>
 
             </div>
+
+            <!-- Calculadora de Presupuesto Interactiva -->
+            <div class="budget-calculator glass-panel reveal">
+                <h3>Ajusta tu Presupuesto Estimado</h3>
+                <div class="slider-container">
+                    <span class="slider-label">$100</span>
+                    <input type="range" id="budgetRange" min="100" max="2000" step="50" value="1000">
+                    <span class="slider-label">$2000+</span>
+                </div>
+                <div class="budget-display" id="budgetValue">$1000</div>
+                <p style="margin-top: 15px; font-size: 0.9rem; color: #a0a0a0;">Desliza para indicarnos tu capacidad de inversión y te guiaremos.</p>
+            </div>
+
         </div>
     </section>
 
+    <!-- Modal Emergente de Presupuesto -->
+    <div id="budgetModal" class="modal-overlay">
+        <div class="modal-content glass-panel">
+            <span class="close-modal" id="closeBudgetModal">&times;</span>
+            <h3 class="modal-title">Tu presupuesto es el indicado para tu proxima pagina web estructurada a la perfeccion</h3>
+            
+            <form id="budgetForm">
+                <div class="form-group">
+                    <label for="modalObjetivo">¿Cuál es el objetivo principal de tu página web?</label>
+                    <input type="text" id="modalObjetivo" class="form-control" placeholder="Ej. Vender productos, mostrar mi portafolio..." required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="modalFunciones">¿Qué funciones clave consideras indispensables?</label>
+                    <textarea id="modalFunciones" class="form-control" placeholder="Ej. Pasarela de pagos, sistema de reservas, chat en vivo..." style="min-height: 80px;" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="modalNombre">Tu Nombre o Empresa</label>
+                    <input type="text" id="modalNombre" class="form-control" placeholder="Ej. Empresa C.A." required>
+                </div>
+
+                <button type="submit" class="btn btn-submit">Validar Requerimiento</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Casos de Éxito (Portafolio) -->
     <section id="portfolio">
         <div class="container">
             <h2 class="section-title reveal">Casos de Éxito</h2>
@@ -565,6 +758,7 @@
         </div>
     </section>
 
+    <!-- Equipo -->
     <section id="team">
         <div class="container">
             <h2 class="section-title reveal">Liderazgo Técnico</h2>
@@ -586,6 +780,7 @@
         </div>
     </section>
 
+    <!-- Generación de Leads (Contacto) -->
     <section id="contact">
         <div class="container">
             <h2 class="section-title reveal">Inicia tu Proyecto</h2>
@@ -625,6 +820,7 @@
         </div>
     </footer>
 
+    <!-- Lógica de Interactividad y API WhatsApp -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             
@@ -646,33 +842,102 @@
 
             revealElements.forEach(el => revealOnScroll.observe(el));
 
-            // 2. Procesamiento de Formulario hacia WhatsApp API
+            // 2. Procesamiento de Formulario Principal hacia WhatsApp API
+            const telefonoWhatsApp = "58XXXXXXXXX"; // Reemplazar por el número real
+
             const leadForm = document.getElementById('leadForm');
+            if(leadForm) {
+                leadForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const nombre = document.getElementById('clienteNombre').value.trim();
+                    const servicio = document.getElementById('clienteServicio').value;
+                    const detalles = document.getElementById('clienteDetalles').value.trim();
+
+                    const mensajeConstruido = `*🚀 NUEVO LEAD - EXOS CODE LABS*\n\n` +
+                                              `*Cliente / Empresa:* ${nombre}\n` +
+                                              `*Servicio Solicitado:* ${servicio}\n\n` +
+                                              `*Detalles del Proyecto:*\n_${detalles}_\n\n` +
+                                              `_Mensaje generado automáticamente desde la plataforma web._`;
+
+                    const urlApi = `https://wa.me/${telefonoWhatsApp}?text=${encodeURIComponent(mensajeConstruido)}`;
+                    window.open(urlApi, '_blank');
+                });
+            }
+
+            // 3. Lógica del Slider de Presupuesto y Modal Emergente
+            const budgetRange = document.getElementById('budgetRange');
+            const budgetValueDisplay = document.getElementById('budgetValue');
+            const budgetModal = document.getElementById('budgetModal');
+            const closeBudgetModal = document.getElementById('closeBudgetModal');
+            const budgetForm = document.getElementById('budgetForm');
             
-            leadForm.addEventListener('submit', function(e) {
-                e.preventDefault();
+            let inactivityTimer;
 
-                // Captura de datos
-                const nombre = document.getElementById('clienteNombre').value.trim();
-                const servicio = document.getElementById('clienteServicio').value;
-                const detalles = document.getElementById('clienteDetalles').value.trim();
+            // Función para iniciar/reiniciar el temporizador de 5 segundos
+            const resetInactivityTimer = () => {
+                clearTimeout(inactivityTimer);
+                inactivityTimer = setTimeout(() => {
+                    budgetModal.classList.add('active');
+                }, 5000); // 5000ms = 5 segundos
+            };
 
-                // Número destino (Reemplaza los X por el número de ventas de la agencia con código de país)
-                const telefonoWhatsApp = "58XXXXXXXXX"; 
+            if(budgetRange) {
+                budgetRange.addEventListener('input', function(e) {
+                    const currentVal = e.target.value;
+                    // Actualizar el valor en la pantalla
+                    budgetValueDisplay.textContent = currentVal >= 2000 ? `$2000+` : `$${currentVal}`;
+                    
+                    // Reiniciar el temporizador de 5 segundos cada vez que se mueve el rango
+                    resetInactivityTimer();
+                });
+                
+                // Iniciar el temporizador al cargar si se desea, o solo cuando interactúen.
+                // Lo asociaremos al evento 'change' (cuando sueltan el click) para mayor precisión
+                budgetRange.addEventListener('change', resetInactivityTimer);
+            }
 
-                // Estructura del mensaje de Lead
-                const mensajeConstruido = `*🚀 NUEVO LEAD - EXOS CODE LABS*\n\n` +
-                                          `*Cliente / Empresa:* ${nombre}\n` +
-                                          `*Servicio Solicitado:* ${servicio}\n\n` +
-                                          `*Detalles del Proyecto:*\n_${detalles}_\n\n` +
-                                          `_Mensaje generado automáticamente desde la plataforma web._`;
+            // Cerrar el modal
+            if(closeBudgetModal) {
+                closeBudgetModal.addEventListener('click', () => {
+                    budgetModal.classList.remove('active');
+                    clearTimeout(inactivityTimer); // Detener el temporizador si cierran
+                });
+            }
 
-                // Codificación de URL para la API
-                const urlApi = `https://wa.me/${telefonoWhatsApp}?text=${encodeURIComponent(mensajeConstruido)}`;
+            // Cerrar el modal al hacer click fuera del contenido
+            if(budgetModal) {
+                budgetModal.addEventListener('click', (e) => {
+                    if (e.target === budgetModal) {
+                        budgetModal.classList.remove('active');
+                        clearTimeout(inactivityTimer);
+                    }
+                });
+            }
 
-                // Redirección limpia en nueva pestaña
-                window.open(urlApi, '_blank');
-            });
+            // Procesar el formulario del Modal hacia WhatsApp
+            if(budgetForm) {
+                budgetForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const objetivo = document.getElementById('modalObjetivo').value.trim();
+                    const funciones = document.getElementById('modalFunciones').value.trim();
+                    const nombreModal = document.getElementById('modalNombre').value.trim();
+                    const presupuestoSeleccionado = budgetRange.value >= 2000 ? '$2000+' : `$${budgetRange.value}`;
+
+                    const mensajeModal = `*💡 LEAD VIP POR PRESUPUESTO - EXOS CODE LABS*\n\n` +
+                                         `*Cliente / Empresa:* ${nombreModal}\n` +
+                                         `*Presupuesto Indicado:* ${presupuestoSeleccionado}\n\n` +
+                                         `*Objetivo de la Web:*\n_${objetivo}_\n\n` +
+                                         `*Funciones Clave Necesarias:*\n_${funciones}_\n\n` +
+                                         `_Capturado desde la calculadora interactiva._`;
+
+                    const urlApiModal = `https://wa.me/${telefonoWhatsApp}?text=${encodeURIComponent(mensajeModal)}`;
+                    window.open(urlApiModal, '_blank');
+                    
+                    // Cerrar y resetear modal tras enviar
+                    budgetModal.classList.remove('active');
+                    budgetForm.reset();
+                });
+            }
         });
     </script>
 </body>
