@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exos Code Labs</title>
+    <title>Exos Code Labs | Ecosistemas Web de Alta Ingeniería</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -213,7 +213,6 @@
         .btn-primary {
             background: var(--accent-purple-gradient);
             color: #FFFFFF;
-            /* Estructura 3D estilizada basada en capas de sombras microcalibradas */
             box-shadow: 
                 0 0 0 1px rgba(255, 255, 255, 0.1) inset,
                 0 1px 0 0 rgba(255, 255, 255, 0.2) inset,
@@ -272,7 +271,7 @@
            4. CATÁLOGO DE SOLUCIONES (BENTO GRID LIMPIO)
            ========================================== */
         #catalogo {
-            padding: 140px 0;
+            padding: 140px 0 60px 0;
             position: relative;
         }
 
@@ -298,7 +297,6 @@
             box-shadow: 0 10px 30px -10px rgba(0,0,0,0.3);
         }
 
-        /* Estructura asimétrica sutil estilo Bento para evitar monotonía */
         .pricing-card:nth-child(1), .pricing-card:nth-child(2) {
             grid-column: span 3;
         }
@@ -306,7 +304,6 @@
             grid-column: span 2;
         }
 
-        /* Tarjeta Destacada (E-Commerce Full Stack) con diseño Vercel */
         .pricing-card.highlighted {
             border-color: rgba(163, 112, 247, 0.3);
             background: linear-gradient(180deg, rgba(20, 24, 38, 0.8) 0%, rgba(13, 16, 24, 0.65) 100%);
@@ -350,12 +347,6 @@
             gap: 4px;
         }
 
-        .card-price span {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            font-family: var(--font-sans);
-        }
-
         .highlighted .card-price {
             color: var(--accent-mint);
             text-shadow: 0 0 20px var(--accent-mint-glow);
@@ -380,6 +371,255 @@
             padding: 12px;
             font-size: 0.85rem;
             border-radius: 10px;
+            text-align: center;
+        }
+
+        /* ==========================================
+           4.5 CONFIGURADOR INTERACTIVO A MEDIDA ($20 - $10,000)
+           ========================================== */
+        #configurador {
+            padding: 40px 0 140px 0;
+        }
+
+        .config-panel {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 32px;
+            background: rgba(10, 12, 19, 0.5);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--curve);
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .config-controls h3 {
+            font-family: var(--font-tech);
+            font-size: 1.5rem;
+            margin-bottom: 24px;
+            color: var(--text-main);
+        }
+
+        .slider-wrapper {
+            margin-bottom: 40px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 24px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .slider-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+        }
+
+        .slider-header span:first-child {
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .slider-header span:last-child {
+            font-family: var(--font-mono);
+            color: var(--accent-mint);
+        }
+
+        /* Estilización del Input Range */
+        .real-range {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+            margin: 15px 0;
+        }
+
+        .real-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent-purple);
+            cursor: pointer;
+            box-shadow: 0 0 10px var(--accent-purple);
+            transition: transform 0.1s;
+        }
+
+        .real-range::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .modules-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        .modules-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Estilización de los Toggles de Selección Pro */
+        .module-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition-fluid);
+        }
+
+        .module-item:hover {
+            border-color: rgba(255, 255, 255, 0.12);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .module-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .module-name {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .module-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .module-action {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .module-cost {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Switch UI */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .switch input { 
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider-toggle {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: .3s cubic-bezier(0.16, 1, 0.3, 1);
+            border-radius: 24px;
+        }
+
+        .slider-toggle:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: var(--text-main);
+            transition: .3s cubic-bezier(0.16, 1, 0.3, 1);
+            border-radius: 50%;
+        }
+
+        input:checked + .slider-toggle {
+            background-color: var(--accent-purple);
+        }
+
+        input:checked + .slider-toggle:before {
+            transform: translateX(20px);
+            background-color: #FFFFFF;
+        }
+
+        /* Columna de Recibo de Presupuesto Real-Time */
+        .config-summary {
+            background: rgba(5, 6, 9, 0.7);
+            border: 1px solid rgba(163, 112, 247, 0.2);
+            border-radius: 12px;
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+        }
+
+        .summary-title {
+            font-family: var(--font-tech);
+            font-size: 1.2rem;
+            color: var(--text-main);
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border-subtle);
+            padding-bottom: 12px;
+        }
+
+        .summary-price-box {
+            text-align: center;
+            margin: 24px 0;
+        }
+
+        .summary-price-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .summary-total {
+            font-family: var(--font-mono);
+            font-size: 3rem;
+            font-weight: 600;
+            color: var(--accent-mint);
+            text-shadow: 0 0 25px var(--accent-mint-glow);
+            margin-top: 4px;
+        }
+
+        .summary-details {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--font-mono);
+            font-size: 0.8rem;
+        }
+
+        .summary-btn {
+            width: 100%;
             text-align: center;
         }
 
@@ -562,6 +802,12 @@
             padding: 48px;
             border-radius: var(--curve);
             box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6);
+            transition: var(--transition-fluid);
+        }
+
+        .form-wrapper:hover {
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.1);
         }
 
         .form-row-split {
@@ -615,7 +861,7 @@
 
         textarea.form-control {
             resize: none;
-            min-height: 120px;
+            min-height: 140px;
         }
 
         .form-wrapper .submit-btn {
@@ -639,12 +885,18 @@
         }
 
         /* Ajustes Responsivos Fluidos */
-        @media (max-width: 900px) {
+        @media (max-width: 950px) {
             .pricing-grid {
                 grid-template-columns: 1fr;
             }
             .pricing-card, .pricing-card:nth-child(1), .pricing-card:nth-child(2), .pricing-card:nth-child(3), .pricing-card:nth-child(4), .pricing-card:nth-child(5) {
                 grid-column: span 1;
+            }
+            .config-panel {
+                grid-template-columns: 1fr;
+            }
+            .config-summary {
+                position: static;
             }
             .portfolio-grid {
                 grid-template-columns: 1fr;
@@ -662,7 +914,7 @@
         @media (max-width: 600px) {
             .nav-links { display: none; }
             .cta-group { flex-direction: column; }
-            .form-wrapper { padding: 32px 24px; }
+            .form-wrapper, .config-panel { padding: 32px 20px; }
             .section-title { font-size: 1.75rem; }
         }
     </style>
@@ -681,6 +933,7 @@
             </div>
             <div class="nav-links">
                 <a href="#catalogo">Soluciones</a>
+                <a href="#configurador">Configurador</a>
                 <a href="#portafolio">Portafolio</a>
                 <a href="#equipo">Equipo</a>
                 <a href="#contacto">Contacto</a>
@@ -694,7 +947,7 @@
             <p>Construimos arquitectura web autónoma, lógica de datos integrada y flujos optimizados de extremo a extremo.</p>
             <div class="cta-group">
                 <button onclick="document.getElementById('contacto').scrollIntoView();" class="btn btn-primary">Iniciar Requerimiento</button>
-                <button onclick="document.getElementById('catalogo').scrollIntoView();" class="btn btn-secondary">Ver Catálogo</button>
+                <button onclick="document.getElementById('configurador').scrollIntoView();" class="btn btn-secondary">Diseño Personalizado</button>
             </div>
         </div>
     </section>
@@ -711,7 +964,7 @@
                     </div>
                     <div>
                         <div class="card-price">$180</div>
-                        <button onclick="document.getElementById('contacto').scrollIntoView();" class="btn btn-secondary btn-card">Seleccionar</button>
+                        <button onclick="seleccionarPlanPreset('Landing Page Corporativa', 180);" class="btn btn-secondary btn-card">Seleccionar</button>
                     </div>
                 </div>
 
@@ -723,7 +976,7 @@
                     </div>
                     <div>
                         <div class="card-price">$450</div>
-                        <button onclick="document.getElementById('contacto').scrollIntoView();" class="btn btn-primary btn-card">Solicitar Diseño</button>
+                        <button onclick="seleccionarPlanPreset('E-Commerce Full Stack', 450);" class="btn btn-primary btn-card">Solicitar Diseño</button>
                     </div>
                 </div>
 
@@ -734,7 +987,7 @@
                     </div>
                     <div>
                         <div class="card-price">$1200</div>
-                        <button onclick="document.getElementById('contacto').scrollIntoView();" class="btn btn-secondary btn-card">Seleccionar</button>
+                        <button onclick="seleccionarPlanPreset('App Híbrida', 1200);" class="btn btn-secondary btn-card">Seleccionar</button>
                     </div>
                 </div>
 
@@ -745,7 +998,7 @@
                     </div>
                     <div>
                         <div class="card-price">$75</div>
-                        <button onclick="document.getElementById('contacto').scrollIntoView();" class="btn btn-secondary btn-card">Seleccionar</button>
+                        <button onclick="seleccionarPlanPreset('Infraestructura VPM', 75);" class="btn btn-secondary btn-card">Seleccionar</button>
                     </div>
                 </div>
 
@@ -756,8 +1009,120 @@
                     </div>
                     <div>
                         <div class="card-price">$800</div>
-                        <button onclick="document.getElementById('contacto').scrollIntoView();" class="btn btn-secondary btn-card">Seleccionar</button>
+                        <button onclick="seleccionarPlanPreset('Enterprise Server', 800);" class="btn btn-secondary btn-card">Seleccionar</button>
                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="configurador">
+        <div class="container">
+            <h2 class="section-title">Configurador de <span>Sistemas Dinámicos</span></h2>
+            
+            <div class="config-panel">
+                <div class="config-controls">
+                    <h3>Parámetros de la Infraestructura</h3>
+                    
+                    <div class="slider-wrapper">
+                        <div class="slider-header">
+                            <span>Volumen Core e Infraestructura</span>
+                            <span id="sliderValueDisplay">$20</span>
+                        </div>
+                        <input type="range" id="baseSlider" min="20" max="5000" value="20" step="10" class="real-range">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">
+                            <span>Micro-Script Base ($20)</span>
+                            <span>Core Arquitectura Pro ($5,000)</span>
+                        </div>
+                    </div>
+
+                    <div class="modules-title">Módulos Lógicos Acumulativos</div>
+                    <div class="modules-list">
+                        <div class="module-item" onclick="toggleCheckbox('modApp')">
+                            <div class="module-info">
+                                <span class="module-name">App Híbrida Multiplataforma</span>
+                                <span class="module-desc">Despliegue nativo sincronizado para iOS y Android.</span>
+                            </div>
+                            <div class="module-action">
+                                <span class="module-cost">+$2,500</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="modApp" data-price="2500" data-name="App Híbrida Mobile">
+                                    <span class="slider-toggle"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="module-item" onclick="toggleCheckbox('modHigh')">
+                            <div class="module-info">
+                                <span class="module-name">Redundancia Enterprise y Alta Disponibilidad</span>
+                                <span class="module-desc">Balanceo de carga avanzado y failover automático ante picos críticos.</span>
+                            </div>
+                            <div class="module-action">
+                                <span class="module-cost">+$1,500</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="modHigh" data-price="1500" data-name="Redundancia Enterprise">
+                                    <span class="slider-toggle"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="module-item" onclick="toggleCheckbox('modErp')">
+                            <div class="module-info">
+                                <span class="module-name">Sincronización ERP / Base de Datos Real-Time</span>
+                                <span class="module-desc">Integración directa y bidireccional con lógica multisucursal.</span>
+                            </div>
+                            <div class="module-action">
+                                <span class="module-cost">+$600</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="modErp" data-price="600" data-name="Sincronización ERP R-Time">
+                                    <span class="slider-toggle"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="module-item" onclick="toggleCheckbox('modEcom')">
+                            <div class="module-info">
+                                <span class="module-name">Núcleo Transaccional E-Commerce Avanzado</span>
+                                <span class="module-desc">Variaciones complejas de productos, atributos y embudo de checkout limpio.</span>
+                            </div>
+                            <div class="module-action">
+                                <span class="module-cost">+$250</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="modEcom" data-price="250" data-name="Núcleo E-Commerce Pro">
+                                    <span class="slider-toggle"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="module-item" onclick="toggleCheckbox('modAdmin')">
+                            <div class="module-info">
+                                <span class="module-name">Panel Administrativo Dedicado</span>
+                                <span class="module-desc">Control maestro analítico aislado para flujos de visitantes y stock corporativo.</span>
+                            </div>
+                            <div class="module-action">
+                                <span class="module-cost">+$130</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="modAdmin" data-price="130" data-name="Panel Admin Custom">
+                                    <span class="slider-toggle"></span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="config-summary">
+                    <div>
+                        <div class="summary-title">Resumen de Arquitectura</div>
+                        <div class="summary-details" id="summaryDetailsList">
+                            </div>
+                    </div>
+                    
+                    <div class="summary-price-box">
+                        <div class="summary-price-label">Presupuesto Estimado</div>
+                        <div class="summary-total" id="calcTotalDisplay">$20</div>
+                    </div>
+
+                    <button onclick="bloquearPresupuestoYContinuar();" class="btn btn-primary summary-btn">Fijar Presupuesto y Continuar</button>
                 </div>
             </div>
         </div>
@@ -879,6 +1244,100 @@
     </footer>
 
     <script>
+        const baseSlider = document.getElementById('baseSlider');
+        const sliderValueDisplay = document.getElementById('sliderValueDisplay');
+        const calcTotalDisplay = document.getElementById('calcTotalDisplay');
+        const summaryDetailsList = document.getElementById('summaryDetailsList');
+        const checkboxes = document.querySelectorAll('.modules-list input[type="checkbox"]');
+
+        // Escuchadores de eventos para recalcular presupuesto en tiempo real
+        baseSlider.addEventListener('input', calcularPrecioEcosistema);
+        checkboxes.forEach(box => {
+            box.addEventListener('change', calcularPrecioEcosistema);
+        });
+
+        // Previene la desincronización al hacer clic en todo el contenedor del módulo
+        function toggleCheckbox(id) {
+            const checkbox = document.getElementById(id);
+            if (event.target.tagName !== 'INPUT' && event.target.className !== 'slider-toggle') {
+                checkbox.checked = !checkbox.checked;
+                calcularPrecioEcosistema();
+            }
+        }
+
+        function calcularPrecioEcosistema() {
+            let basePrice = parseInt(baseSlider.value);
+            sliderValueDisplay.textContent = `$${basePrice.toLocaleString()}`;
+            
+            let accumulatedAddons = 0;
+            let summaryHTML = `<div class="summary-item"><span>Infraestructura Base</span><span>$${basePrice.toLocaleString()}</span></div>`;
+
+            checkboxes.forEach(box => {
+                if (box.checked) {
+                    const price = parseInt(box.getAttribute('data-price'));
+                    const name = box.getAttribute('data-name');
+                    accumulatedAddons += price;
+                    summaryHTML += `<div class="summary-item"><span style="color: var(--accent-purple);">+ ${name}</span><span>$${price.toLocaleString()}</span></div>`;
+                }
+            });
+
+            let totalCalculado = basePrice + accumulatedAddons;
+            
+            // Limitador estricto para mantener las directrices del negocio ($20 - $10,000)
+            if (totalCalculado > 10000) totalCalculado = 10000;
+            if (totalCalculado < 20) totalCalculado = 20;
+
+            calcTotalDisplay.textContent = `$${totalCalculado.toLocaleString()}`;
+            summaryDetailsList.innerHTML = summaryHTML;
+            
+            return {
+                total: totalCalculado,
+                base: basePrice,
+                addons: Array.from(checkboxes).filter(b => b.checked).map(b => b.getAttribute('data-name'))
+            };
+        }
+
+        // Transfiere de manera fluida el presupuesto al formulario inferior
+        function bloquearPresupuestoYContinuar() {
+            const configuracionActual = calcularPrecioEcosistema();
+            
+            const selectServicio = document.getElementById('servicio');
+            const textareaDetalles = document.getElementById('detalles');
+            
+            selectServicio.value = "Desarrollo Custom Especializado";
+            
+            let especificacionesInyectadas = `--- ARQUITECTURA CONFIGURADA A MEDIDA ---\n`;
+            especificacionesInyectadas += `• Costo Base Infraestructura: $${configuracionActual.base}\n`;
+            if (configuracionActual.addons.length > 0) {
+                especificacionesInyectadas += `• Módulos Integrados: ${configuracionActual.addons.join(', ')}\n`;
+            } else {
+                especificacionesInyectadas += `• Módulos: Ninguno (Lógica de Script Puro)\n`;
+            }
+            especificacionesInyectadas += `• Presupuesto Total Fijado: $${configuracionActual.total} USD\n`;
+            especificacionesInyectadas += `-------------------------------------------\n`;
+            especificacionesInyectadas += `Detalles Adicionales del Proyecto: `;
+            
+            textareaDetalles.value = especificacionesInyectadas;
+            
+            document.getElementById('contacto').scrollIntoView({ behavior: 'smooth' });
+            textareaDetalles.focus();
+        }
+
+        // Ejecuta preset directo desde las tarjetas superiores
+        function seleccionarPlanPreset(plan, precio) {
+            const selectServicio = document.getElementById('servicio');
+            const textareaDetalles = document.getElementById('detalles');
+            
+            selectServicio.value = plan;
+            textareaDetalles.value = `Solicitud directa de plan comercial estructurado: ${plan} ($${precio} USD).\nLógica de negocio estándar requerida.`;
+            
+            document.getElementById('contacto').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Inicializador en primer ciclo de renderizado
+        calcularPrecioEcosistema();
+
+        // Lógica de Validación y Transmisión hacia API Externa WhatsApp
         document.getElementById('leadForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
@@ -893,20 +1352,19 @@
                 return;
             }
 
-            // Formateo limpio de datos estructurados para lectura inmediata en WhatsApp móvil o desktop
             const mensaje = `*EXOS CODE LABS STUDIO — REQUERIMIENTO ESTRUCTURADO*%0A%0A` +
                             `*Cliente:* ${nombre}%0A` +
                             `*Identificación:* ${cedula}%0A` +
                             `*WhatsApp:* ${whatsapp}%0A` +
                             `*Servicio:* ${servicio}%0A%0A` +
-                            `*Detalles del Proyecto:*%0A${detalles}`;
+                            `*Detalles del Proyecto:*%0A${encodeURIComponent(detalles)}`;
 
-            // Número receptor por defecto de Exos Code Labs Studio
             const numeroReceptor = '58400000000'; 
             const urlWhatsApp = `https://wa.me/${numeroReceptor}?text=${mensaje}`;
 
             window.open(urlWhatsApp, '_blank');
             this.reset();
+            calcularPrecioEcosistema(); // Reinicia la calculadora visual
         });
     </script>
 </body>
