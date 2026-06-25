@@ -3,62 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Exos Code Labs Studio - Ingeniería de Software para Ecosistemas Escalables">
-    <title>Exos Code Labs | Ecosistemas Escalables</title>
-    <!-- Fuentes de Google -->
+    <title>Exos Code Labs | Ecosistemas Web Escalables</title>
+    
+    <!-- Google Fonts: Space Grotesk para títulos, JetBrains Mono para detalles -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     
     <style>
-        /* Variables Globales y Tema Dark/Neón */
+        /* ==========================================
+           1. VARIABLES Y RESET
+           ========================================== */
         :root {
-            --bg-dark: #0a0a0f;
-            --bg-darker: #050507;
-            --neon-cyan: #00f0ff;
-            --neon-green: #00ff66;
-            --text-light: #e0e0e0;
-            --text-white: #ffffff;
-            --glass-bg: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            --void-black: #08090D;
+            --surface-dark: #12141D;
+            --exos-purple: #9D4EDD;
+            --exos-purple-glow: rgba(157, 78, 221, 0.4);
+            --matrix-mint: #39FF14;
+            --matrix-mint-glow: rgba(57, 255, 20, 0.3);
+            --clean-white: #F8F9FA;
+            --text-muted: #A0AAB2;
+            --transition: all 0.3s ease-in-out;
         }
 
-        /* Reset y Base */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+        }
+
+        html {
             scroll-behavior: smooth;
         }
 
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-light);
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
+            font-family: 'Space Grotesk', sans-serif;
+            background-color: var(--void-black);
+            color: var(--clean-white);
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         h1, h2, h3, h4 {
-            font-family: 'Poppins', sans-serif;
-            color: var(--text-white);
+            font-weight: 700;
         }
 
         a {
             text-decoration: none;
             color: inherit;
-        }
-
-        /* Utilidades de Diseño Moderno */
-        .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
-            box-shadow: var(--glass-shadow);
-            transition: all 0.4s ease;
         }
 
         .container {
@@ -71,21 +63,27 @@
             text-align: center;
             font-size: 2.5rem;
             margin-bottom: 3rem;
-            background: linear-gradient(90deg, var(--text-white), var(--neon-cyan));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: var(--clean-white);
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
-        /* Navegación */
+        .section-title span {
+            color: var(--exos-purple);
+        }
+
+        /* ==========================================
+           2. NAVEGACIÓN
+           ========================================== */
         nav {
             position: fixed;
             top: 0;
             width: 100%;
             padding: 20px 0;
-            z-index: 1000;
-            background: rgba(10, 10, 15, 0.8);
+            background: rgba(8, 9, 13, 0.85);
             backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .nav-container {
@@ -95,15 +93,15 @@
         }
 
         .logo {
-            font-family: 'Poppins', sans-serif;
             font-size: 1.5rem;
             font-weight: 700;
-            color: var(--text-white);
-            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .logo span {
-            color: var(--neon-cyan);
+            color: var(--matrix-mint);
         }
 
         .nav-links {
@@ -112,19 +110,19 @@
         }
 
         .nav-links a {
-            font-weight: 600;
             font-size: 0.9rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            transition: color 0.3s;
+            transition: var(--transition);
         }
 
         .nav-links a:hover {
-            color: var(--neon-cyan);
-            text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+            color: var(--matrix-mint);
         }
 
-        /* Hero Section */
+        /* ==========================================
+           3. HERO SECTION
+           ========================================== */
         #hero {
             height: 100vh;
             display: flex;
@@ -132,78 +130,75 @@
             justify-content: center;
             text-align: center;
             position: relative;
-            background: radial-gradient(circle at 50% 50%, rgba(0, 240, 255, 0.1) 0%, var(--bg-dark) 60%);
+            background: radial-gradient(circle at 50% 50%, var(--surface-dark) 0%, var(--void-black) 100%);
+            padding-top: 80px;
         }
 
-        .hero-content {
-            max-width: 800px;
-            z-index: 1;
-        }
-
-        .hero-title {
-            font-size: 4rem;
+        .hero-content h1 {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
             line-height: 1.1;
             margin-bottom: 20px;
-            animation: slideUp 1s ease-out forwards;
+            text-shadow: 0 0 40px var(--exos-purple-glow);
         }
 
-        .hero-subtitle {
-            font-size: 1.2rem;
+        .hero-content p {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--text-muted);
             margin-bottom: 40px;
-            color: #a0a0a0;
-            animation: slideUp 1s ease-out 0.2s forwards;
-            opacity: 0;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .cta-group {
             display: flex;
             gap: 20px;
             justify-content: center;
-            animation: slideUp 1s ease-out 0.4s forwards;
-            opacity: 0;
         }
 
         .btn {
-            padding: 15px 30px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-family: 'Poppins', sans-serif;
+            padding: 15px 35px;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
+            transition: var(--transition);
+            font-family: 'Space Grotesk', sans-serif;
+            border: none;
         }
 
         .btn-primary {
-            background: transparent;
-            color: var(--neon-cyan);
-            border: 2px solid var(--neon-cyan);
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.2);
+            background-color: var(--exos-purple);
+            color: var(--clean-white);
+            box-shadow: 0 0 20px var(--exos-purple-glow);
         }
 
         .btn-primary:hover {
-            background: var(--neon-cyan);
-            color: var(--bg-dark);
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.6);
+            background-color: #8940C4;
+            box-shadow: 0 0 30px rgba(157, 78, 221, 0.6);
             transform: translateY(-2px);
         }
 
         .btn-secondary {
-            background: var(--glass-bg);
-            color: var(--text-white);
-            border: 1px solid var(--glass-border);
+            background-color: transparent;
+            color: var(--matrix-mint);
+            border: 1px solid var(--matrix-mint);
+            box-shadow: 0 0 15px var(--matrix-mint-glow) inset;
         }
 
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: var(--text-white);
+            background-color: rgba(57, 255, 20, 0.1);
             transform: translateY(-2px);
         }
 
-        /* Grid de Precios */
-        #pricing {
+        /* ==========================================
+           4. CATÁLOGO DE SOLUCIONES (PRECIOS)
+           ========================================== */
+        #catalogo {
             padding: 100px 0;
-            background-color: var(--bg-darker);
+            background-color: var(--void-black);
         }
 
         .pricing-grid {
@@ -214,307 +209,210 @@
         }
 
         .pricing-card {
+            background: var(--surface-dark);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
             padding: 40px 30px;
             text-align: center;
-            position: relative;
-        }
-
-        .pricing-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .pricing-card.highlight {
-            border: 2px solid var(--neon-cyan);
-            box-shadow: 0 0 25px rgba(0, 240, 255, 0.15);
-            transform: scale(1.05);
-        }
-
-        .pricing-card.highlight:hover {
-            transform: scale(1.05) translateY(-10px);
-            box-shadow: 0 0 40px rgba(0, 240, 255, 0.3);
-        }
-
-        .price-badge {
-            position: absolute;
-            top: -15px;
-            right: 20px;
-            background: var(--neon-cyan);
-            color: var(--bg-dark);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
-        }
-
-        .plan-name {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-        }
-
-        .plan-price {
-            font-size: 3rem;
-            font-weight: 800;
-            color: var(--neon-cyan);
-            margin-bottom: 20px;
-        }
-
-        .plan-price.green {
-            color: var(--neon-green);
-        }
-
-        /* Calculadora de Presupuesto */
-        .budget-calculator {
-            margin-top: 60px;
-            padding: 40px;
-            text-align: center;
+            transition: var(--transition);
             position: relative;
             overflow: hidden;
         }
 
-        .budget-calculator h3 {
-            font-size: 1.8rem;
-            margin-bottom: 30px;
-            color: var(--text-white);
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            border-color: rgba(157, 78, 221, 0.3);
         }
 
-        .slider-container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            margin-bottom: 30px;
+        .pricing-card.highlighted {
+            border: 2px solid var(--exos-purple);
+            box-shadow: 0 0 30px var(--exos-purple-glow);
+            transform: scale(1.05);
+            z-index: 2;
+            background: linear-gradient(180deg, var(--surface-dark) 0%, rgba(157,78,221,0.05) 100%);
         }
 
-        .slider-label {
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            color: var(--text-light);
-            font-size: 1.2rem;
+        .pricing-card.highlighted:hover {
+            transform: scale(1.05) translateY(-10px);
         }
 
-        /* Input Range Estilizado */
-        input[type=range] {
-            -webkit-appearance: none;
-            width: 100%;
-            max-width: 500px;
-            background: transparent;
-        }
-
-        input[type=range]:focus {
-            outline: none;
-        }
-
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 6px;
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-            border: 1px solid var(--glass-border);
-        }
-
-        input[type=range]::-webkit-slider-thumb {
-            height: 24px;
-            width: 24px;
-            border-radius: 50%;
-            background: var(--neon-cyan);
-            cursor: pointer;
-            -webkit-appearance: none;
-            margin-top: -9px;
-            box-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
-            transition: transform 0.2s;
-        }
-
-        input[type=range]::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-        }
-
-        .budget-display {
-            font-size: 3.5rem;
-            font-weight: 800;
-            font-family: 'Poppins', sans-serif;
-            color: var(--neon-green);
-            text-shadow: 0 0 20px rgba(0, 255, 102, 0.3);
-        }
-
-        /* Modal Emergente */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(5, 5, 7, 0.85);
-            backdrop-filter: blur(5px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.4s ease;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-content {
-            width: 90%;
-            max-width: 550px;
-            padding: 40px;
-            position: relative;
-            transform: translateY(50px) scale(0.9);
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid var(--neon-cyan);
-            box-shadow: 0 0 40px rgba(0, 240, 255, 0.15);
-        }
-
-        .modal-overlay.active .modal-content {
-            transform: translateY(0) scale(1);
-        }
-
-        .close-modal {
+        .badge {
             position: absolute;
             top: 15px;
-            right: 20px;
-            font-size: 2rem;
-            color: var(--text-light);
-            cursor: pointer;
-            transition: color 0.3s;
-            line-height: 1;
+            right: -30px;
+            background: var(--exos-purple);
+            color: white;
+            padding: 5px 40px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            transform: rotate(45deg);
+            text-transform: uppercase;
         }
 
-        .close-modal:hover {
-            color: var(--neon-cyan);
+        .card-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--text-muted);
         }
 
-        .modal-title {
-            font-size: 1.4rem;
-            color: var(--neon-cyan);
+        .pricing-card.highlighted .card-title {
+            color: var(--clean-white);
+        }
+
+        .card-price {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--matrix-mint);
             margin-bottom: 20px;
-            line-height: 1.4;
-            text-align: center;
         }
 
-        /* Portafolio */
-        #portfolio {
+        /* ==========================================
+           5. PORTAFOLIO (CASOS DE ÉXITO)
+           ========================================== */
+        #portafolio {
             padding: 100px 0;
+            background-color: var(--surface-dark);
         }
 
         .portfolio-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
+            gap: 20px;
         }
 
-        .portfolio-card {
-            height: 250px;
-            display: flex;
-            align-items: flex-end;
-            padding: 30px;
+        .portfolio-item {
             position: relative;
+            height: 300px;
+            border-radius: 8px;
             overflow: hidden;
-            cursor: pointer;
-            /* Efecto 3D Base */
-            transform-style: preserve-3d;
-            perspective: 1000px;
-        }
-
-        .portfolio-card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(to top, rgba(10,10,15,0.9), rgba(10,10,15,0.1));
-            z-index: 1;
-        }
-
-        .portfolio-card:hover {
-            transform: translateY(-10px) rotateX(2deg) rotateY(-2deg);
-            box-shadow: -10px 20px 30px rgba(0,0,0,0.5), 0 0 20px rgba(0, 240, 255, 0.2);
-            border-color: var(--neon-cyan);
-        }
-
-        .portfolio-info {
-            position: relative;
-            z-index: 2;
-            transform: translateZ(30px); /* Elemento sobresaliente en 3D */
-        }
-
-        .portfolio-title {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            color: var(--neon-cyan);
-        }
-
-        .portfolio-desc {
-            font-size: 0.9rem;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.3s ease;
-        }
-
-        .portfolio-card:hover .portfolio-desc {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* Equipo */
-        #team {
-            padding: 100px 0;
-            background-color: var(--bg-darker);
-        }
-
-        .team-grid {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            flex-wrap: wrap;
-        }
-
-        .team-member {
-            width: 300px;
-            padding: 40px 20px;
-            text-align: center;
-        }
-
-        .team-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: var(--glass-bg);
-            border: 2px solid var(--glass-border);
-            margin: 0 auto 20px;
+            background: #1A1D24;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 3rem;
-            color: var(--neon-cyan);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        .team-name {
+        .portfolio-item::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(45deg, rgba(157,78,221,0.1), transparent);
+            z-index: 1;
+        }
+
+        .portfolio-title-front {
             font-size: 1.5rem;
+            font-weight: 700;
+            z-index: 2;
+            transition: var(--transition);
+        }
+
+        .portfolio-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(8, 9, 13, 0.95);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            text-align: center;
+            transform: translateY(100%);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 3;
+            border-top: 3px solid var(--matrix-mint);
+        }
+
+        .portfolio-item:hover .portfolio-overlay {
+            transform: translateY(0);
+        }
+
+        .portfolio-item:hover .portfolio-title-front {
+            opacity: 0;
+        }
+
+        .portfolio-overlay h3 {
+            color: var(--matrix-mint);
+            margin-bottom: 10px;
+        }
+
+        .portfolio-overlay p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* ==========================================
+           6. EQUIPO
+           ========================================== */
+        #equipo {
+            padding: 100px 0;
+            background-color: var(--void-black);
+            text-align: center;
+        }
+
+        .team-container {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+
+        .team-member {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--surface-dark);
+            border: 2px solid var(--exos-purple);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--matrix-mint);
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px var(--exos-purple-glow);
+        }
+
+        .team-member h3 {
+            font-size: 1.2rem;
             margin-bottom: 5px;
         }
 
-        .team-role {
-            color: var(--neon-green);
-            font-size: 0.9rem;
+        .team-member p {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        /* Contacto y Generación de Leads */
-        #contact {
+        /* ==========================================
+           7. FORMULARIO DE CONTACTO (LEADS)
+           ========================================== */
+        #contacto {
             padding: 100px 0;
+            background: linear-gradient(0deg, var(--surface-dark) 0%, var(--void-black) 100%);
         }
 
-        .contact-form {
+        .form-container {
             max-width: 600px;
             margin: 0 auto;
+            background: rgba(18, 20, 29, 0.8);
             padding: 40px;
+            border-radius: 8px;
+            border: 1px solid rgba(157, 78, 221, 0.2);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .form-group {
@@ -523,26 +421,28 @@
 
         .form-group label {
             display: block;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: var(--text-light);
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--clean-white);
+            font-family: 'JetBrains Mono', monospace;
         }
 
         .form-control {
             width: 100%;
             padding: 15px;
-            background: rgba(0, 0, 0, 0.2);
-            border: 1px solid var(--glass-border);
-            border-radius: 8px;
-            color: var(--text-white);
-            font-family: 'Inter', sans-serif;
-            transition: all 0.3s;
+            background: var(--void-black);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            color: var(--clean-white);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
         }
 
         .form-control:focus {
             outline: none;
-            border-color: var(--neon-cyan);
-            box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+            border-color: var(--matrix-mint);
+            box-shadow: 0 0 10px var(--matrix-mint-glow);
         }
 
         textarea.form-control {
@@ -550,394 +450,268 @@
             min-height: 120px;
         }
 
-        .btn-submit {
+        .submit-btn {
             width: 100%;
-            background: var(--neon-cyan);
-            color: var(--bg-dark);
-            border: none;
-            font-size: 1.1rem;
-            padding: 15px 30px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-family: 'Poppins', sans-serif;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            margin-top: 10px;
         }
 
-        .btn-submit:hover {
-            background: var(--text-white);
-            color: var(--bg-dark);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
-        }
-
+        /* ==========================================
+           8. FOOTER
+           ========================================== */
         footer {
-            text-align: center;
+            background: var(--void-black);
             padding: 30px 0;
-            border-top: 1px solid var(--glass-border);
-            background: var(--bg-darker);
-            font-size: 0.9rem;
-            color: #888;
-        }
-
-        /* Animaciones */
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(50px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
-        }
-
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-muted);
         }
 
         /* Responsive */
         @media (max-width: 768px) {
-            .hero-title { font-size: 2.5rem; }
-            .nav-links { display: none; }
-            .pricing-card.highlight { transform: scale(1); }
-            .pricing-card.highlight:hover { transform: translateY(-5px); }
-            .budget-display { font-size: 2.5rem; }
+            .nav-links {
+                display: none; /* Simplificado para móvil, se puede agregar menú hamburguesa después */
+            }
+            .pricing-card.highlighted {
+                transform: scale(1);
+            }
+            .pricing-card.highlighted:hover {
+                transform: translateY(-10px);
+            }
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+            .cta-group {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- Navegación -->
+    <!-- NAVEGACIÓN -->
     <nav>
         <div class="container nav-container">
-            <div class="logo">EXOS<span>.</span>LABS</div>
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#9D4EDD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                EXOS<span>.</span>
+            </div>
             <div class="nav-links">
-                <a href="#hero">Inicio</a>
-                <a href="#pricing">Catálogo</a>
-                <a href="#portfolio">Portafolio</a>
-                <a href="#team">Equipo</a>
-                <a href="#contact">Contacto</a>
+                <a href="#catalogo">Catálogo</a>
+                <a href="#portafolio">Portafolio</a>
+                <a href="#equipo">Equipo</a>
+                <a href="#contacto">Contacto</a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <header id="hero">
+    <!-- HERO SECTION -->
+    <section id="hero">
         <div class="container hero-content">
-            <h1 class="hero-title">Ingeniería de Software para Ecosistemas Escalables</h1>
-            <p class="hero-subtitle">Construimos arquitecturas digitales robustas, rápidas y de alto impacto visual diseñadas para el crecimiento corporativo y ventas.</p>
+            <h1>Ingeniería de Software para Ecosistemas Escalables</h1>
+            <p>// Autonomía tecnológica, lógica de negocio robusta y diseño inmersivo para plataformas de alto rendimiento.</p>
             <div class="cta-group">
-                <a href="#contact" class="btn btn-primary">Iniciar Requerimiento</a>
-                <a href="#pricing" class="btn btn-secondary">Ver Catálogo</a>
+                <button onclick="document.getElementById('contacto').scrollIntoView();" class="btn btn-primary">Iniciar Requerimiento</button>
+                <button onclick="document.getElementById('catalogo').scrollIntoView();" class="btn btn-secondary">Ver Catálogo</button>
             </div>
-        </div>
-    </header>
-
-    <!-- Catálogo de Soluciones (Precios) -->
-    <section id="pricing">
-        <div class="container">
-            <h2 class="section-title reveal">Nuestras Soluciones</h2>
-            <div class="pricing-grid reveal">
-                
-                <!-- Card 1 -->
-                <div class="pricing-card glass-panel">
-                    <h3 class="plan-name">Landing Page Corporativa</h3>
-                    <div class="plan-price">$180</div>
-                    <p>Presencia digital impecable y de alta conversión.</p>
-                </div>
-
-                <!-- Card 2 (Destacado) -->
-                <div class="pricing-card glass-panel highlight">
-                    <div class="price-badge">MÁS POPULAR</div>
-                    <h3 class="plan-name">E-Commerce Full Stack</h3>
-                    <div class="plan-price">$450</div>
-                    <p>Plataforma de ventas integral, inventario y pasarelas.</p>
-                </div>
-
-                <!-- Card 3 -->
-                <div class="pricing-card glass-panel">
-                    <h3 class="plan-name">App Híbrida</h3>
-                    <div class="plan-price green">$1200</div>
-                    <p>Desarrollo móvil escalable para iOS y Android.</p>
-                </div>
-
-                <!-- Card 4 -->
-                <div class="pricing-card glass-panel">
-                    <h3 class="plan-name">Infraestructura VPM</h3>
-                    <div class="plan-price">$75</div>
-                    <p>Optimización y arquitectura de servidores.</p>
-                </div>
-
-                <!-- Card 5 -->
-                <div class="pricing-card glass-panel">
-                    <h3 class="plan-name">Enterprise Server</h3>
-                    <div class="plan-price green">$800</div>
-                    <p>Despliegue de servidores corporativos de alta demanda.</p>
-                </div>
-
-            </div>
-
-            <!-- Calculadora de Presupuesto Interactiva -->
-            <div class="budget-calculator glass-panel reveal">
-                <h3>Ajusta tu Presupuesto Estimado</h3>
-                <div class="slider-container">
-                    <span class="slider-label">$100</span>
-                    <input type="range" id="budgetRange" min="100" max="2000" step="50" value="1000">
-                    <span class="slider-label">$2000+</span>
-                </div>
-                <div class="budget-display" id="budgetValue">$1000</div>
-                <p style="margin-top: 15px; font-size: 0.9rem; color: #a0a0a0;">Desliza para indicarnos tu capacidad de inversión y te guiaremos.</p>
-            </div>
-
         </div>
     </section>
 
-    <!-- Modal Emergente de Presupuesto -->
-    <div id="budgetModal" class="modal-overlay">
-        <div class="modal-content glass-panel">
-            <span class="close-modal" id="closeBudgetModal">&times;</span>
-            <h3 class="modal-title">Tu presupuesto es el indicado para tu proxima pagina web estructurada a la perfeccion</h3>
+    <!-- CATÁLOGO DE SOLUCIONES -->
+    <section id="catalogo">
+        <div class="container">
+            <h2 class="section-title">Nuestras <span>Soluciones</span></h2>
             
-            <form id="budgetForm">
-                <div class="form-group">
-                    <label for="modalObjetivo">¿Cuál es el objetivo principal de tu página web?</label>
-                    <input type="text" id="modalObjetivo" class="form-control" placeholder="Ej. Vender productos, mostrar mi portafolio..." required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="modalFunciones">¿Qué funciones clave consideras indispensables?</label>
-                    <textarea id="modalFunciones" class="form-control" placeholder="Ej. Pasarela de pagos, sistema de reservas, chat en vivo..." style="min-height: 80px;" required></textarea>
+            <div class="pricing-grid">
+                <!-- Tarjeta 1 -->
+                <div class="pricing-card">
+                    <h3 class="card-title">Landing Page Corporativa</h3>
+                    <div class="card-price">$180</div>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; font-family: 'JetBrains Mono', monospace;">Presencia digital optimizada y de alta velocidad.</p>
                 </div>
 
-                <div class="form-group">
-                    <label for="modalNombre">Tu Nombre o Empresa</label>
-                    <input type="text" id="modalNombre" class="form-control" placeholder="Ej. Empresa C.A." required>
+                <!-- Tarjeta 2 DESTACADA -->
+                <div class="pricing-card highlighted">
+                    <div class="badge">Recomendado</div>
+                    <h3 class="card-title">E-Commerce Full Stack</h3>
+                    <div class="card-price">$450</div>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; font-family: 'JetBrains Mono', monospace; margin-bottom: 20px;">Plataforma completa con control de stock, variaciones y checkout limpio.</p>
+                    <button onclick="document.getElementById('contacto').scrollIntoView();" class="btn btn-primary" style="width: 100%; font-size: 0.8rem; padding: 10px;">Solicitar Arquitectura</button>
                 </div>
 
-                <button type="submit" class="btn btn-submit">Validar Requerimiento</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Casos de Éxito (Portafolio) -->
-    <section id="portfolio">
-        <div class="container">
-            <h2 class="section-title reveal">Casos de Éxito</h2>
-            <div class="portfolio-grid reveal">
-                
-                <div class="portfolio-card glass-panel">
-                    <div class="portfolio-info">
-                        <h3 class="portfolio-title">Fanática Beauty</h3>
-                        <p class="portfolio-desc">E-Commerce optimizado para cosméticos con gestión de inventario en tiempo real.</p>
-                    </div>
+                <!-- Tarjeta 3 -->
+                <div class="pricing-card">
+                    <h3 class="card-title">App Híbrida</h3>
+                    <div class="card-price">$1200</div>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; font-family: 'JetBrains Mono', monospace;">Aplicación multiplataforma con integración nativa.</p>
                 </div>
 
-                <div class="portfolio-card glass-panel">
-                    <div class="portfolio-info">
-                        <h3 class="portfolio-title">Sistema VPM</h3>
-                        <p class="portfolio-desc">Arquitectura interna de bases de datos para monitoreo de métricas empresariales.</p>
-                    </div>
+                <!-- Tarjeta 4 -->
+                <div class="pricing-card">
+                    <h3 class="card-title">Infraestructura VPM</h3>
+                    <div class="card-price">$75</div>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; font-family: 'JetBrains Mono', monospace;">Configuración y seguridad de entornos de bases de datos.</p>
                 </div>
 
-                <div class="portfolio-card glass-panel">
-                    <div class="portfolio-info">
-                        <h3 class="portfolio-title">Sincronía ERP</h3>
-                        <p class="portfolio-desc">Sistema monolítico para la gestión unificada de recursos corporativos.</p>
-                    </div>
+                <!-- Tarjeta 5 -->
+                <div class="pricing-card">
+                    <h3 class="card-title">Enterprise Server</h3>
+                    <div class="card-price">$800</div>
+                    <p style="color: var(--text-muted); font-size: 0.9rem; font-family: 'JetBrains Mono', monospace;">Despliegue y optimización de servidores para alto tráfico.</p>
                 </div>
-
-                <div class="portfolio-card glass-panel">
-                    <div class="portfolio-info">
-                        <h3 class="portfolio-title">Fanaticapp</h3>
-                        <p class="portfolio-desc">Aplicación móvil híbrida para fidelización de clientes y compras in-app.</p>
-                    </div>
-                </div>
-
             </div>
         </div>
     </section>
 
-    <!-- Equipo -->
-    <section id="team">
+    <!-- PORTAFOLIO / CASOS DE ÉXITO -->
+    <section id="portafolio">
         <div class="container">
-            <h2 class="section-title reveal">Liderazgo Técnico</h2>
-            <div class="team-grid reveal">
-                
-                <div class="team-member glass-panel">
-                    <div class="team-avatar">👨‍💻</div>
-                    <h3 class="team-name">Samuel A.</h3>
-                    <div class="team-role">Lead Architect</div>
+            <h2 class="section-title">Casos de <span>Éxito</span></h2>
+            
+            <div class="portfolio-grid">
+                <!-- Item 1 -->
+                <div class="portfolio-item">
+                    <div class="portfolio-title-front">Fanática Beauty</div>
+                    <div class="portfolio-overlay">
+                        <h3>Fanática Beauty</h3>
+                        <p>Plataforma E-commerce con sincronización de inventario, selección de tonos específicos y checkout optimizado vía WhatsApp.</p>
+                    </div>
                 </div>
 
-                <div class="team-member glass-panel">
-                    <div class="team-avatar">⚙️</div>
-                    <h3 class="team-name">José R.</h3>
-                    <div class="team-role">Systems Engineer</div>
+                <!-- Item 2 -->
+                <div class="portfolio-item">
+                    <div class="portfolio-title-front">Sistema VPM</div>
+                    <div class="portfolio-overlay">
+                        <h3>Sistema VPM</h3>
+                        <p>Panel administrativo y base de datos autónoma para gestión de flujos de trabajo con altos estándares de seguridad.</p>
+                    </div>
                 </div>
 
+                <!-- Item 3 -->
+                <div class="portfolio-item">
+                    <div class="portfolio-title-front">Sincronía ERP</div>
+                    <div class="portfolio-overlay">
+                        <h3>Sincronía ERP</h3>
+                        <p>Dashboard personalizado ("God Mode") para seguimiento de analíticas, stock multisucursal y flujo de visitantes.</p>
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="portfolio-item">
+                    <div class="portfolio-title-front">Fanaticapp</div>
+                    <div class="portfolio-overlay">
+                        <h3>Fanaticapp</h3>
+                        <p>Integración de ecosistema móvil para acceso rápido a inventarios y fidelización de clientes de la marca.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Generación de Leads (Contacto) -->
-    <section id="contact">
+    <!-- EQUIPO -->
+    <section id="equipo">
         <div class="container">
-            <h2 class="section-title reveal">Inicia tu Proyecto</h2>
-            <form id="leadForm" class="contact-form glass-panel reveal">
-                
-                <div class="form-group">
-                    <label for="clienteNombre">Nombre o Empresa</label>
-                    <input type="text" id="clienteNombre" class="form-control" placeholder="Ej. Empresa C.A." required>
+            <h2 class="section-title">Arquitectura <span>Humana</span></h2>
+            <div class="team-container">
+                <div class="team-member">
+                    <div class="avatar">SA</div>
+                    <h3>Samuel A.</h3>
+                    <p>Lead Architect</p>
                 </div>
-
-                <div class="form-group">
-                    <label for="clienteServicio">Servicio de Interés</label>
-                    <select id="clienteServicio" class="form-control" required>
-                        <option value="" disabled selected>Selecciona un servicio...</option>
-                        <option value="Landing Page ($180)">Landing Page Corporativa</option>
-                        <option value="E-Commerce ($450)">E-Commerce Full Stack</option>
-                        <option value="App Híbrida ($1200)">App Híbrida</option>
-                        <option value="Infraestructura VPM ($75)">Infraestructura VPM</option>
-                        <option value="Enterprise Server ($800)">Enterprise Server</option>
-                        <option value="Otro">Otro requerimiento a medida</option>
-                    </select>
+                <div class="team-member">
+                    <div class="avatar">JR</div>
+                    <h3>José R.</h3>
+                    <p>Systems Engineer</p>
                 </div>
-
-                <div class="form-group">
-                    <label for="clienteDetalles">Detalles del Requerimiento</label>
-                    <textarea id="clienteDetalles" class="form-control" placeholder="Describe brevemente lo que necesitas construir..." required></textarea>
-                </div>
-
-                <button type="submit" class="btn btn-submit">Enviar Vía WhatsApp</button>
-            </form>
+            </div>
         </div>
     </section>
 
+    <!-- GENERACIÓN DE LEADS (FORMULARIO) -->
+    <section id="contacto">
+        <div class="container">
+            <h2 class="section-title">Inicializar <span>Requerimiento</span></h2>
+            <div class="form-container">
+                <form id="leadForm">
+                    <div class="form-group">
+                        <label for="nombre">NOMBRE Y APELLIDO</label>
+                        <input type="text" id="nombre" class="form-control" required placeholder="Ej: John Doe">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="whatsapp">NÚMERO DE WHATSAPP</label>
+                        <input type="tel" id="whatsapp" class="form-control" required placeholder="Ej: +58 414 1234567">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="servicio">SERVICIO REQUERIDO</label>
+                        <select id="servicio" class="form-control" required>
+                            <option value="" disabled selected>Selecciona un servicio...</option>
+                            <option value="Landing Page Corporativa">Landing Page Corporativa ($180)</option>
+                            <option value="E-Commerce Full Stack">E-Commerce Full Stack ($450)</option>
+                            <option value="App Híbrida">App Híbrida ($1200)</option>
+                            <option value="Infraestructura VPM">Infraestructura VPM ($75)</option>
+                            <option value="Enterprise Server">Enterprise Server ($800)</option>
+                            <option value="Desarrollo a Medida">Desarrollo a Medida / Otro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="detalles">DETALLES DEL PROYECTO</label>
+                        <textarea id="detalles" class="form-control" required placeholder="Describe brevemente la lógica de negocio o requerimientos técnicos..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary submit-btn">Sincronizar Datos</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
     <footer>
         <div class="container">
-            <p>&copy; 2026 Exos Code Labs Studio. Ingeniería de Software para Ecosistemas Escalables. Todos los derechos reservados.</p>
+            <p>&copy; 2026 Exos Code Labs Studio. System Online. All rights reserved.</p>
         </div>
     </footer>
 
-    <!-- Lógica de Interactividad y API WhatsApp -->
+    <!-- SCRIPT DE INTERACCIÓN Y WHATSAPP API -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('leadForm').addEventListener('submit', function(event) {
+            // Evitamos la recarga de la página
+            event.preventDefault();
+
+            // Captura de datos
+            const nombre = document.getElementById('nombre').value.trim();
+            const whatsapp = document.getElementById('whatsapp').value.trim();
+            const servicio = document.getElementById('servicio').value;
+            const detalles = document.getElementById('detalles').value.trim();
+
+            // Validación básica
+            if (!nombre || !whatsapp || !servicio || !detalles) {
+                alert('Faltan parámetros requeridos para la ejecución.');
+                return;
+            }
+
+            // Construcción del mensaje formateado
+            const mensaje = `*NUEVO REQUERIMIENTO: EXOS CODE LABS*%0A%0A` +
+                            `*Nombre:* ${nombre}%0A` +
+                            `*Contacto:* ${whatsapp}%0A` +
+                            `*Servicio de interés:* ${servicio}%0A%0A` +
+                            `*Detalles técnicos:*%0A${detalles}`;
+
+            // URL de la API de WhatsApp
+            // Reemplaza '58400000000' por el número de recepción real del lab (con código de país sin el '+')
+            const numeroReceptor = '58400000000'; 
+            const urlWhatsApp = `https://wa.me/${numeroReceptor}?text=${mensaje}`;
+
+            // Redirección en una nueva pestaña
+            window.open(urlWhatsApp, '_blank');
             
-            // 1. Animaciones de Intersección (Scroll Reveal)
-            const revealElements = document.querySelectorAll('.reveal');
-            
-            const revealOptions = {
-                threshold: 0.15,
-                rootMargin: "0px 0px -50px 0px"
-            };
-
-            const revealOnScroll = new IntersectionObserver(function(entries, observer) {
-                entries.forEach(entry => {
-                    if (!entry.isIntersecting) return;
-                    entry.target.classList.add('active');
-                    observer.unobserve(entry.target);
-                });
-            }, revealOptions);
-
-            revealElements.forEach(el => revealOnScroll.observe(el));
-
-            // 2. Procesamiento de Formulario Principal hacia WhatsApp API
-            const telefonoWhatsApp = "58XXXXXXXXX"; // Reemplazar por el número real
-
-            const leadForm = document.getElementById('leadForm');
-            if(leadForm) {
-                leadForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const nombre = document.getElementById('clienteNombre').value.trim();
-                    const servicio = document.getElementById('clienteServicio').value;
-                    const detalles = document.getElementById('clienteDetalles').value.trim();
-
-                    const mensajeConstruido = `*🚀 NUEVO LEAD - EXOS CODE LABS*\n\n` +
-                                              `*Cliente / Empresa:* ${nombre}\n` +
-                                              `*Servicio Solicitado:* ${servicio}\n\n` +
-                                              `*Detalles del Proyecto:*\n_${detalles}_\n\n` +
-                                              `_Mensaje generado automáticamente desde la plataforma web._`;
-
-                    const urlApi = `https://wa.me/${telefonoWhatsApp}?text=${encodeURIComponent(mensajeConstruido)}`;
-                    window.open(urlApi, '_blank');
-                });
-            }
-
-            // 3. Lógica del Slider de Presupuesto y Modal Emergente
-            const budgetRange = document.getElementById('budgetRange');
-            const budgetValueDisplay = document.getElementById('budgetValue');
-            const budgetModal = document.getElementById('budgetModal');
-            const closeBudgetModal = document.getElementById('closeBudgetModal');
-            const budgetForm = document.getElementById('budgetForm');
-            
-            let inactivityTimer;
-
-            // Función para iniciar/reiniciar el temporizador de 5 segundos
-            const resetInactivityTimer = () => {
-                clearTimeout(inactivityTimer);
-                inactivityTimer = setTimeout(() => {
-                    budgetModal.classList.add('active');
-                }, 5000); // 5000ms = 5 segundos
-            };
-
-            if(budgetRange) {
-                budgetRange.addEventListener('input', function(e) {
-                    const currentVal = e.target.value;
-                    // Actualizar el valor en la pantalla
-                    budgetValueDisplay.textContent = currentVal >= 2000 ? `$2000+` : `$${currentVal}`;
-                    
-                    // Reiniciar el temporizador de 5 segundos cada vez que se mueve el rango
-                    resetInactivityTimer();
-                });
-                
-                // Iniciar el temporizador al cargar si se desea, o solo cuando interactúen.
-                // Lo asociaremos al evento 'change' (cuando sueltan el click) para mayor precisión
-                budgetRange.addEventListener('change', resetInactivityTimer);
-            }
-
-            // Cerrar el modal
-            if(closeBudgetModal) {
-                closeBudgetModal.addEventListener('click', () => {
-                    budgetModal.classList.remove('active');
-                    clearTimeout(inactivityTimer); // Detener el temporizador si cierran
-                });
-            }
-
-            // Cerrar el modal al hacer click fuera del contenido
-            if(budgetModal) {
-                budgetModal.addEventListener('click', (e) => {
-                    if (e.target === budgetModal) {
-                        budgetModal.classList.remove('active');
-                        clearTimeout(inactivityTimer);
-                    }
-                });
-            }
-
-            // Procesar el formulario del Modal hacia WhatsApp
-            if(budgetForm) {
-                budgetForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    const objetivo = document.getElementById('modalObjetivo').value.trim();
-                    const funciones = document.getElementById('modalFunciones').value.trim();
-                    const nombreModal = document.getElementById('modalNombre').value.trim();
-                    const presupuestoSeleccionado = budgetRange.value >= 2000 ? '$2000+' : `$${budgetRange.value}`;
-
-                    const mensajeModal = `*💡 LEAD VIP POR PRESUPUESTO - EXOS CODE LABS*\n\n` +
-                                         `*Cliente / Empresa:* ${nombreModal}\n` +
-                                         `*Presupuesto Indicado:* ${presupuestoSeleccionado}\n\n` +
-                                         `*Objetivo de la Web:*\n_${objetivo}_\n\n` +
-                                         `*Funciones Clave Necesarias:*\n_${funciones}_\n\n` +
-                                         `_Capturado desde la calculadora interactiva._`;
-
-                    const urlApiModal = `https://wa.me/${telefonoWhatsApp}?text=${encodeURIComponent(mensajeModal)}`;
-                    window.open(urlApiModal, '_blank');
-                    
-                    // Cerrar y resetear modal tras enviar
-                    budgetModal.classList.remove('active');
-                    budgetForm.reset();
-                });
-            }
+            // Limpiar formulario tras el envío
+            this.reset();
         });
     </script>
 </body>
