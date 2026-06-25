@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Exos Code Labs</title>
+    <title>Exos Code Labs | Ecosistemas Web Escalables</title>
     
     <!-- Google Fonts: Space Grotesk para títulos, JetBrains Mono para detalles -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,12 +18,14 @@
             --void-black: #08090D;
             --surface-dark: #12141D;
             --exos-purple: #9D4EDD;
-            --exos-purple-glow: rgba(157, 78, 221, 0.4);
+            --exos-purple-dark: #5E268C;
+            --exos-purple-glow: rgba(157, 78, 221, 0.6);
             --matrix-mint: #39FF14;
-            --matrix-mint-glow: rgba(57, 255, 20, 0.3);
+            --matrix-mint-dark: #1F8C0A;
+            --matrix-mint-glow: rgba(57, 255, 20, 0.5);
             --clean-white: #F8F9FA;
             --text-muted: #A0AAB2;
-            --transition: all 0.3s ease-in-out;
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         * {
@@ -42,6 +44,23 @@
             color: var(--clean-white);
             line-height: 1.6;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Efecto de fondo moderno (Grid animado) */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: 
+                linear-gradient(rgba(157, 78, 221, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(157, 78, 221, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            pointer-events: none;
         }
 
         h1, h2, h3, h4 {
@@ -66,10 +85,28 @@
             color: var(--clean-white);
             text-transform: uppercase;
             letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 3px;
+            background: var(--exos-purple);
+            box-shadow: 0 0 10px var(--exos-purple-glow);
+            border-radius: 2px;
         }
 
         .section-title span {
             color: var(--exos-purple);
+            text-shadow: 0 0 15px var(--exos-purple-glow);
         }
 
         /* ==========================================
@@ -80,10 +117,12 @@
             top: 0;
             width: 100%;
             padding: 20px 0;
-            background: rgba(8, 9, 13, 0.85);
-            backdrop-filter: blur(10px);
+            background: rgba(8, 9, 13, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             z-index: 1000;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
         }
 
         .nav-container {
@@ -93,15 +132,17 @@
         }
 
         .logo {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
             display: flex;
             align-items: center;
             gap: 10px;
+            text-shadow: 0 0 10px rgba(255,255,255,0.2);
         }
 
         .logo span {
             color: var(--matrix-mint);
+            text-shadow: 0 0 15px var(--matrix-mint-glow);
         }
 
         .nav-links {
@@ -114,10 +155,28 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--matrix-mint);
+            transition: width 0.3s ease;
+            box-shadow: 0 0 8px var(--matrix-mint-glow);
         }
 
         .nav-links a:hover {
             color: var(--matrix-mint);
+            text-shadow: 0 0 10px var(--matrix-mint-glow);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
         }
 
         /* ==========================================
@@ -130,67 +189,141 @@
             justify-content: center;
             text-align: center;
             position: relative;
-            background: radial-gradient(circle at 50% 50%, var(--surface-dark) 0%, var(--void-black) 100%);
+            background: radial-gradient(circle at 50% 50%, rgba(26,29,36,0.8) 0%, var(--void-black) 100%);
             padding-top: 80px;
+            overflow: hidden;
+        }
+
+        /* Orbe luminoso de fondo */
+        #hero::before {
+            content: '';
+            position: absolute;
+            width: 60vw;
+            height: 60vw;
+            background: radial-gradient(circle, var(--exos-purple-glow) 0%, transparent 60%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            opacity: 0.3;
+            animation: pulseGlow 6s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.2; }
+            100% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.4; }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
         }
 
         .hero-content h1 {
             font-size: clamp(2.5rem, 5vw, 4.5rem);
             line-height: 1.1;
             margin-bottom: 20px;
-            text-shadow: 0 0 40px var(--exos-purple-glow);
+            text-shadow: 0 0 40px var(--exos-purple-glow), 2px 2px 0px rgba(0,0,0,0.5);
+            animation: slideUp 0.8s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
         }
 
         .hero-content p {
             font-family: 'JetBrains Mono', monospace;
             font-size: 1.1rem;
             color: var(--text-muted);
-            margin-bottom: 40px;
+            margin-bottom: 50px;
             max-width: 600px;
             margin-left: auto;
             margin-right: auto;
+            animation: slideUp 1s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
         }
 
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- BOTONES 3D MODERNOS --- */
         .cta-group {
             display: flex;
-            gap: 20px;
+            gap: 25px;
             justify-content: center;
+            perspective: 1000px; /* Para futuros efectos 3D si se rotan */
         }
 
         .btn {
-            padding: 15px 35px;
-            border-radius: 4px;
+            padding: 16px 40px;
+            border-radius: 12px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all 0.15s ease;
             font-family: 'Space Grotesk', sans-serif;
             border: none;
+            position: relative;
+            transform-style: preserve-3d;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
 
+        /* Botón Primario 3D */
         .btn-primary {
             background-color: var(--exos-purple);
             color: var(--clean-white);
-            box-shadow: 0 0 20px var(--exos-purple-glow);
+            /* Sombra múltiple para crear el volumen 3D */
+            box-shadow: 
+                0 8px 0 var(--exos-purple-dark), 
+                0 15px 20px rgba(0,0,0,0.6),
+                inset 0 2px 0 rgba(255,255,255,0.3);
+            transform: translateY(0);
         }
 
         .btn-primary:hover {
-            background-color: #8940C4;
-            box-shadow: 0 0 30px rgba(157, 78, 221, 0.6);
+            background-color: #a95df0;
+            box-shadow: 
+                0 10px 0 var(--exos-purple-dark), 
+                0 20px 25px rgba(0,0,0,0.6),
+                inset 0 2px 0 rgba(255,255,255,0.4);
             transform: translateY(-2px);
         }
 
+        .btn-primary:active {
+            /* Se hunde al hacer click */
+            box-shadow: 
+                0 0px 0 var(--exos-purple-dark), 
+                0 5px 10px rgba(0,0,0,0.6),
+                inset 0 2px 0 rgba(255,255,255,0.1);
+            transform: translateY(8px);
+        }
+
+        /* Botón Secundario 3D */
         .btn-secondary {
-            background-color: transparent;
+            background-color: #1A1D24;
             color: var(--matrix-mint);
-            border: 1px solid var(--matrix-mint);
-            box-shadow: 0 0 15px var(--matrix-mint-glow) inset;
+            border: 2px solid var(--matrix-mint);
+            box-shadow: 
+                0 8px 0 var(--matrix-mint-dark), 
+                0 15px 20px rgba(0,0,0,0.6),
+                inset 0 0 10px var(--matrix-mint-glow);
+            transform: translateY(0);
         }
 
         .btn-secondary:hover {
             background-color: rgba(57, 255, 20, 0.1);
+            box-shadow: 
+                0 10px 0 var(--matrix-mint-dark), 
+                0 20px 25px rgba(0,0,0,0.6),
+                inset 0 0 20px var(--matrix-mint-glow);
             transform: translateY(-2px);
+        }
+
+        .btn-secondary:active {
+            box-shadow: 
+                0 0px 0 var(--matrix-mint-dark), 
+                0 5px 10px rgba(0,0,0,0.6),
+                inset 0 0 5px var(--matrix-mint-glow);
+            transform: translateY(8px);
         }
 
         /* ==========================================
@@ -199,72 +332,109 @@
         #catalogo {
             padding: 100px 0;
             background-color: var(--void-black);
+            position: relative;
+            z-index: 2;
         }
 
         .pricing-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
+            gap: 40px;
             align-items: center;
+            perspective: 1200px;
         }
 
         .pricing-card {
-            background: var(--surface-dark);
+            background: linear-gradient(145deg, #161922, #0d0f15);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
+            border-radius: 16px;
             padding: 40px 30px;
             text-align: center;
             transition: var(--transition);
             position: relative;
             overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        /* Retraso escalonado para la animación de flotación */
+        .pricing-card:nth-child(1) { animation-delay: 0s; }
+        .pricing-card:nth-child(2) { animation-delay: 1s; }
+        .pricing-card:nth-child(3) { animation-delay: 2s; }
+        .pricing-card:nth-child(4) { animation-delay: 3s; }
+        .pricing-card:nth-child(5) { animation-delay: 4s; }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
         }
 
         .pricing-card:hover {
-            transform: translateY(-10px);
-            border-color: rgba(157, 78, 221, 0.3);
+            transform: translateY(-15px) scale(1.02) rotateX(5deg);
+            border-color: rgba(157, 78, 221, 0.5);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8), 0 0 20px var(--exos-purple-glow);
+            animation-play-state: paused;
         }
 
         .pricing-card.highlighted {
             border: 2px solid var(--exos-purple);
-            box-shadow: 0 0 30px var(--exos-purple-glow);
+            box-shadow: 0 0 40px var(--exos-purple-glow), inset 0 0 20px rgba(157, 78, 221, 0.1);
             transform: scale(1.05);
             z-index: 2;
-            background: linear-gradient(180deg, var(--surface-dark) 0%, rgba(157,78,221,0.05) 100%);
+            background: linear-gradient(180deg, var(--surface-dark) 0%, rgba(157,78,221,0.1) 100%);
+            animation: floatHighlight 5s ease-in-out infinite;
+        }
+
+        @keyframes floatHighlight {
+            0% { transform: scale(1.05) translateY(0px); box-shadow: 0 0 40px var(--exos-purple-glow); }
+            50% { transform: scale(1.05) translateY(-15px); box-shadow: 0 0 60px rgba(157, 78, 221, 0.8); }
+            100% { transform: scale(1.05) translateY(0px); box-shadow: 0 0 40px var(--exos-purple-glow); }
         }
 
         .pricing-card.highlighted:hover {
-            transform: scale(1.05) translateY(-10px);
+            transform: scale(1.08) translateY(-15px) rotateY(5deg);
+            animation-play-state: paused;
         }
 
         .badge {
             position: absolute;
-            top: 15px;
-            right: -30px;
+            top: 20px;
+            right: -35px;
             background: var(--exos-purple);
             color: white;
-            padding: 5px 40px;
-            font-size: 0.7rem;
+            padding: 8px 45px;
+            font-size: 0.75rem;
             font-weight: 700;
             transform: rotate(45deg);
             text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            letter-spacing: 1px;
         }
 
         .card-title {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             margin-bottom: 15px;
             color: var(--text-muted);
+            transition: color 0.3s ease;
+        }
+
+        .pricing-card:hover .card-title {
+            color: var(--clean-white);
         }
 
         .pricing-card.highlighted .card-title {
             color: var(--clean-white);
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
         }
 
         .card-price {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             font-weight: 700;
             color: var(--matrix-mint);
             margin-bottom: 20px;
+            text-shadow: 0 0 20px var(--matrix-mint-glow);
         }
 
         /* ==========================================
@@ -273,39 +443,56 @@
         #portafolio {
             padding: 100px 0;
             background-color: var(--surface-dark);
+            box-shadow: inset 0 20px 50px rgba(0,0,0,0.5);
         }
 
         .portfolio-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            gap: 30px;
+            perspective: 1000px;
         }
 
         .portfolio-item {
             position: relative;
-            height: 300px;
-            border-radius: 8px;
+            height: 320px;
+            border-radius: 16px;
             overflow: hidden;
             background: #1A1D24;
             display: flex;
             align-items: center;
             justify-content: center;
             border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
         }
 
         .portfolio-item::before {
             content: '';
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(45deg, rgba(157,78,221,0.1), transparent);
+            background: linear-gradient(135deg, rgba(157,78,221,0.2), rgba(57, 255, 20, 0.05));
             z-index: 1;
+            transition: opacity 0.4s ease;
+        }
+
+        .portfolio-item:hover {
+            transform: translateY(-10px) rotateX(5deg) rotateY(-5deg);
+            box-shadow: 20px 20px 40px rgba(0,0,0,0.6), -5px -5px 20px rgba(157,78,221,0.2);
+        }
+
+        .portfolio-item:hover::before {
+            opacity: 0.5;
         }
 
         .portfolio-title-front {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
             z-index: 2;
-            transition: var(--transition);
+            transition: all 0.4s ease;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.8);
+            transform: translateZ(50px); /* Efecto 3D del texto */
         }
 
         .portfolio-overlay {
@@ -315,34 +502,41 @@
             width: 100%;
             height: 100%;
             background: rgba(8, 9, 13, 0.95);
+            backdrop-filter: blur(5px);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             padding: 30px;
             text-align: center;
-            transform: translateY(100%);
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            transform: translateY(20px) translateZ(30px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             z-index: 3;
-            border-top: 3px solid var(--matrix-mint);
+            border-top: 4px solid var(--matrix-mint);
         }
 
         .portfolio-item:hover .portfolio-overlay {
-            transform: translateY(0);
+            opacity: 1;
+            transform: translateY(0) translateZ(30px);
         }
 
         .portfolio-item:hover .portfolio-title-front {
             opacity: 0;
+            transform: scale(0.8) translateZ(0);
         }
 
         .portfolio-overlay h3 {
             color: var(--matrix-mint);
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            text-shadow: 0 0 10px var(--matrix-mint-glow);
         }
 
         .portfolio-overlay p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
+            font-size: 1rem;
+            color: var(--clean-white);
+            line-height: 1.5;
         }
 
         /* ==========================================
@@ -352,126 +546,154 @@
             padding: 100px 0;
             background-color: var(--void-black);
             text-align: center;
+            position: relative;
         }
 
         .team-container {
             display: flex;
             justify-content: center;
-            gap: 60px;
+            gap: 80px;
             flex-wrap: wrap;
-            margin-top: 50px;
+            margin-top: 60px;
         }
 
         .team-member {
             display: flex;
             flex-direction: column;
             align-items: center;
+            transition: transform 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
         }
 
         .avatar {
-            width: 120px;
-            height: 120px;
+            width: 130px;
+            height: 130px;
             border-radius: 50%;
-            background: var(--surface-dark);
-            border: 2px solid var(--exos-purple);
+            background: linear-gradient(145deg, #161922, #0d0f15);
+            border: 3px solid var(--exos-purple);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2.5rem;
             font-weight: 700;
             color: var(--matrix-mint);
-            margin-bottom: 20px;
-            box-shadow: 0 0 20px var(--exos-purple-glow);
+            margin-bottom: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5), inset 0 0 15px rgba(157, 78, 221, 0.3);
+            text-shadow: 0 0 10px var(--matrix-mint-glow);
+            transition: all 0.4s ease;
+        }
+
+        .team-member:hover .avatar {
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 0 30px var(--exos-purple-glow);
+            transform: rotate(5deg) scale(1.05);
         }
 
         .team-member h3 {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             margin-bottom: 5px;
         }
 
         .team-member p {
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            color: var(--text-muted);
+            font-size: 0.9rem;
+            color: var(--exos-purple);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
+            font-weight: 700;
         }
 
         /* ==========================================
            7. FORMULARIO DE CONTACTO (LEADS)
            ========================================== */
         #contacto {
-            padding: 100px 0;
+            padding: 120px 0;
             background: linear-gradient(0deg, var(--surface-dark) 0%, var(--void-black) 100%);
         }
 
         .form-container {
-            max-width: 600px;
+            max-width: 650px;
             margin: 0 auto;
-            background: rgba(18, 20, 29, 0.8);
-            padding: 40px;
-            border-radius: 8px;
-            border: 1px solid rgba(157, 78, 221, 0.2);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: rgba(18, 20, 29, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 50px;
+            border-radius: 16px;
+            border: 1px solid rgba(157, 78, 221, 0.3);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6), inset 0 0 20px rgba(157,78,221,0.05);
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+        }
+
+        .form-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.7), 0 0 40px rgba(157,78,221,0.1);
         }
 
         .form-group {
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
-            font-size: 0.9rem;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
             color: var(--clean-white);
             font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 1px;
         }
 
         .form-control {
             width: 100%;
-            padding: 15px;
-            background: var(--void-black);
+            padding: 18px;
+            background: rgba(8, 9, 13, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
+            border-radius: 8px;
             color: var(--clean-white);
             font-family: 'Space Grotesk', sans-serif;
-            font-size: 1rem;
+            font-size: 1.05rem;
             transition: var(--transition);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
         }
 
         .form-control:focus {
             outline: none;
             border-color: var(--matrix-mint);
-            box-shadow: 0 0 10px var(--matrix-mint-glow);
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.5), 0 0 15px var(--matrix-mint-glow);
+            background: var(--void-black);
         }
 
         textarea.form-control {
             resize: vertical;
-            min-height: 120px;
+            min-height: 140px;
         }
 
         .submit-btn {
             width: 100%;
-            margin-top: 10px;
+            margin-top: 15px;
+            padding: 20px;
+            font-size: 1.1rem;
         }
 
         /* ==========================================
            8. FOOTER
            ========================================== */
         footer {
-            background: var(--void-black);
-            padding: 30px 0;
+            background: #040507;
+            padding: 40px 0;
             text-align: center;
             border-top: 1px solid rgba(255,255,255,0.05);
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             .nav-links {
-                display: none; /* Simplificado para móvil, se puede agregar menú hamburguesa después */
+                display: none;
             }
             .pricing-card.highlighted {
                 transform: scale(1);
@@ -480,10 +702,14 @@
                 transform: translateY(-10px);
             }
             .hero-content h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
             .cta-group {
                 flex-direction: column;
+                gap: 15px;
+            }
+            .form-container {
+                padding: 30px 20px;
             }
         }
     </style>
@@ -494,7 +720,7 @@
     <nav>
         <div class="container nav-container">
             <div class="logo">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#9D4EDD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
                 EXOS<span>.</span>
@@ -530,7 +756,7 @@
                 <div class="pricing-card">
                     <h3 class="card-title">Landing Page Corporativa</h3>
                     <div class="card-price">$180</div>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; font-family: 'JetBrains Mono', monospace;">Presencia digital optimizada y de alta velocidad.</p>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; font-family: 'JetBrains Mono', monospace;">Presencia digital optimizada y de alta velocidad.</p>
                 </div>
 
                 <!-- Tarjeta 2 DESTACADA -->
@@ -538,29 +764,29 @@
                     <div class="badge">Recomendado</div>
                     <h3 class="card-title">E-Commerce Full Stack</h3>
                     <div class="card-price">$450</div>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; font-family: 'JetBrains Mono', monospace; margin-bottom: 20px;">Plataforma completa con control de stock, variaciones y checkout limpio.</p>
-                    <button onclick="document.getElementById('contacto').scrollIntoView();" class="btn btn-primary" style="width: 100%; font-size: 0.8rem; padding: 10px;">Solicitar Arquitectura</button>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; font-family: 'JetBrains Mono', monospace; margin-bottom: 25px;">Plataforma completa con control de stock, variaciones y checkout limpio.</p>
+                    <button onclick="document.getElementById('contacto').scrollIntoView();" class="btn btn-primary" style="width: 100%; font-size: 0.85rem; padding: 12px;">Solicitar Arquitectura</button>
                 </div>
 
                 <!-- Tarjeta 3 -->
                 <div class="pricing-card">
                     <h3 class="card-title">App Híbrida</h3>
                     <div class="card-price">$1200</div>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; font-family: 'JetBrains Mono', monospace;">Aplicación multiplataforma con integración nativa.</p>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; font-family: 'JetBrains Mono', monospace;">Aplicación multiplataforma con integración nativa.</p>
                 </div>
 
                 <!-- Tarjeta 4 -->
                 <div class="pricing-card">
                     <h3 class="card-title">Infraestructura VPM</h3>
                     <div class="card-price">$75</div>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; font-family: 'JetBrains Mono', monospace;">Configuración y seguridad de entornos de bases de datos.</p>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; font-family: 'JetBrains Mono', monospace;">Configuración y seguridad de entornos de bases de datos.</p>
                 </div>
 
                 <!-- Tarjeta 5 -->
                 <div class="pricing-card">
                     <h3 class="card-title">Enterprise Server</h3>
                     <div class="card-price">$800</div>
-                    <p style="color: var(--text-muted); font-size: 0.9rem; font-family: 'JetBrains Mono', monospace;">Despliegue y optimización de servidores para alto tráfico.</p>
+                    <p style="color: var(--text-muted); font-size: 0.95rem; font-family: 'JetBrains Mono', monospace;">Despliegue y optimización de servidores para alto tráfico.</p>
                 </div>
             </div>
         </div>
