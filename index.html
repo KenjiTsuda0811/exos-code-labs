@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exos Code Labs</title>
     
+    <link rel="icon" type="image/jpeg" href="https://exoscodelabs.site/logo%20index.jpeg">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -124,6 +126,8 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            cursor: pointer;
+            user-select: none;
         }
 
         .logo svg {
@@ -781,7 +785,7 @@
         }
 
         /* ==========================================
-           7. FORMULARIO DE CAPTACIÓN (IMPECABLE Y MODERNO)
+           7. FORMULARIO DE CAPTACIÓN CON CARGA DE ARCHIVOS
            ========================================== */
         #contacto {
             padding: 140px 0;
@@ -860,13 +864,125 @@
             min-height: 140px;
         }
 
+        /* Estilo para el input file */
+        .file-label-custom {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: rgba(255,255,255,0.02);
+            border: 1px dashed rgba(255,255,255,0.15);
+            padding: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            transition: var(--transition-fluid);
+        }
+
+        .file-label-custom:hover {
+            border-color: var(--accent-purple);
+            color: var(--text-main);
+            background: rgba(163, 112, 247, 0.02);
+        }
+
         .form-wrapper .submit-btn {
             width: 100%;
             margin-top: 8px;
         }
 
         /* ==========================================
-           8. FOOTER METADATA
+           8. MODAL OCULTO DE ADMINISTRACIÓN DE PEDIDOS
+           ========================================== */
+        .modal-admin {
+            position: fixed;
+            inset: 0;
+            background: rgba(5, 6, 9, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .modal-admin-content {
+            background: #0D1017;
+            border: 1px solid var(--border-subtle);
+            width: 100%;
+            max-width: 900px;
+            border-radius: var(--curve);
+            padding: 40px;
+            max-height: 85vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+        }
+
+        .close-admin {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: var(--transition-fluid);
+        }
+
+        .close-admin:hover {
+            color: var(--text-main);
+        }
+
+        .admin-table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 24px;
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            text-align: left;
+        }
+
+        .admin-table th {
+            background: #141923;
+            padding: 14px 16px;
+            color: var(--text-main);
+            font-family: var(--font-tech);
+            font-weight: 500;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .admin-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .admin-table tr:hover td {
+            background: rgba(255,255,255,0.01);
+            color: var(--text-main);
+        }
+
+        .img-link-preview {
+            color: var(--accent-mint);
+            text-decoration: underline;
+            font-family: var(--font-mono);
+        }
+
+        /* ==========================================
+           9. FOOTER METADATA
            ========================================== */
         footer {
             padding: 48px 0;
@@ -880,31 +996,14 @@
             color: var(--text-muted);
         }
 
-        /* Ajustes Responsivos Fluidos */
         @media (max-width: 950px) {
-            .pricing-grid {
-                grid-template-columns: 1fr;
-            }
-            .pricing-card, .pricing-card:nth-child(1), .pricing-card:nth-child(2), .pricing-card:nth-child(3), .pricing-card:nth-child(4), .pricing-card:nth-child(5) {
-                grid-column: span 1;
-            }
-            .config-panel {
-                grid-template-columns: 1fr;
-            }
-            .config-summary {
-                position: static;
-            }
-            .portfolio-grid {
-                grid-template-columns: 1fr;
-            }
-            .form-row-split {
-                grid-template-columns: 1fr;
-                gap: 0;
-            }
-            .team-grid {
-                gap: 48px;
-                flex-direction: column;
-            }
+            .pricing-grid { grid-template-columns: 1fr; }
+            .pricing-card, .pricing-card:nth-child(1), .pricing-card:nth-child(2), .pricing-card:nth-child(3), .pricing-card:nth-child(4), .pricing-card:nth-child(5) { grid-column: span 1; }
+            .config-panel { grid-template-columns: 1fr; }
+            .config-summary { position: static; }
+            .portfolio-grid { grid-template-columns: 1fr; }
+            .form-row-split { grid-template-columns: 1fr; gap: 0; }
+            .team-grid { gap: 48px; flex-direction: column; }
         }
 
         @media (max-width: 600px) {
@@ -921,7 +1020,7 @@
 
     <nav>
         <div class="container nav-container">
-            <div class="logo">
+            <div class="logo" id="secretLogoTrigger">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
@@ -965,8 +1064,8 @@
                 </div>
 
                 <div class="pricing-card highlighted">
+                    <div class="badge">La Más Vendida</div>
                     <div class="card-header">
-                        <div class="badge">La Más Vendida</div>
                         <h3>Tienda Online con Carrito</h3>
                         <p>Tu catálogo de productos en internet para vender las 24 horas. Incluye control de cantidades disponibles, opción de elegir colores/tonos y pedidos directos a tu WhatsApp.</p>
                     </div>
@@ -1109,8 +1208,7 @@
                 <div class="config-summary">
                     <div>
                         <div class="summary-title">Tu Lista de Opciones</div>
-                        <div class="summary-details" id="summaryDetailsList">
-                            </div>
+                        <div class="summary-details" id="summaryDetailsList"></div>
                     </div>
                     
                     <div class="summary-price-box">
@@ -1192,7 +1290,7 @@
         <div class="container">
             <h2 class="section-title">Escríbenos por <span>WhatsApp</span></h2>
             <div class="form-wrapper">
-                <form id="leadForm">
+                <form id="leadForm" enctype="multipart/form-data">
                     <div class="form-row-split">
                         <div class="form-group">
                             <label for="nombre">Tu Nombre Completo</label>
@@ -1224,7 +1322,18 @@
                     
                     <div class="form-group">
                         <label for="detalles">Cuéntanos sobre tu negocio o qué necesitas en tu página</label>
-                        <textarea id="detalles" class="form-control" required placeholder="Ej: Necesito una tienda online para vender ropa y que me envíen la lista de compras directamente a mi WhatsApp..."></textarea>
+                        <textarea id="detalles" class="form-control" required placeholder="Ej: Necesito una tienda online para vender ropa..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>¿Deseas adjuntar una imagen de referencia o bosquejo? (Opcional)</label>
+                        <label for="imagenInput" class="file-label-custom" id="fileLabelText">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/>
+                            </svg>
+                            Seleccionar Archivo / Captura
+                        </label>
+                        <input type="file" id="imagenInput" accept="image/*" style="display: none;">
                     </div>
                     
                     <button type="submit" class="btn btn-primary submit-btn">Enviar Pedido por WhatsApp</button>
@@ -1232,6 +1341,49 @@
             </div>
         </div>
     </section>
+
+    <div class="modal-admin" id="adminModal">
+        <div class="modal-admin-content">
+            <button class="close-admin" onclick="cerrarPanelAdmin();">&times;</button>
+            
+            <div id="adminLoginView">
+                <h3 class="section-title" style="margin-bottom: 2rem; font-size: 1.5rem; text-align: left;">Acceso <span>Operativo Core</span></h3>
+                <div class="form-group">
+                    <label>Usuario (Número de Teléfono Registrado)</label>
+                    <input type="text" id="adminUser" class="form-control" placeholder="Ej: 584127336450">
+                </div>
+                <div class="form-group">
+                    <label>Clave de Autenticación de Sistemas</label>
+                    <input type="password" id="adminPass" class="form-control" placeholder="••••••••">
+                </div>
+                <button onclick="procesarLoginAdmin();" class="btn btn-primary" style="width: 100%;">Conectar Ecosistema</button>
+            </div>
+
+            <div id="adminDashboardView" style="display: none;">
+                <h3 class="section-title" style="margin-bottom: 1rem; font-size: 1.5rem; text-align: left;">Registros <span>ECLS</span></h3>
+                <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Lista de requerimientos y flujos transaccionales guardados en la base de datos.</p>
+                
+                <div class="admin-table-wrapper">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Cliente</th>
+                                <th>Identificación</th>
+                                <th>Teléfono</th>
+                                <th>Servicio</th>
+                                <th>Especificación</th>
+                                <th>Imagen Adjunta</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pedidosTableBody">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
     <footer>
         <div class="container">
@@ -1245,6 +1397,17 @@
         const calcTotalDisplay = document.getElementById('calcTotalDisplay');
         const summaryDetailsList = document.getElementById('summaryDetailsList');
         const checkboxes = document.querySelectorAll('.modules-list input[type="checkbox"]');
+        const imagenInput = document.getElementById('imagenInput');
+        const fileLabelText = document.getElementById('fileLabelText');
+
+        // Escuchar cambio en el input file para cambiar el texto del botón
+        imagenInput.addEventListener('change', function() {
+            if (this.files && this.files[0]) {
+                fileLabelText.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00F5A0" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg> Imagen Cargada: ` + this.files[0].name;
+                fileLabelText.style.borderColor = "var(--accent-mint)";
+                fileLabelText.style.color = "var(--text-main)";
+            }
+        });
 
         baseSlider.addEventListener('input', calcularPrecioEcosistema);
         checkboxes.forEach(box => {
@@ -1292,7 +1455,6 @@
 
         function bloquearPresupuestoYContinuar() {
             const configuracionActual = calcularPrecioEcosistema();
-            
             const selectServicio = document.getElementById('servicio');
             const textareaDetalles = document.getElementById('detalles');
             
@@ -1310,7 +1472,6 @@
             especificacionesInyectadas += `Más información de mi negocio: `;
             
             textareaDetalles.value = especificacionesInyectadas;
-            
             document.getElementById('contacto').scrollIntoView({ behavior: 'smooth' });
             textareaDetalles.focus();
         }
@@ -1321,13 +1482,12 @@
             
             selectServicio.value = plan;
             textareaDetalles.value = `Hola, me interesa contratar directamente el paquete: ${plan} ($${precio} USD).`;
-            
             document.getElementById('contacto').scrollIntoView({ behavior: 'smooth' });
         }
 
         calcularPrecioEcosistema();
 
-        // CONEXIÓN ASÍNCRONA ENTRE NETLIFY Y CPANEL GODADDY
+        // CONTROLADOR DE ENVÍO CON FORM DATA PARA COMPATIBILIDAD CON IMÁGENES
         document.getElementById('leadForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
@@ -1338,35 +1498,32 @@
             const detalles = document.getElementById('detalles').value.trim();
 
             if (!nombre || !cedula || !whatsapp || !servicio || !detalles) {
-                alert('Por favor rellene todos los campos requeridos para enviar su solicitud.');
+                alert('Por favor rellene todos los campos requeridos.');
                 return;
             }
 
-            // Estructuración del paquete de datos lógicos
-            const datosFormulario = {
-                nombre: nombre,
-                cedula: cedula,
-                whatsapp: whatsapp,
-                servicio: servicio,
-                detalles: detalles
-            };
+            // Crear el contenedor de tipo FormData para poder enviar archivos multimedia
+            const formDataEnvio = new FormData();
+            formDataEnvio.append('nombre', nombre);
+            formDataEnvio.append('cedula', cedula);
+            formDataEnvio.append('whatsapp', whatsapp);
+            formDataEnvio.append('servicio', servicio);
+            formDataEnvio.append('detalles', detalles);
+            
+            if (imagenInput.files && imagenInput.files[0]) {
+                formDataEnvio.append('imagen', imagenInput.files[0]);
+            }
 
-            // URL exacta de producción apuntando a tu subcarpeta en GoDaddy
             const urlApiGoDaddy = "https://exoscodelabs.site/api/guardar_pedido.php";
 
-            // Transmisión en segundo plano utilizando Fetch API
             fetch(urlApiGoDaddy, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(datosFormulario)
+                body: formDataEnvio
             })
             .then(response => response.json())
             .then(resultado => {
-                console.log("Servidor MySQL ECLS reporta:", resultado);
+                console.log("Transmisión exitosa al servidor:", resultado);
                 
-                // Formateo del mensaje para la apertura de la API de mensajería
                 const mensaje = `*EXOS CODE LABS — NUEVO PEDIDO DE PÁGINA WEB*%0A%0A` +
                                 `*Cliente:* ${nombre}%0A` +
                                 `*Cédula:* ${cedula}%0A` +
@@ -1374,18 +1531,19 @@
                                 `*Tipo de Página:* ${servicio}%0A%0A` +
                                 `*Detalles del pedido:*%0A${encodeURIComponent(detalles)}`;
 
-                const numeroReceptor = '58400000000'; 
-                const urlWhatsApp = `https://wa.me/${numeroReceptor}?text=${mensaje}`;
+                // Canalizado directo al terminal de Samuel A.
+                const numeroSamuel = '584127336450'; 
+                const urlWhatsApp = `https://wa.me/${numeroSamuel}?text=${mensaje}`;
 
                 window.open(urlWhatsApp, '_blank');
                 document.getElementById('leadForm').reset();
+                fileLabelText.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg> Seleccionar Archivo / Captura`;
+                fileLabelText.style.borderColor = "rgba(255,255,255,0.15)";
+                fileLabelText.style.color = "var(--text-muted)";
                 calcularPrecioEcosistema();
             })
             .catch(error => {
-                // Redundancia y tolerancia a fallos: Si el hosting cPanel llegase a experimentar latencia,
-                // el cliente no se bloquea y es redirigido a WhatsApp directamente.
-                console.error("Redirección por contingencia técnica:", error);
-                
+                console.error("Redirección directa por latencia:", error);
                 const mensaje = `*EXOS CODE LABS — NUEVO PEDIDO DE PÁGINA WEB*%0A%0A` +
                                 `*Cliente:* ${nombre}%0A` +
                                 `*Cédula:* ${cedula}%0A` +
@@ -1393,10 +1551,98 @@
                                 `*Tipo de Página:* ${servicio}%0A%0A` +
                                 `*Detalles del pedido:*%0A${encodeURIComponent(detalles)}`;
 
-                const numeroReceptor = '58400000000'; 
-                window.open(`https://wa.me/${numeroReceptor}?text=${mensaje}`, '_blank');
+                const numeroSamuel = '584127336450'; 
+                window.open(`https://wa.me/${numeroSamuel}?text=${mensaje}`, '_blank');
             });
         });
+
+        // ==========================================
+        // LÓGICA DEL PANEL DE INICIO DE SESIÓN OCULTO
+        // ==========================================
+        let clickLogoCount = 0;
+        document.getElementById('secretLogoTrigger').addEventListener('click', function() {
+            clickLogoCount++;
+            if (clickLogoCount === 5) {
+                clickLogoCount = 0;
+                document.getElementById('adminModal').style.display = 'flex';
+            }
+            // Temporizador para reiniciar contador si pasa mucho tiempo entre clics
+            setTimeout(() => { clickLogoCount = 0; }, 3000);
+        });
+
+        function cerrarPanelAdmin() {
+            document.getElementById('adminModal').style.display = 'none';
+            document.getElementById('adminLoginView').style.display = 'block';
+            document.getElementById('adminDashboardView').style.display = 'none';
+            document.getElementById('adminUser').value = '';
+            document.getElementById('adminPass').value = '';
+        }
+
+        function procesarLoginAdmin() {
+            const usuarioInput = document.getElementById('adminUser').value.trim();
+            const claveInput = document.getElementById('adminPass').value.trim();
+
+            // Usuarios maestros provistos por la arquitectura
+            const usuariosValidos = ["584127336450", "584120690493"];
+            // Clave única asignada por defecto para control
+            const claveValida = "ExosAdmin2026";
+
+            if (usuariosValidos.includes(usuarioInput) && claveInput === claveValida) {
+                cargarPedidosDesdeBaseDatos();
+            } else {
+                alert("Credenciales lógicas inválidas o acceso denegado.");
+            }
+        }
+
+        function cargarPedidosDesdeBaseDatos() {
+            const urlConsulta = "https://exoscodelabs.site/api/obtener_pedidos.php";
+            const tokenMaster = "ExosStudioAdmin2026_SecureToken";
+
+            fetch(urlConsulta, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ token: tokenMaster })
+            })
+            .then(res => res.json())
+            .then(resData => {
+                if (resData.status === "success") {
+                    const tablaBody = document.getElementById('pedidosTableBody');
+                    tablaBody.innerHTML = "";
+
+                    if (resData.data.length === 0) {
+                        tablaBody.innerHTML = `<tr><td colspan="7" style="text-align:center; color: var(--text-muted);">No existen registros guardados.</td></tr>`;
+                    } else {
+                        resData.data.forEach(pedido => {
+                            let linkImagen = "Ninguna";
+                            if (pedido.imagen_url && pedido.imagen_url !== "") {
+                                linkImagen = `<a href="${pedido.imagen_url}" target="_blank" class="img-link-preview">Ver Imagen</a>`;
+                            }
+
+                            const filaHTML = `<tr>
+                                <td style="font-family: var(--font-mono); color: var(--accent-purple); font-weight:600;">${pedido.id}</td>
+                                <td style="font-weight: 500; color: var(--text-main);">${pedido.nombre}</td>
+                                <td>${pedido.cedula}</td>
+                                <td>${pedido.telefono}</td>
+                                <td>${pedido.servicio}</td>
+                                <td title="${pedido.detalles}">${pedido.detalles}</td>
+                                <td>${linkImagen}</td>
+                            </tr>`;
+                            tablaBody.innerHTML += filaHTML;
+                        });
+                    }
+
+                    // Intercambiar vistas dentro del modal
+                    document.getElementById('adminLoginView').style.display = 'none';
+                    document.getElementById('adminDashboardView').style.display = 'block';
+                } else {
+                    alert("Error en la lectura del bloque de datos.");
+                }
+            })
+            .catch(err => {
+                console.error("Fallo de comunicación API:", err);
+                alert("Error al intentar conectar con el servidor central.");
+            });
+        }
     </script>
 </body>
 </html>
