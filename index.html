@@ -425,7 +425,6 @@
             color: var(--accent-mint);
         }
 
-        /* Estilización del Input Range */
         .real-range {
             -webkit-appearance: none;
             width: 100%;
@@ -466,7 +465,6 @@
             gap: 16px;
         }
 
-        /* Estilización de los Toggles de Selección Pro */
         .module-item {
             display: flex;
             justify-content: space-between;
@@ -513,7 +511,6 @@
             color: var(--text-muted);
         }
 
-        /* Switch UI */
         .switch {
             position: relative;
             display: inline-block;
@@ -557,7 +554,6 @@
             background-color: #FFFFFF;
         }
 
-        /* Columna de Recibo de Presupuesto Real-Time */
         .config-summary {
             background: rgba(5, 6, 9, 0.7);
             border: 1px solid rgba(163, 112, 247, 0.2);
@@ -1250,13 +1246,11 @@
         const summaryDetailsList = document.getElementById('summaryDetailsList');
         const checkboxes = document.querySelectorAll('.modules-list input[type="checkbox"]');
 
-        // Escuchadores de eventos para recalcular presupuesto en tiempo real
         baseSlider.addEventListener('input', calcularPrecioEcosistema);
         checkboxes.forEach(box => {
             box.addEventListener('change', calcularPrecioEcosistema);
         });
 
-        // Previene problemas al hacer clic en todo el contenedor de la opción
         function toggleCheckbox(id) {
             const checkbox = document.getElementById(id);
             if (event.target.tagName !== 'INPUT' && event.target.className !== 'slider-toggle') {
@@ -1283,7 +1277,6 @@
 
             let totalCalculado = basePrice + accumulatedAddons;
             
-            // Limitadores automáticos ($20 - $10,000)
             if (totalCalculado > 10000) totalCalculado = 10000;
             if (totalCalculado < 20) totalCalculado = 20;
 
@@ -1297,7 +1290,6 @@
             };
         }
 
-        // Transfiere de manera cómoda las opciones elegidas al formulario final
         function bloquearPresupuestoYContinuar() {
             const configuracionActual = calcularPrecioEcosistema();
             
@@ -1323,7 +1315,6 @@
             textareaDetalles.focus();
         }
 
-        // Ejecuta la selección directa desde los botones de los paquetes fijos superiores
         function seleccionarPlanPreset(plan, precio) {
             const selectServicio = document.getElementById('servicio');
             const textareaDetalles = document.getElementById('detalles');
@@ -1334,10 +1325,9 @@
             document.getElementById('contacto').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Arrancar la calculadora al cargar la página
         calcularPrecioEcosistema();
 
-        // Envío de información limpia por WhatsApp
+        // CONEXIÓN ASÍNCRONA ENTRE NETLIFY Y CPANEL GODADDY
         document.getElementById('leadForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
@@ -1352,20 +1342,60 @@
                 return;
             }
 
-            const mensaje = `*EXOS CODE LABS — NUEVO PEDIDO DE PÁGINA WEB*%0A%0A` +
-                            `*Cliente:* ${nombre}%0A` +
-                            `*Cédula:* ${cedula}%0A` +
-                            `*Teléfono:* ${whatsapp}%0A` +
-                            `*Tipo de Página:* ${servicio}%0A%0A` +
-                            `*Detalles del pedido:*%0A${encodeURIComponent(detalles)}`;
+            // Estructuración del paquete de datos lógicos
+            const datosFormulario = {
+                nombre: nombre,
+                cedula: cedula,
+                whatsapp: whatsapp,
+                servicio: servicio,
+                detalles: detalles
+            };
 
-            // Número de recepción de Exos Code Labs Studio
-            const numeroReceptor = '58400000000'; 
-            const urlWhatsApp = `https://wa.me/${numeroReceptor}?text=${mensaje}`;
+            // URL exacta de producción apuntando a tu subcarpeta en GoDaddy
+            const urlApiGoDaddy = "https://exoscodelabs.site/api/guardar_pedido.php";
 
-            window.open(urlWhatsApp, '_blank');
-            this.reset();
-            calcularPrecioEcosistema(); // Reinicia la calculadora visual
+            // Transmisión en segundo plano utilizando Fetch API
+            fetch(urlApiGoDaddy, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(datosFormulario)
+            })
+            .then(response => response.json())
+            .then(resultado => {
+                console.log("Servidor MySQL ECLS reporta:", resultado);
+                
+                // Formateo del mensaje para la apertura de la API de mensajería
+                const mensaje = `*EXOS CODE LABS — NUEVO PEDIDO DE PÁGINA WEB*%0A%0A` +
+                                `*Cliente:* ${nombre}%0A` +
+                                `*Cédula:* ${cedula}%0A` +
+                                `*Teléfono:* ${whatsapp}%0A` +
+                                `*Tipo de Página:* ${servicio}%0A%0A` +
+                                `*Detalles del pedido:*%0A${encodeURIComponent(detalles)}`;
+
+                const numeroReceptor = '58400000000'; 
+                const urlWhatsApp = `https://wa.me/${numeroReceptor}?text=${mensaje}`;
+
+                window.open(urlWhatsApp, '_blank');
+                document.getElementById('leadForm').reset();
+                calcularPrecioEcosistema();
+            })
+            .catch(error => {
+                // Redundancia y tolerancia a fallos: Si el hosting cPanel llegase a experimentar latencia,
+                // el cliente no se bloquea y es redirigido a WhatsApp directamente.
+                console.error("Redirección por contingencia técnica:", error);
+                
+                const mensaje = `*EXOS CODE LABS — NUEVO PEDIDO DE PÁGINA WEB*%0A%0A` +
+                                `*Cliente:* ${nombre}%0A` +
+                                `*Cédula:* ${cedula}%0A` +
+                                `*Teléfono:* ${whatsapp}%0A` +
+                                `*Tipo de Página:* ${servicio}%0A%0A` +
+                                `*Detalles del pedido:*%0A${encodeURIComponent(detalles)}`;
+
+                const numeroReceptor = '58400000000'; 
+                window.open(`https://wa.me/${numeroReceptor}?text=${mensaje}`, '_blank');
+            });
         });
     </script>
 </body>
